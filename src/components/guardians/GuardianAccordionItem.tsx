@@ -1,10 +1,14 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Accordion, Button, Modal, Form, Row, Col, Card } from 'react-bootstrap';
-import { useForm, Controller } from 'react-hook-form';
+import { Accordion, Button, Modal, Form, Row, Col, Card, Alert } from 'react-bootstrap';
+import { X } from 'react-bootstrap-icons';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import type { Control } from 'react-hook-form';
 import { createGuardian } from '../../types/models';
-import type { Guardian } from '../../types/models';
+import type { Guardian, Telephone } from '../../types/models';
 import { validationService } from '../../services/validation';
 import AddressForm from '../common/AddressForm';
+import TelephoneForm from '../common/TelephoneForm';
+import { formatAddressString } from '../../utils/addressUtils';
 
 interface GuardianAccordionItemProps {
   guardian?: Guardian;
@@ -42,6 +46,12 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
       same_address_as_kid: true,
       telephones: []
     }
+  });
+
+  // Field array for managing telephones
+  const { fields: telephoneFields, append: appendTelephone, remove: removeTelephone } = useFieldArray({
+    control,
+    name: 'telephones'
   });
 
   const onSubmit = useCallback((data: Guardian) => {
@@ -85,6 +95,18 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     return 'Guardian';
   }, [isNew, guardian?.name, guardian?.surname, guardian?.relation_with_kid]);
 
+  // Memoized address title for guardian
+  const guardianAddressTitle = useMemo(() => {
+    const addressString = formatAddressString(guardian?.address);
+    return addressString ? `Guardian Address: ${addressString}` : 'Guardian Address';
+  }, [guardian?.address]);
+
+  // Address accordion expanded state for guardian
+  const guardianAddressExpanded = useMemo(() => {
+    const addressString = formatAddressString(guardian?.address);
+    return !addressString; // Expanded if no address, collapsed if address exists
+  }, [guardian?.address]);
+
   return (
     <>
       <Accordion.Item eventKey={eventKey}>
@@ -92,17 +114,19 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
           <div className="d-flex justify-content-between align-items-center w-100">
             <span>{headerTitle}</span>
             {!isNew && guardian && (
-              <div className="me-2" onClick={(e) => e.stopPropagation()}>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => setShowDeleteModal(true)}
-                  className="p-1"
-                  title="Delete guardian"
-                >
-                  🗑️
-                </Button>
-              </div>
+              <Button
+                variant="link"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteModal(true);
+                }}
+                className="p-1 text-danger"
+                title="Delete guardian"
+                style={{ marginLeft: 'auto' }}
+              >
+                <X size={16} />
+              </Button>
             )}
           </div>
         </Accordion.Header>
@@ -215,24 +239,17 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
 
             {/* Address Section - Only show if NOT same address as kid */}
             {!watch('same_address_as_kid') && (
-              <Card className="mb-3">
-                <Card.Header>
-                  <h6 className="mb-0">Guardian Address</h6>
-                </Card.Header>
-                <Card.Body>
-                  <Accordion>
-                    <Accordion.Item eventKey="0">
-                      <Accordion.Header>Click to add address information</Accordion.Header>
-                      <Accordion.Body>
-                        <AddressForm 
-                          control={control}
-                          errors={errors.address}
-                        />
-                      </Accordion.Body>
-                    </Accordion.Item>
-                  </Accordion>
-                </Card.Body>
-              </Card>
+              <Accordion className="mb-3" defaultActiveKey={guardianAddressExpanded ? "0" : undefined}>
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>{guardianAddressTitle}</Accordion.Header>
+                  <Accordion.Body>
+                    <AddressForm 
+                      control={control}
+                      errors={errors.address}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
             )}
 
             {/* Show message when same address as kid is checked */}
@@ -243,6 +260,46 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
                 </small>
               </div>
             )}
+
+            {/* Telephone Section */}
+            <Card className="mb-4">
+              <Card.Header>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h6 className="mb-0">📞 Telephone Numbers ({telephoneFields.length})</h6>
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={() => appendTelephone({ 
+                      country_code: '+30', 
+                      number: '', 
+                      telephone_type: 'mobile' as const 
+                    })}
+                  >
+                    + Add Telephone
+                  </Button>
+                </div>
+              </Card.Header>
+              <Card.Body>
+                {telephoneFields.length === 0 ? (
+                  <Alert variant="info" className="mb-0">
+                    📞 No telephone numbers added yet. Click "Add Telephone" to get started.
+                  </Alert>
+                ) : (
+                  <>
+                    {telephoneFields.map((field, index) => (
+                      <TelephoneForm
+                        key={field.id}
+                        control={control as unknown as Control<Record<string, unknown>>}
+                        errors={errors.telephones?.[index]}
+                        fieldPrefix={`telephones.${index}`}
+                        onRemove={() => removeTelephone(index)}
+                        showRemoveButton={true}
+                      />
+                    ))}
+                  </>
+                )}
+              </Card.Body>
+            </Card>
 
             <div className="d-flex gap-2">
               <Button variant="primary" onClick={handleSubmit(onSubmit)}>

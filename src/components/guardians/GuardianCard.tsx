@@ -39,11 +39,7 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
 
         {/* Address Display */}
         <div className="small">
-          {guardian.same_address_as_kid ? (
-            <div className="text-muted">
-              📍 Same address as kid
-            </div>
-          ) : (
+          {!guardian.same_address_as_kid && (
             <AddressDisplay 
               address={guardian.address} 
               className="text-muted"

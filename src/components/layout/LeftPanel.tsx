@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ListGroup, Button, Modal } from 'react-bootstrap';
+import { ListGroup, Button, Modal, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { PencilSquare, XLg, PersonFill, Plus } from 'react-bootstrap-icons';
 import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import type { Kid } from '../../types/models';
@@ -9,14 +10,14 @@ const LeftPanel: React.FC = () => {
   const { kids, refreshKids } = useKids();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [kidToDelete, setKidToDelete] = useState<Kid | null>(null);
+  const [hoveredKidId, setHoveredKidId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     refreshKids();
   }, [refreshKids]);
 
-  const handleView = (kid: Kid, event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleKidClick = (kid: Kid) => {
     navigate(`/kids/${kid.kid_id}`);
   };
 
@@ -51,60 +52,80 @@ const LeftPanel: React.FC = () => {
     setKidToDelete(null);
   };
 
+  // Sort kids by preferred name (if exists) or legal name, then by surname
+  const sortedKids = [...kids].sort((a, b) => {
+    const aFirstName = a.preferred_name || a.name;
+    const bFirstName = b.preferred_name || b.name;
+    
+    if (aFirstName.toLowerCase() !== bFirstName.toLowerCase()) {
+      return aFirstName.toLowerCase().localeCompare(bFirstName.toLowerCase());
+    }
+    
+    return a.surname.toLowerCase().localeCompare(b.surname.toLowerCase());
+  });
+
   return (
     <>
       <div className="left-panel p-3">
-        <Button 
-          variant="primary" 
-          className="w-100 mb-3"
-          onClick={() => navigate('/kids/add')}
-        >
-          Add Kid
-        </Button>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h5 className="mb-0">Class</h5>
+          <Button 
+            variant="link" 
+            className="p-0 text-decoration-none"
+            onClick={() => navigate('/kids/add')}
+            title="Add Kid"
+          >
+            <Plus size={20} />
+          </Button>
+        </div>
         
-        <h5>Kids List</h5>
-        <ListGroup>
-          {kids.map(kid => (
+        <ListGroup variant="flush">
+          {sortedKids.map(kid => (
             <ListGroup.Item 
               key={kid.kid_id} 
-              className="d-flex justify-content-between align-items-center py-2"
+              className="kid-list-item d-flex justify-content-between align-items-center py-2 px-0 border-0"
+              style={{ 
+                cursor: 'pointer',
+                backgroundColor: hoveredKidId === kid.kid_id ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={() => setHoveredKidId(kid.kid_id)}
+              onMouseLeave={() => setHoveredKidId(null)}
+              onClick={() => handleKidClick(kid)}
             >
-              <span className="text-truncate me-2">
-                {kid.name} {kid.surname}
-              </span>
-              <div className="d-flex gap-1">
+              <div className="kid-name-area flex-grow-1 d-flex align-items-center gap-2">
+                <span className="text-truncate">
+                  {(kid.preferred_name || kid.name)} {kid.surname}
+                </span>
+                <Badge bg="secondary" className="d-flex align-items-center gap-1">
+                  <PersonFill size={12} />
+                  {kid.guardians.length}
+                </Badge>
+              </div>
+              <div className="action-icons d-flex gap-1">
                 <Button 
-                  variant="outline-primary" 
+                  variant="link" 
                   size="sm"
-                  className="p-1"
-                  onClick={(e) => handleView(kid, e)}
-                  title="View details"
-                >
-                  👁️
-                </Button>
-                <Button 
-                  variant="outline-secondary" 
-                  size="sm"
-                  className="p-1"
+                  className={`p-1 text-decoration-none icon-button edit-icon ${hoveredKidId === kid.kid_id ? 'visible' : 'invisible'}`}
                   onClick={(e) => handleEdit(kid, e)}
                   title="Edit"
                 >
-                  ✏️
+                  <PencilSquare size={16} />
                 </Button>
                 <Button 
-                  variant="outline-danger" 
+                  variant="link" 
                   size="sm"
-                  className="p-1"
+                  className={`p-1 text-decoration-none icon-button delete-icon ${hoveredKidId === kid.kid_id ? 'visible' : 'invisible'}`}
                   onClick={(e) => handleDeleteClick(kid, e)}
                   title="Delete"
                 >
-                  ✖️
+                  <XLg size={16} />
                 </Button>
               </div>
             </ListGroup.Item>
           ))}
           {kids.length === 0 && (
-            <ListGroup.Item variant="light" className="text-center">
+            <ListGroup.Item variant="light" className="text-center border-0">
               No kids added yet
             </ListGroup.Item>
           )}

@@ -40,3 +40,56 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Left Panel Styles */
+.kid-list-item {
+  cursor: pointer;
+}
+
+.kid-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* More specific selectors to override Bootstrap */
+.list-group-flush .kid-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.list-group .list-group-item.kid-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.kid-name-area {
+  cursor: pointer;
+}
+
+.kid-name-area * {
+  cursor: pointer;
+}
+
+.icon-button {
+  color: #6c757d;
+  border: none !important;
+}
+
+.icon-button:hover {
+  color: #495057;
+  background-color: transparent !important;
+}
+
+.delete-icon:hover {
+  color: #dc3545 !important;
+}
+
+.edit-icon:hover {
+  color: #0d6efd !important;
+}
+
+/* Ensure smooth transitions */
+.icon-button {
+  transition: color 0.2s ease;
+}
+
+.kid-list-item {
+  transition: background-color 0.2s ease;
+}

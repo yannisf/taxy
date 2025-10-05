@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Button, Container, Row, Col, Alert, Accordion, Card } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
 import { createKid } from '../../types/models';
 import type { Kid, Guardian } from '../../types/models';
 import { validationService } from '../../services/validation';
@@ -8,6 +9,7 @@ import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import GuardianAccordionItem from '../guardians/GuardianAccordionItem';
 import AddressForm from '../common/AddressForm';
+import { formatAddressString } from '../../utils/addressUtils';
 
 type KidFormProps = {
   initialData?: Kid;
@@ -19,6 +21,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
   const [guardians, setGuardians] = useState<Guardian[]>(initialData?.guardians || []);
   const [showNewGuardian, setShowNewGuardian] = useState(false);
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { kidId } = useParams<{ kidId: string }>();
   const { refreshKids } = useKids();
   const { 
     control, 
@@ -30,8 +34,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
     defaultValues: initialData || {
       name: '',
       surname: '',
-      gender: 'male',
-      level: 'kindergartner',
+      gender: '' as any,
+      level: '' as any,
       special_education: false,
       guardians: [],
       notes: '',
@@ -70,6 +74,24 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
 
   // Memoized guardian count
   const guardianCount = useMemo(() => guardians.length, [guardians.length]);
+
+  // Memoized address title
+  const addressTitle = useMemo(() => {
+    const addressString = formatAddressString(initialData?.address);
+    return addressString ? `Address: ${addressString}` : 'Address';
+  }, [initialData?.address]);
+
+  // Address accordion expanded state
+  const addressExpanded = useMemo(() => {
+    const addressString = formatAddressString(initialData?.address);
+    return !addressString; // Expanded if no address, collapsed if address exists
+  }, [initialData?.address]);
+
+  const handleCancel = useCallback(() => {
+    if (kidId) {
+      navigate(`/kids/${kidId}`);
+    }
+  }, [kidId, navigate]);
 
   const onSubmit = useCallback(async (data: Kid) => {
     try {
@@ -188,14 +210,21 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
               <Controller
                 name="gender"
                 control={control}
+                rules={{ required: 'Gender is required' }}
                 render={({ field }) => (
-                  <Form.Select {...field}>
+                  <Form.Select {...field} isInvalid={!!errors.gender}>
+                    <option value="" disabled>Select gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                   </Form.Select>
                 )}
               />
+              {errors.gender && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.gender.message}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
           </Col>
           <Col>
@@ -204,14 +233,21 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
               <Controller
                 name="level"
                 control={control}
+                rules={{ required: 'Level is required' }}
                 render={({ field }) => (
-                  <Form.Select {...field}>
+                  <Form.Select {...field} isInvalid={!!errors.level}>
+                    <option value="" disabled>Select level</option>
                     <option value="pre-kindergartner">Pre-Kindergartner</option>
                     <option value="kindergartner">Kindergartner</option>
                     <option value="kindergartner-repeating">Kindergartner (Repeating)</option>
                   </Form.Select>
                 )}
               />
+              {errors.level && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.level.message}
+                </Form.Control.Feedback>
+              )}
             </Form.Group>
           </Col>
         </Row>
@@ -286,24 +322,17 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         </Row>
 
         {/* Address Section */}
-        <Card className="mb-4">
-          <Card.Header>
-            <h5 className="mb-0">Address</h5>
-          </Card.Header>
-          <Card.Body>
-            <Accordion>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Click to add address information</Accordion.Header>
-                <Accordion.Body>
-                  <AddressForm 
-                    control={control}
-                    errors={errors.address}
-                  />
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          </Card.Body>
-        </Card>
+        <Accordion className="mb-4" defaultActiveKey={addressExpanded ? "0" : undefined}>
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>{addressTitle}</Accordion.Header>
+            <Accordion.Body>
+              <AddressForm 
+                control={control}
+                errors={errors.address}
+              />
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
 
         {/* Guardians Section */}
         <Card className="mb-4">
@@ -351,9 +380,16 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           </Card.Body>
         </Card>
 
-        <Button variant="primary" type="submit">
-          {initialData ? 'Update Kid' : 'Add Kid'}
-        </Button>
+        <div className="d-flex gap-2">
+          <Button variant="primary" type="submit">
+            {initialData ? 'Update Kid' : 'Add Kid'}
+          </Button>
+          {initialData && (
+            <Button variant="secondary" type="button" onClick={handleCancel}>
+              Cancel
+            </Button>
+          )}
+        </div>
       </Form>
     </Container>
   );
