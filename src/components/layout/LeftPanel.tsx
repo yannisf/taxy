@@ -1,16 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { ListGroup, Button, Modal, Badge } from 'react-bootstrap';
+import React, { useState, useEffect, useRef } from 'react';
+import { ListGroup, Button, Modal, Badge, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { PencilSquare, XLg, PersonFill, Plus } from 'react-bootstrap-icons';
+import { PencilSquare, XLg, PersonFill, Plus, Download, Upload } from 'react-bootstrap-icons';
+import { toast } from 'react-toastify';
 import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import type { Kid } from '../../types/models';
+import { exportClassData } from '../../utils/exportUtils';
+import { 
+  validateImportFile, 
+  performImport,
+  type ImportValidationResult
+} from '../../utils/importUtils';
 
 const LeftPanel: React.FC = () => {
   const { kids, refreshKids } = useKids();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [kidToDelete, setKidToDelete] = useState<Kid | null>(null);
   const [hoveredKidId, setHoveredKidId] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
+  const [importValidationResult, setImportValidationResult] = useState<ImportValidationResult | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +62,83 @@ const LeftPanel: React.FC = () => {
   const cancelDelete = () => {
     setShowDeleteModal(false);
     setKidToDelete(null);
+  };
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      await exportClassData();
+      toast.success('Class data exported successfully!');
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Failed to export class data');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Reset file input
+    event.target.value = '';
+
+    if (!file.name.toLowerCase().endsWith('.json')) {
+      toast.error('Please select a JSON file');
+      return;
+    }
+
+    setIsImporting(true);
+    try {
+      const validationResult = await validateImportFile(file);
+      
+      if (!validationResult.valid) {
+        toast.error('Invalid import file');
+        console.error('Import validation errors:', validationResult.errors);
+        return;
+      }
+
+      setImportValidationResult(validationResult);
+      setShowImportConfirmModal(true);
+    } catch (error) {
+      console.error('Import validation failed:', error);
+      toast.error('Failed to validate import file');
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const handleConfirmImport = async () => {
+    if (!importValidationResult?.validatedKids) return;
+
+    setIsImporting(true);
+    try {
+      const result = await performImport(importValidationResult.validatedKids);
+      
+      if (result.success) {
+        toast.success(result.message);
+        await refreshKids();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error('Import failed:', error);
+      toast.error('Import failed due to an unexpected error');
+    } finally {
+      setIsImporting(false);
+      setShowImportConfirmModal(false);
+      setImportValidationResult(null);
+    }
+  };
+
+  const handleCancelImport = () => {
+    setShowImportConfirmModal(false);
+    setImportValidationResult(null);
   };
 
   // Sort kids by preferred name (if exists) or legal name, then by surname
@@ -130,6 +219,40 @@ const LeftPanel: React.FC = () => {
             </ListGroup.Item>
           )}
         </ListGroup>
+        
+        <div className="mt-3 pt-3 border-top">
+          <div className="d-flex gap-2">
+            <Button 
+              variant="outline-primary" 
+              size="sm"
+              className="flex-fill d-flex align-items-center justify-content-center gap-2"
+              onClick={handleExport}
+              disabled={isExporting || kids.length === 0}
+              title="Export class data as JSON"
+            >
+              <Download size={16} />
+              {isExporting ? 'Exporting...' : 'Export Class'}
+            </Button>
+            <Button 
+              variant="outline-success" 
+              size="sm"
+              className="flex-fill d-flex align-items-center justify-content-center gap-2"
+              onClick={handleImportClick}
+              disabled={isImporting}
+              title="Import class data from JSON"
+            >
+              <Upload size={16} />
+              {isImporting ? 'Importing...' : 'Import Class'}
+            </Button>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            style={{ display: 'none' }}
+            onChange={handleFileSelect}
+          />
+        </div>
       </div>
 
       {/* Delete Confirmation Modal */}
@@ -147,6 +270,39 @@ const LeftPanel: React.FC = () => {
           </Button>
           <Button variant="danger" onClick={confirmDelete}>
             Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Import Confirmation Modal */}
+      <Modal show={showImportConfirmModal} onHide={handleCancelImport} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Import</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {importValidationResult?.statistics && (
+            <>
+              <Alert variant="info">
+                <h6>Import Summary:</h6>
+                <ul className="mb-0">
+                  <li><strong>{importValidationResult.statistics.newKids}</strong> new kids will be added</li>
+                  <li><strong>{importValidationResult.statistics.updatedKids}</strong> existing kids will be updated</li>
+                  <li><strong>{importValidationResult.statistics.unchangedKids}</strong> kids will remain unchanged</li>
+                </ul>
+              </Alert>
+              <p className="mb-0">
+                The import file contains <strong>{importValidationResult.statistics.totalInFile}</strong> kids. 
+                Your current database has <strong>{importValidationResult.statistics.totalInDatabase}</strong> kids.
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCancelImport} disabled={isImporting}>
+            Cancel
+          </Button>
+          <Button variant="success" onClick={handleConfirmImport} disabled={isImporting}>
+            {isImporting ? 'Importing...' : 'Confirm Import'}
           </Button>
         </Modal.Footer>
       </Modal>

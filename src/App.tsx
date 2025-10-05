@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
 
 // Import layout components
 import TopBar from './components/layout/TopBar';
@@ -17,6 +18,8 @@ import { KidsProvider } from './contexts/KidsContext';
 
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+// Import React Toastify CSS
+import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
   return (
@@ -41,6 +44,17 @@ const App: React.FC = () => {
             </Row>
           </Container>
         </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </Router>
     </KidsProvider>
   );
