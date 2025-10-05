@@ -32,6 +32,22 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
           )}
         </div>
 
+        {guardian.email && (
+          <div className="mb-1">
+            <small className="text-muted">
+              📧 {guardian.email}
+            </small>
+          </div>
+        )}
+
+        {guardian.profession && (
+          <div className="mb-2">
+            <small className="text-muted">
+              💼 {guardian.profession}
+            </small>
+          </div>
+        )}
+
         {guardian.telephones && guardian.telephones.length > 0 && (
           <div className="mb-2">
             {guardian.telephones.map((telephone, index) => (

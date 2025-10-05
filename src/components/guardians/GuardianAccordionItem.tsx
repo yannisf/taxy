@@ -3,8 +3,7 @@ import { Accordion, Button, Modal, Form, Row, Col, Card, Alert } from 'react-boo
 import { X } from 'react-bootstrap-icons';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
-import { createGuardian } from '../../types/models';
-import type { Guardian, Telephone } from '../../types/models';
+import type { Guardian } from '../../types/models';
 import { validationService } from '../../services/validation';
 import AddressForm from '../common/AddressForm';
 import TelephoneForm from '../common/TelephoneForm';
@@ -15,7 +14,7 @@ interface GuardianAccordionItemProps {
   isNew?: boolean;
   eventKey: string;
   onSave: (guardian: Guardian) => void;
-  onDelete: (guardianId: string) => void;
+  onDelete: (guardian: Guardian) => void;
   onCancel?: () => void;
 }
 
@@ -38,7 +37,6 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     watch 
   } = useForm<Guardian>({
     defaultValues: guardian || {
-      guardian_id: '',
       name: '',
       surname: '',
       relation_with_kid: 'mother',
@@ -68,24 +66,19 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
       return;
     }
 
-    // Ensure a guardian_id exists
-    const guardianToSave: Guardian = isNew 
-      ? createGuardian(data)
-      : { ...data, guardian_id: guardian?.guardian_id || '' };
-
-    onSave(guardianToSave);
+    onSave(data);
     // Only reset if it's a new guardian - existing guardians should keep their data
     if (isNew) {
       reset();
     }
-  }, [onSave, isNew, guardian?.guardian_id, reset]);
+  }, [onSave, isNew, reset]);
 
   const handleDelete = useCallback(() => {
-    if (guardian?.guardian_id) {
-      onDelete(guardian.guardian_id);
+    if (guardian) {
+      onDelete(guardian);
     }
     setShowDeleteModal(false);
-  }, [guardian?.guardian_id, onDelete]);
+  }, [guardian, onDelete]);
 
   const headerTitle = useMemo(() => {
     if (isNew) return 'New Guardian';
@@ -233,6 +226,55 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
                       />
                     )}
                   />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Control
+                        {...field}
+                        value={field.value ?? ''}
+                        type="email"
+                        placeholder="Enter email address"
+                        isInvalid={!!errors.email}
+                      />
+                    )}
+                  />
+                  {errors.email && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.email.message}
+                    </Form.Control.Feedback>
+                  )}
+                </Form.Group>
+              </Col>
+              <Col>
+                <Form.Group className="mb-3">
+                  <Form.Label>Profession</Form.Label>
+                  <Controller
+                    name="profession"
+                    control={control}
+                    render={({ field }) => (
+                      <Form.Control
+                        {...field}
+                        value={field.value ?? ''}
+                        type="text"
+                        placeholder="Enter profession"
+                        isInvalid={!!errors.profession}
+                      />
+                    )}
+                  />
+                  {errors.profession && (
+                    <Form.Control.Feedback type="invalid">
+                      {errors.profession.message}
+                    </Form.Control.Feedback>
+                  )}
                 </Form.Group>
               </Col>
             </Row>

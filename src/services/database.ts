@@ -1,64 +1,62 @@
 import Dexie from 'dexie';
-import type { Kid, Guardian, ClassRecord } from '../types/models';
+import type { Kid, ClassRecord } from '../types/models';
 
 export class ClassManagementDatabase extends Dexie {
   kids: Dexie.Table<Kid, string>;
-  guardians: Dexie.Table<Guardian, string>;
 
   constructor() {
     super('ClassManagementDatabase');
+    
+    // Version 1: Original schema
     this.version(1).stores({
-      kids: 'kid_id, name, surname, level, gender',
-      guardians: 'guardian_id, name, surname'
+      kids: 'kid_id, name, surname, level, gender'
+    });
+
+    // Version 2: Add timestamp fields
+    this.version(2).stores({
+      kids: 'kid_id, name, surname, level, gender, createdAt, updatedAt'
+    }).upgrade(trans => {
+      // Migrate existing records to include timestamps
+      return trans.table('kids').toCollection().modify(kid => {
+        const now = new Date().toISOString();
+        if (!kid.createdAt) {
+          kid.createdAt = now;
+        }
+        if (!kid.updatedAt) {
+          kid.updatedAt = now;
+        }
+      });
     });
 
     this.kids = this.table('kids');
-    this.guardians = this.table('guardians');
   }
 
   // Kid operations
   async addKid(kid: Kid) {
-    return this.transaction('rw', this.kids, this.guardians, async () => {
-      // First, add guardians if they don't exist
-      for (const guardian of kid.guardians) {
-        await this.guardians.put(guardian);
-      }
-      
-      // Then add the kid
-      return this.kids.put(kid);
-    });
+    // Ensure createdAt is set if not already present (for new kids)
+    if (!kid.createdAt) {
+      const now = new Date().toISOString();
+      kid.createdAt = now;
+      kid.updatedAt = now;
+    }
+    return this.kids.put(kid);
   }
 
   async getKids() {
-    const kids = await this.kids.toArray();
-    // Load guardians for each kid
-    for (const kid of kids) {
-      if (kid.guardians && kid.guardians.length > 0) {
-        const guardianIds = kid.guardians.map(g => g.guardian_id).filter(id => id);
-        if (guardianIds.length > 0) {
-          const guardians = await this.guardians.where('guardian_id').anyOf(guardianIds).toArray();
-          kid.guardians = guardians.length > 0 ? guardians : kid.guardians;
-        }
-      }
-    }
-    return kids;
+    return this.kids.toArray();
   }
 
   async getKidById(id: string) {
-    const kid = await this.kids.get(id);
-    if (kid && kid.guardians && kid.guardians.length > 0) {
-      // Load guardians for this kid
-      const guardianIds = kid.guardians.map(g => g.guardian_id).filter(id => id);
-      if (guardianIds.length > 0) {
-        const guardians = await this.guardians.where('guardian_id').anyOf(guardianIds).toArray();
-        kid.guardians = guardians.length > 0 ? guardians : kid.guardians;
-      }
-    }
-    return kid;
+    return this.kids.get(id);
   }
 
   async updateKid(id: string, updates: Partial<Kid>) {
-    return this.kids.update(id, updates);
+    // Automatically set updatedAt timestamp on every update
+    const updatesWithTimestamp = {
+      ...updates,
+      updatedAt: new Date().toISOString()
+    };
+    return this.kids.update(id, updatesWithTimestamp);
   }
 
   async deleteKid(id: string) {
@@ -83,10 +81,9 @@ export class ClassManagementDatabase extends Dexie {
   }
 
   async importData(data: ClassRecord) {
-    return this.transaction('rw', this.kids, this.guardians, async () => {
+    return this.transaction('rw', this.kids, async () => {
       // Clear existing data
       await this.kids.clear();
-      await this.guardians.clear();
 
       // Import new data
       for (const kid of data.kids) {

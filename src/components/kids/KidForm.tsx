@@ -51,8 +51,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
     setActiveKey(null);
   }, [guardians]);
 
-  const handleDeleteGuardian = useCallback((guardianId: string) => {
-    setGuardians(prev => prev.filter(g => g.guardian_id !== guardianId));
+  const handleDeleteGuardian = useCallback((guardian: Guardian) => {
+    setGuardians(prev => prev.filter(g => g !== guardian));
     setActiveKey(null);
   }, []);
 
@@ -123,18 +123,26 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         return;
       }
 
-      // Prepare kid object for saving
-      const kidToSave = initialData 
-        ? { ...data, kid_id: initialData.kid_id } 
-        : createKid(data);
-
       // Save to database with timeout
-      await Promise.race([
-        db.addKid(kidToSave),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Insertion timed out')), 5000)
-        )
-      ]);
+      if (initialData) {
+        // Update existing kid
+        const updates = { ...data, guardians };
+        await Promise.race([
+          db.updateKid(initialData.kid_id, updates),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Update timed out')), 5000)
+          )
+        ]);
+      } else {
+        // Create new kid
+        const kidToSave = createKid(data);
+        await Promise.race([
+          db.addKid(kidToSave),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Insertion timed out')), 5000)
+          )
+        ]);
+      }
 
       // Reset form, refresh kids list, and notify parent
       reset();
@@ -358,7 +366,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
               <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key as string | null)}>
                 {guardians.map((guardian, index) => (
                   <GuardianAccordionItem
-                    key={guardian.guardian_id}
+                    key={index}
                     guardian={guardian}
                     eventKey={`guardian-${index}`}
                     onSave={(updatedGuardian) => handleSaveGuardian(index, updatedGuardian)}

@@ -82,6 +82,20 @@ const KidDetailsView: React.FC = () => {
               <p>{kid.notes}</p>
             </div>
           )}
+
+          {/* Timestamps */}
+          <div className="mt-3 border-top pt-3">
+            <Row>
+              <Col sm={6}>
+                <p className="mb-1"><strong>Created:</strong></p>
+                <small className="text-muted">{formatDateDisplay(kid.createdAt, true)}</small>
+              </Col>
+              <Col sm={6}>
+                <p className="mb-1"><strong>Last Updated:</strong></p>
+                <small className="text-muted">{formatDateDisplay(kid.updatedAt, true)}</small>
+              </Col>
+            </Row>
+          </div>
         </Card.Body>
       </Card>
 
@@ -99,7 +113,7 @@ const KidDetailsView: React.FC = () => {
           ) : (
             <Row>
               {kid.guardians.map((guardian, index) => (
-                <Col key={guardian.guardian_id || index} md={6} lg={4} className="mb-3">
+                <Col key={index} md={6} lg={4} className="mb-3">
                   <GuardianCard guardian={guardian} />
                 </Col>
               ))}

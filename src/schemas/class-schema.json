@@ -72,12 +72,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "guardian_id": {
-          "type": "string",
-          "format": "uuid",
-          "readOnly": true,
-          "description": "System-generated unique identifier for the guardian."
-        },
         "name": { "type": "string", "description": "Guardian's given name." },
         "surname": { "type": "string", "description": "Guardian's family name." },
         "relation_with_kid": {
@@ -107,12 +101,21 @@
           "description": "List of telephone contacts for the guardian. May be omitted.",
           "items": { "$ref": "#/$defs/telephone" }
         },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Guardian's email address."
+        },
+        "profession": {
+          "type": "string",
+          "description": "Guardian's profession or occupation."
+        },
         "address": {
           "$ref": "#/$defs/address",
           "description": "Guardian's address. Optional. If omitted and 'same_address_as_kid' is true, the child's address applies."
         }
       },
-      "required": ["guardian_id", "name", "surname", "relation_with_kid"]
+      "required": ["name", "surname", "relation_with_kid"]
     },
     "kid": {
       "title": "Kid",
@@ -165,6 +168,18 @@
           "type": "array",
           "description": "List of guardians associated with the child. May be empty or omitted.",
           "items": { "$ref": "#/$defs/guardian" }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the kid record was created (ISO 8601 format).",
+          "readOnly": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the kid record was last updated (ISO 8601 format).",
+          "readOnly": true
         }
       },
       "required": [
@@ -174,7 +189,9 @@
         "gender",
         "level",
         "special_education",
-        "guardians"
+        "guardians",
+        "createdAt",
+        "updatedAt"
       ]
     }
   }

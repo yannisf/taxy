@@ -1,7 +1,6 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Row, Col, Button } from 'react-bootstrap';
-import { v4 as uuidv4 } from 'uuid';
 import type { Guardian } from '../../types/models';
 import { validationService } from '../../services/validation';
 
@@ -21,7 +20,6 @@ export const GuardianForm: React.FC<GuardianFormProps> = ({
     reset 
   } = useForm<Guardian>({
     defaultValues: initialData || {
-      guardian_id: uuidv4(),
       name: '',
       surname: '',
       relation_with_kid: 'mother',
@@ -40,13 +38,7 @@ export const GuardianForm: React.FC<GuardianFormProps> = ({
       return;
     }
 
-    // Ensure a guardian_id exists
-    const guardianToAdd: Guardian = {
-      ...data,
-      guardian_id: data.guardian_id || uuidv4()
-    };
-
-    onAddGuardian(guardianToAdd);
+    onAddGuardian(data);
     reset(); // Reset form after adding
   };
 
@@ -133,6 +125,55 @@ export const GuardianForm: React.FC<GuardianFormProps> = ({
               label="Same Address as Kid"
               {...control.register('same_address_as_kid')}
             />
+          </Form.Group>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>Email</Form.Label>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <Form.Control
+                  {...field}
+                  value={field.value ?? ''}
+                  type="email"
+                  placeholder="Enter email address"
+                  isInvalid={!!errors.email}
+                />
+              )}
+            />
+            {errors.email && (
+              <Form.Control.Feedback type="invalid">
+                {errors.email.message}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>Profession</Form.Label>
+            <Controller
+              name="profession"
+              control={control}
+              render={({ field }) => (
+                <Form.Control
+                  {...field}
+                  value={field.value ?? ''}
+                  type="text"
+                  placeholder="Enter profession"
+                  isInvalid={!!errors.profession}
+                />
+              )}
+            />
+            {errors.profession && (
+              <Form.Control.Feedback type="invalid">
+                {errors.profession.message}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
         </Col>
       </Row>

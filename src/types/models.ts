@@ -16,13 +16,14 @@ export interface Telephone {
 }
 
 export interface Guardian {
-  guardian_id: string;
   name: string;
   surname: string;
   relation_with_kid: 'father' | 'mother' | 'sibling' | 'grandparent' | 'extended family' | 'friend';
   authorized_for_pickup?: boolean;
   same_address_as_kid?: boolean;
   telephones?: Telephone[];
+  email?: string;
+  profession?: string;
   address?: Address;
 }
 
@@ -39,6 +40,8 @@ export interface Kid {
   private_notes?: string | null;
   special_education: boolean;
   guardians: Guardian[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ClassRecord {
@@ -49,17 +52,12 @@ export interface ClassRecord {
 }
 
 // Utility function to create a new kid with default UUID
-export function createKid(partialKid: Omit<Kid, 'kid_id'>): Kid {
+export function createKid(partialKid: Omit<Kid, 'kid_id' | 'createdAt' | 'updatedAt'>): Kid {
+  const now = new Date().toISOString();
   return {
     kid_id: uuidv4(),
+    createdAt: now,
+    updatedAt: now,
     ...partialKid
-  };
-}
-
-// Utility function to create a new guardian with default UUID
-export function createGuardian(partialGuardian: Omit<Guardian, 'guardian_id'>): Guardian {
-  return {
-    guardian_id: uuidv4(),
-    ...partialGuardian
   };
 }

@@ -7,13 +7,14 @@ import type { Telephone } from '../../types/models';
 import { validateTelephoneNumber, validateCountryCode } from '../../utils/telephoneUtils';
 
 interface TelephoneFormProps {
-  control: Control<Record<string, any>>;
+  control: Control<Record<string, unknown>>;
   errors?: FieldErrors<Telephone>;
   fieldPrefix: string;
   onRemove: () => void;
   disabled?: boolean;
   showRemoveButton?: boolean;
   showDragHandle?: boolean;
+  dragListeners?: Record<string, Function>;
 }
 
 const TelephoneForm: React.FC<TelephoneFormProps> = ({ 
@@ -23,7 +24,8 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
   onRemove,
   disabled = false,
   showRemoveButton = true,
-  showDragHandle = false
+  showDragHandle = false,
+  dragListeners
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
