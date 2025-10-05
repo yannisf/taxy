@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/class.schema.json",
+  "title": "Class",
+  "description": "A record representing a school class, including student and guardian contact details.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "school_name": {
+      "type": "string",
+      "description": "The official name of the school."
+    },
+    "class_name": {
+      "type": "string",
+      "description": "The name or identifier of the class (e.g., 'Kindergarten A')."
+    },
+    "school_year": {
+      "type": "string",
+      "description": "The school year (e.g., '2025–2026' or '2025-2026').",
+      "pattern": "^[0-9]{4}[–-][0-9]{4}$"
+    },
+    "kids": {
+      "type": "array",
+      "minItems": 0,
+      "description": "The list of children enrolled in this class. May be empty.",
+      "items": { "$ref": "#/$defs/kid" }
+    }
+  },
+  "required": ["school_name", "class_name", "school_year", "kids"],
+  "$defs": {
+    "address": {
+      "title": "Address",
+      "description": "A postal address. All fields are optional.",
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "street_name": { "type": "string", "description": "Name of the street." },
+        "street_number": { "type": "string", "description": "House or building number." },
+        "neighborhood": { "type": "string", "description": "Neighborhood or district name." },
+        "postal_code": { "type": "string", "description": "Postal or ZIP code." },
+        "city": { "type": "string", "description": "City or town name." },
+        "country": { "type": "string", "description": "Country name." }
+      }
+    },
+    "telephone": {
+      "title": "Telephone",
+      "description": "A structured telephone contact entry for a guardian.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "description": "International dialing code with '+' prefix (e.g., '+44', '+30').",
+          "pattern": "^\\+[1-9]\\d{0,2}$"
+        },
+        "number": {
+          "type": "string",
+          "description": "Telephone number without country code. Digits only.",
+          "pattern": "^\\d{4,15}$"
+        },
+        "telephone_type": {
+          "type": "string",
+          "description": "The type of telephone contact.",
+          "enum": ["mobile", "home", "work", "other"]
+        }
+      },
+      "required": ["country_code", "number", "telephone_type"]
+    },
+    "guardian": {
+      "title": "Guardian",
+      "description": "A person responsible for or related to a child.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "guardian_id": {
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true,
+          "description": "System-generated unique identifier for the guardian."
+        },
+        "name": { "type": "string", "description": "Guardian's given name." },
+        "surname": { "type": "string", "description": "Guardian's family name." },
+        "relation_with_kid": {
+          "type": "string",
+          "description": "The guardian's relationship to the child.",
+          "enum": [
+            "father",
+            "mother",
+            "sibling",
+            "grandparent",
+            "extended family",
+            "friend"
+          ]
+        },
+        "authorized_for_pickup": {
+          "type": "boolean",
+          "description": "Whether this guardian is authorized to pick up the child.",
+          "default": false
+        },
+        "same_address_as_kid": {
+          "type": "boolean",
+          "description": "If true, indicates that the guardian shares the same address as the child. When true, the 'address' field may be omitted or ignored.",
+          "default": false
+        },
+        "telephones": {
+          "type": "array",
+          "description": "List of telephone contacts for the guardian. May be omitted.",
+          "items": { "$ref": "#/$defs/telephone" }
+        },
+        "address": {
+          "$ref": "#/$defs/address",
+          "description": "Guardian's address. Optional. If omitted and 'same_address_as_kid' is true, the child's address applies."
+        }
+      },
+      "required": ["guardian_id", "name", "surname", "relation_with_kid"]
+    },
+    "kid": {
+      "title": "Kid",
+      "description": "A record describing a student in the class.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kid_id": {
+          "type": "string",
+          "format": "uuid",
+          "readOnly": true,
+          "description": "System-generated unique identifier for the child."
+        },
+        "name": { "type": "string", "description": "Child's given name." },
+        "surname": { "type": "string", "description": "Child's family name." },
+        "preferred_name": { "type": "string", "description": "Name the child prefers to be called." },
+        "date_of_birth": {
+          "type": ["string", "null"],
+          "format": "date",
+          "description": "Date of birth in ISO format (YYYY-MM-DD)."
+        },
+        "gender": {
+          "type": "string",
+          "description": "Gender of the child.",
+          "enum": ["male", "female", "other"]
+        },
+        "level": {
+          "type": "string",
+          "description": "Educational level or grade.",
+          "enum": ["pre-kindergartner", "kindergartner", "kindergartner-repeating"]
+        },
+        "address": {
+          "$ref": "#/$defs/address",
+          "description": "The child's home address."
+        },
+        "notes": { 
+          "type": ["string", "null"], 
+          "description": "General notes about the child (visible to staff)."
+        },
+        "private_notes": {
+          "type": ["string", "null"],
+          "description": "Confidential notes (restricted access).",
+          "writeOnly": true
+        },
+        "special_education": {
+          "type": "boolean",
+          "description": "Indicates whether the child participates in special education."
+        },
+        "guardians": {
+          "type": "array",
+          "description": "List of guardians associated with the child. May be empty or omitted.",
+          "items": { "$ref": "#/$defs/guardian" }
+        }
+      },
+      "required": [
+        "kid_id",
+        "name",
+        "surname",
+        "gender",
+        "level",
+        "special_education",
+        "guardians"
+      ]
+    }
+  }
+}
