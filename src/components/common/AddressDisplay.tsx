@@ -9,9 +9,9 @@ interface AddressDisplayProps {
 const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = '' }) => {
   if (!address) {
     return (
-      <div className={`text-muted ${className}`}>
+      <span className={`text-muted ${className}`}>
         No address provided
-      </div>
+      </span>
     );
   }
 
@@ -20,9 +20,9 @@ const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = ''
   
   if (!hasAddressData) {
     return (
-      <div className={`text-muted ${className}`}>
+      <span className={`text-muted ${className}`}>
         No address provided
-      </div>
+      </span>
     );
   }
 
@@ -57,9 +57,9 @@ const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = ''
   };
 
   return (
-    <div className={className}>
+    <span className={className}>
       📍 {formatAddress()}
-    </div>
+    </span>
   );
 };
 

@@ -1,0 +1,62 @@
+{
+  "title": {
+    "kids": "Kids",
+    "addKid": "Add New Kid",
+    "editKid": "Edit Kid",
+    "kidDetails": "Kid Details",
+    "addFirstKid": "Add Your First Kid",
+    "addAnotherKid": "Add Another Kid"
+  },
+  "form": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "preferredName": "Preferred Name",
+    "dateOfBirth": "Date of Birth",
+    "gender": "Gender",
+    "level": "Level",
+    "specialEducation": "Special Education",
+    "notes": "Notes",
+    "privateNotes": "Private Notes",
+    "placeholders": {
+      "firstName": "Enter first name",
+      "lastName": "Enter last name",
+      "preferredName": "Enter preferred name",
+      "notes": "General notes about the child",
+      "privateNotes": "Confidential notes (restricted access)"
+    }
+  },
+  "levels": {
+    "selectLevel": "Select level",
+    "preKindergarten": "Pre-Kindergartner",
+    "kindergarten": "Kindergartner",
+    "kindergartenRepeating": "Kindergartner (Repeating)"
+  },
+  "actions": {
+    "addKid": "Add Kid",
+    "updateKid": "Update Kid",
+    "viewDetails": "View Details",
+    "editKid": "Edit Kid",
+    "deleteKid": "Delete Kid"
+  },
+  "messages": {
+    "noKidsInClass": "You haven't added any kids to this class yet.",
+    "getStarted": "Get started by adding your first student.",
+    "selectFromPanel": "Select a kid from the left panel to view their details, edit their information, or add a new student.",
+    "kidsInClass_one": "{{count}} Kid in Class",
+    "kidsInClass_other": "{{count}} Kids in Class",
+    "noKidsYet": "No kids in this class yet",
+    "kidNotFound": "Kid not found.",
+    "loadingDetails": "Loading kid details...",
+    "noGuardians": "No guardians have been added for this student yet.",
+    "validation": {
+      "missingFields": "Missing required fields: {{fields}}",
+      "selectClass": "Please select a class before adding a kid."
+    }
+  },
+  "status": {
+    "specialEducation": "Special education"
+  },
+  "dialogs": {
+    "confirmDeleteKid": "Are you sure you want to delete {{firstName}} {{lastName}}?"
+  }
+}

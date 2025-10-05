@@ -50,8 +50,8 @@ describe('importUtils', () => {
     it('should successfully validate a valid JSON file with kids array', async () => {
       const validKids = [
         {
-          name: 'John',
-          surname: 'Doe',
+          first_name: 'John',
+          last_name: 'Doe',
           gender: 'male',
           level: 'kindergartner',
           special_education: false,
@@ -80,8 +80,8 @@ describe('importUtils', () => {
       expect(result.errors).toEqual([]);
       expect(result.validatedKids).toHaveLength(1);
       expect(result.validatedKids?.[0]).toMatchObject({
-        name: 'John',
-        surname: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         gender: 'male',
         level: 'kindergartner',
         kid_id: 'mocked-uuid-1234', // UUID should be generated
@@ -139,8 +139,8 @@ describe('importUtils', () => {
     it('should reject kids with validation errors', async () => {
       const invalidKids = [
         {
-          name: '', // Invalid - empty name
-          surname: 'Doe',
+          first_name: '', // Invalid - empty first name
+          last_name: 'Doe',
           gender: 'male',
           level: 'kindergartner',
           guardians: [],
@@ -152,7 +152,7 @@ describe('importUtils', () => {
       // Mock validation to return error
       (validationService.validateKid as ReturnType<typeof vi.fn>).mockReturnValue({
         valid: false,
-        errors: [{ message: 'Name is required' }],
+        errors: [{ message: 'First name is required' }],
       });
 
       const originalFileReader = global.FileReader;
@@ -170,7 +170,7 @@ describe('importUtils', () => {
       const result = await validateImportFile(file);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Kid 1: Name is required');
+      expect(result.errors).toContain('Kid 1: First name is required');
 
       global.FileReader = originalFileReader;
     });
@@ -178,8 +178,8 @@ describe('importUtils', () => {
     it('should generate UUIDs for kids without IDs', async () => {
       const kidsWithoutIds = [
         {
-          name: 'John',
-          surname: 'Doe',
+          first_name: 'John',
+          last_name: 'Doe',
           gender: 'male',
           level: 'kindergartner',
           special_education: false,
@@ -213,13 +213,13 @@ describe('importUtils', () => {
       const kidsWithIds = [
         {
           kid_id: 'existing-id-123',
-          name: 'John',
-          surname: 'Doe',
+          first_name: 'John',
+          lastName: 'Doe',
           gender: 'male',
           level: 'kindergartner',
           special_education: false,
           guardians: [],
-          createdAt: '2023-01-01T00:00:00.000Z',
+          created_at: '2023-01-01T00:00:00.000Z',
         },
       ];
 
@@ -241,7 +241,7 @@ describe('importUtils', () => {
 
       expect(result.valid).toBe(true);
       expect(result.validatedKids?.[0].kid_id).toBe('existing-id-123');
-      expect(result.validatedKids?.[0].createdAt).toBe('2023-01-01T00:00:00.000Z');
+      expect(result.validatedKids?.[0].created_at).toBe('2023-01-01T00:00:00.000Z');
 
       global.FileReader = originalFileReader;
     });
@@ -250,30 +250,30 @@ describe('importUtils', () => {
       const existingKids: Kid[] = [
         {
           kid_id: 'existing-1',
-          name: 'Existing',
-          surname: 'Kid',
+          first_name: 'Existing',
+          last_name: 'Kid',
           gender: 'male',
           level: 'kindergartner',
           special_education: false,
           guardians: [],
-          createdAt: '2023-01-01T00:00:00.000Z',
-          updatedAt: '2023-01-01T00:00:00.000Z',
+          created_at: '2023-01-01T00:00:00.000Z',
+          updated_at: '2023-01-01T00:00:00.000Z',
         },
       ];
 
       const importKids = [
         {
           kid_id: 'existing-1', // Will update existing
-          name: 'Updated',
-          surname: 'Kid',
+          first_name: 'Updated',
+          last_name: 'Kid',
           gender: 'male',
           level: 'kindergartner',
           special_education: false,
           guardians: [],
         },
         {
-          name: 'New', // Will create new (no ID)
-          surname: 'Kid',
+          first_name: 'New', // Will create new (no ID)
+          last_name: 'Kid',
           gender: 'female',
           level: 'pre-kindergartner',
           special_education: false,
@@ -317,14 +317,14 @@ describe('importUtils', () => {
       const validatedKids: Kid[] = [
         {
           kid_id: 'test-id-1',
-          name: 'John',
-          surname: 'Doe',
+          first_name: 'John',
+          last_name: 'Doe',
           gender: 'male',
           level: 'kindergartner',
           special_education: false,
           guardians: [],
-          createdAt: '2023-01-01T00:00:00.000Z',
-          updatedAt: '2023-01-01T00:00:00.000Z',
+          created_at: '2023-01-01T00:00:00.000Z',
+          updated_at: '2023-01-01T00:00:00.000Z',
         },
       ];
 
@@ -350,14 +350,14 @@ describe('importUtils', () => {
       const validatedKids: Kid[] = [
         {
           kid_id: 'test-id-1',
-          name: 'John',
-          surname: 'Doe',
+          first_name: 'John',
+          last_name: 'Doe',
           gender: 'male',
           level: 'kindergartner',
           special_education: false,
           guardians: [],
-          createdAt: '2023-01-01T00:00:00.000Z',
-          updatedAt: '2023-01-01T00:00:00.000Z',
+          created_at: '2023-01-01T00:00:00.000Z',
+          updated_at: '2023-01-01T00:00:00.000Z',
         },
       ];
 

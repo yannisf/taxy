@@ -1,0 +1,40 @@
+{
+  "title": {
+    "classes": "Classes",
+    "createClass": "Create New Class",
+    "newClass": "New Class",
+    "selectClass": "Select a class..."
+  },
+  "form": {
+    "schoolName": "School Name",
+    "className": "Class Name",
+    "schoolYear": "School Year",
+    "placeholders": {
+      "schoolName": "Enter school name",
+      "className": "e.g., Kindergarten A, Grade 1B",
+      "schoolYear": "2025-2026"
+    },
+    "validation": {
+      "schoolNameRequired": "Please provide a school name.",
+      "classNameRequired": "Please provide a class name.",
+      "schoolYearRequired": "Please provide a school year in format YYYY-YYYY.",
+      "schoolYearFormat": "School year must be in format YYYY-YYYY (e.g., 2025-2026)"
+    },
+    "help": {
+      "schoolYearFormat": "Format: YYYY-YYYY (e.g., 2025-2026)"
+    }
+  },
+  "actions": {
+    "createClass": "Create Class",
+    "selectClass": "Select Class",
+    "newClass": "New Class"
+  },
+  "messages": {
+    "noClassesAvailable": "No classes available. Create a class to get started.",
+    "selectClassToManage": "Please select a class to manage kids.",
+    "selectFromTopBar": "Please select a class from the top bar to get started.",
+    "needSelectOrCreate": "You need to select or create a class before you can manage kids.",
+    "currentClass": "Current Class:",
+    "classCreatedSuccess": "Class created successfully!"
+  }
+}

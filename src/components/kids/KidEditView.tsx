@@ -75,7 +75,7 @@ const KidEditView: React.FC = () => {
 
   return (
     <Container className="mt-3">
-      <h2>Edit Kid: {kid.name} {kid.surname}</h2>
+      <h2>Edit Kid: {kid.first_name} {kid.last_name}</h2>
       <KidForm 
         initialData={kid}
         onSubmitSuccess={handleSubmitSuccess} 

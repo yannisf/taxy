@@ -13,7 +13,7 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
     <Card className="h-100">
       <Card.Body>
         <Card.Title className="h6">
-          {guardian.name} {guardian.surname}
+          {guardian.first_name} {guardian.last_name}
         </Card.Title>
         <Card.Subtitle className="mb-2 text-muted">
           {guardian.relation_with_kid.charAt(0).toUpperCase() + guardian.relation_with_kid.slice(1)}

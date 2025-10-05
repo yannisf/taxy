@@ -1,0 +1,44 @@
+{
+  "address": {
+    "title": "Address",
+    "streetName": "Street Name",
+    "streetNumber": "Street Number",
+    "neighborhood": "Neighborhood",
+    "postalCode": "Postal Code",
+    "city": "City",
+    "country": "Country",
+    "placeholders": {
+      "streetName": "Enter street name",
+      "streetNumber": "Number",
+      "neighborhood": "Enter neighborhood",
+      "postalCode": "Enter postal code",
+      "city": "Enter city",
+      "country": "Enter country"
+    }
+  },
+  "telephone": {
+    "countryCode": "Country Code",
+    "number": "Number",
+    "type": "Type",
+    "mobile": "Mobile",
+    "home": "Home",
+    "work": "Work",
+    "other": "Other"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "phoneNumber": "Please enter a valid phone number",
+    "postalCode": "Please enter a valid postal code",
+    "fieldRequired": "{{field}} is required",
+    "invalidEmail": "Invalid email format",
+    "tooShort": "This field is too short",
+    "tooLong": "This field is too long"
+  },
+  "placeholders": {
+    "selectOption": "Select an option...",
+    "enterText": "Enter text...",
+    "chooseFile": "Choose file...",
+    "search": "Search..."
+  }
+}

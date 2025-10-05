@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Row, Col, Alert, Badge } from 'react-bootstrap';
-import { PencilSquare, CheckLg } from 'react-bootstrap-icons';
+import { Container, Card, Row, Col, Alert, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { PencilSquare, CheckLg, InfoCircle } from 'react-bootstrap-icons';
 import { db } from '../../services/database';
 import GuardianCard from '../guardians/GuardianCard';
 import AddressDisplay from '../common/AddressDisplay';
@@ -32,8 +32,8 @@ const KidDetailsView: React.FC = () => {
 
   const getDisplayName = () => {
     if (!kid) return '';
-    const displayName = kid.preferred_name || kid.name;
-    return `${displayName} ${kid.surname}`;
+    const displayName = kid.preferred_name || kid.first_name;
+    return `${displayName} ${kid.last_name}`;
   };
 
   if (!kid) {
@@ -49,17 +49,36 @@ const KidDetailsView: React.FC = () => {
       <Card>
         <Card.Header className="d-flex justify-content-between align-items-center">
           <h2>{getDisplayName()}</h2>
-          <PencilSquare 
-            size={24} 
-            className="text-primary" 
-            style={{ cursor: 'pointer' }}
-            onClick={handleEditClick}
-            title="Edit kid details"
-          />
+          <div className="d-flex align-items-center gap-2">
+            <OverlayTrigger
+              placement="bottom"
+              overlay={
+                <Tooltip>
+                  <div>
+                    <strong>Created:</strong> {formatDateDisplay(kid.created_at, true)}<br />
+                    <strong>Last Updated:</strong> {formatDateDisplay(kid.updated_at, true)}
+                  </div>
+                </Tooltip>
+              }
+            >
+              <InfoCircle 
+                size={24} 
+                className="text-primary" 
+                style={{ cursor: 'pointer' }}
+              />
+            </OverlayTrigger>
+            <PencilSquare 
+              size={24} 
+              className="text-primary" 
+              style={{ cursor: 'pointer' }}
+              onClick={handleEditClick}
+              title="Edit kid details"
+            />
+          </div>
         </Card.Header>
         <Card.Body>
-          <p><strong>Name:</strong> {kid.name}</p>
-          <p><strong>Surname:</strong> {kid.surname}</p>
+          <p><strong>First Name:</strong> {kid.first_name}</p>
+          <p><strong>Last Name:</strong> {kid.last_name}</p>
           <p><strong>Preferred Name:</strong> {kid.preferred_name || 'Not specified'}</p>
           <p><strong>Date of Birth:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
           <p><strong>Gender:</strong> {kid.gender}</p>
@@ -69,12 +88,7 @@ const KidDetailsView: React.FC = () => {
           )}
           
           {/* Address within main card */}
-          <div className="mt-3">
-            <strong>Address:</strong>
-            <div className="mt-1">
-              <AddressDisplay address={kid.address} />
-            </div>
-          </div>
+          <p><strong>Address:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
           
           {kid.notes && (
             <div className="mt-3">
@@ -83,19 +97,6 @@ const KidDetailsView: React.FC = () => {
             </div>
           )}
 
-          {/* Timestamps */}
-          <div className="mt-3 border-top pt-3">
-            <Row>
-              <Col sm={6}>
-                <p className="mb-1"><strong>Created:</strong></p>
-                <small className="text-muted">{formatDateDisplay(kid.createdAt, true)}</small>
-              </Col>
-              <Col sm={6}>
-                <p className="mb-1"><strong>Last Updated:</strong></p>
-                <small className="text-muted">{formatDateDisplay(kid.updatedAt, true)}</small>
-              </Col>
-            </Row>
-          </div>
         </Card.Body>
       </Card>
 

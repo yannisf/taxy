@@ -13,8 +13,9 @@ import KidAddView from './components/kids/KidAddView';
 import KidDetailsView from './components/kids/KidDetailsView';
 import KidEditView from './components/kids/KidEditView';
 
-// Import context
+// Import contexts
 import { KidsProvider } from './contexts/KidsContext';
+import { ClassProvider } from './contexts/ClassContext';
 
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,40 +24,42 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
   return (
-    <KidsProvider>
-      <Router>
-        <div className="App d-flex flex-column min-vh-100">
-          <TopBar />
-          <Container fluid className="flex-grow-1">
-            <Row className="h-100">
-              <Col xs={3} className="left-panel-col border-end">
-                <LeftPanel />
-              </Col>
-              <Col xs={9} className="main-content-col">
-                <Routes>
-                  <Route path="/" element={<Navigate to="/kids" replace />} />
-                  <Route path="/kids" element={<KidListView />} />
-                  <Route path="/kids/add" element={<KidAddView />} />
-                  <Route path="/kids/:kidId" element={<KidDetailsView />} />
-                  <Route path="/kids/:kidId/edit" element={<KidEditView />} />
-                </Routes>
-              </Col>
-            </Row>
-          </Container>
-        </div>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-      </Router>
-    </KidsProvider>
+    <ClassProvider>
+      <KidsProvider>
+        <Router>
+          <div className="App d-flex flex-column min-vh-100">
+            <TopBar />
+            <Container fluid className="flex-grow-1">
+              <Row className="h-100">
+                <Col xs={3} className="left-panel-col border-end">
+                  <LeftPanel />
+                </Col>
+                <Col xs={9} className="main-content-col">
+                  <Routes>
+                    <Route path="/" element={<Navigate to="/kids" replace />} />
+                    <Route path="/kids" element={<KidListView />} />
+                    <Route path="/kids/add" element={<KidAddView />} />
+                    <Route path="/kids/:kidId" element={<KidDetailsView />} />
+                    <Route path="/kids/:kidId/edit" element={<KidEditView />} />
+                  </Routes>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </Router>
+      </KidsProvider>
+    </ClassProvider>
   );
 };
 

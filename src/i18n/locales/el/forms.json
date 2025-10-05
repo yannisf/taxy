@@ -1,0 +1,44 @@
+{
+  "address": {
+    "title": "Διεύθυνση",
+    "streetName": "Όνομα Οδού",
+    "streetNumber": "Αριθμός Οδού",
+    "neighborhood": "Συνοικία",
+    "postalCode": "Ταχυδρομικός Κώδικας",
+    "city": "Πόλη",
+    "country": "Χώρα",
+    "placeholders": {
+      "streetName": "Εισάγετε όνομα οδού",
+      "streetNumber": "Αριθμός",
+      "neighborhood": "Εισάγετε συνοικία",
+      "postalCode": "Εισάγετε ταχυδρομικό κώδικα",
+      "city": "Εισάγετε πόλη",
+      "country": "Εισάγετε χώρα"
+    }
+  },
+  "telephone": {
+    "countryCode": "Κωδικός Χώρας",
+    "number": "Αριθμός",
+    "type": "Τύπος",
+    "mobile": "Κινητό",
+    "home": "Σπίτι",
+    "work": "Εργασία",
+    "other": "Άλλο"
+  },
+  "validation": {
+    "required": "Αυτό το πεδίο είναι υποχρεωτικό",
+    "email": "Παρακαλώ εισάγετε ένα έγκυρο email",
+    "phoneNumber": "Παρακαλώ εισάγετε έναν έγκυρο αριθμό τηλεφώνου",
+    "postalCode": "Παρακαλώ εισάγετε έναν έγκυρο ταχυδρομικό κώδικα",
+    "fieldRequired": "Το {{field}} είναι υποχρεωτικό",
+    "invalidEmail": "Μη έγκυρη μορφή email",
+    "tooShort": "Αυτό το πεδίο είναι πολύ σύντομο",
+    "tooLong": "Αυτό το πεδίο είναι πολύ μεγάλο"
+  },
+  "placeholders": {
+    "selectOption": "Επιλέξτε μια επιλογή...",
+    "enterText": "Εισάγετε κείμενο...",
+    "chooseFile": "Επιλέξτε αρχείο...",
+    "search": "Αναζήτηση..."
+  }
+}

@@ -20,8 +20,8 @@ export const GuardianForm: React.FC<GuardianFormProps> = ({
     reset 
   } = useForm<Guardian>({
     defaultValues: initialData || {
-      name: '',
-      surname: '',
+      first_name: '',
+      last_name: '',
       relation_with_kid: 'mother',
       authorized_for_pickup: false,
       same_address_as_kid: true,
@@ -47,48 +47,48 @@ export const GuardianForm: React.FC<GuardianFormProps> = ({
       <Row>
         <Col>
           <Form.Group className="mb-3">
-            <Form.Label>Name</Form.Label>
+            <Form.Label>First Name</Form.Label>
             <Controller
-              name="name"
+              name="first_name"
               control={control}
               rules={{ required: 'Name is required' }}
               render={({ field }) => (
                 <Form.Control
                   {...field}
                   type="text"
-                  placeholder="Enter guardian's name"
-                  isInvalid={!!errors.name}
+                  placeholder="Enter guardian's first name"
+                  isInvalid={!!errors.first_name}
                 />
               )}
             />
-            {errors.name && (
+            {errors.first_name && (
               <Form.Control.Feedback type="invalid">
-                {errors.name.message}
+                {errors.first_name.message}
               </Form.Control.Feedback>
             )}
           </Form.Group>
         </Col>
         <Col>
           <Form.Group className="mb-3">
-            <Form.Label>Surname</Form.Label>
+            <Form.Label>Last Name</Form.Label>
             <Controller
-              name="surname"
+                name="last_name"
               control={control}
-              rules={{ required: 'Surname is required' }}
+              rules={{ required: 'Last name is required' }}
               render={({ field }) => (
                 <Form.Control
                   {...field}
                   type="text"
-                  placeholder="Enter guardian's surname"
-                  isInvalid={!!errors.surname}
+                  placeholder="Enter guardian's last name"
+                    isInvalid={!!errors.last_name}
                 />
               )}
             />
-            {errors.surname && (
-              <Form.Control.Feedback type="invalid">
-                {errors.surname.message}
-              </Form.Control.Feedback>
-            )}
+              {errors.last_name && (
+                <Form.Control.Feedback type="invalid">
+                  {errors.last_name.message}
+                </Form.Control.Feedback>
+              )}
           </Form.Group>
         </Col>
       </Row>

@@ -3,8 +3,10 @@ import { ListGroup, Button, Modal, Badge, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { PencilSquare, XLg, PersonFill, Plus, Download, Upload } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
+import { useClass } from '../../contexts/ClassContext';
 import type { Kid } from '../../types/models';
 import { exportClassData } from '../../utils/exportUtils';
 import { 
@@ -14,7 +16,9 @@ import {
 } from '../../utils/importUtils';
 
 const LeftPanel: React.FC = () => {
+  const { t } = useTranslation(['navigation', 'kids', 'common', 'messages']);
   const { kids, refreshKids } = useKids();
+  const { selectedClass } = useClass();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [kidToDelete, setKidToDelete] = useState<Kid | null>(null);
   const [hoveredKidId, setHoveredKidId] = useState<string | null>(null);
@@ -65,13 +69,18 @@ const LeftPanel: React.FC = () => {
   };
 
   const handleExport = async () => {
+    if (!selectedClass) {
+      toast.error(t('messages:error.selectClassToExport'));
+      return;
+    }
+
     setIsExporting(true);
     try {
-      await exportClassData();
-      toast.success('Class data exported successfully!');
+      await exportClassData(selectedClass.class_id);
+      toast.success(t('messages:success.classDataExported'));
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error('Failed to export class data');
+      toast.error(t('messages:error.failedToExportClassData'));
     } finally {
       setIsExporting(false);
     }
@@ -141,28 +150,70 @@ const LeftPanel: React.FC = () => {
     setImportValidationResult(null);
   };
 
+  // Filter kids based on selected class
+  const [classKids, setClassKids] = useState<Kid[]>([]);
+
+  useEffect(() => {
+    const filterKidsByClass = async () => {
+      if (selectedClass) {
+        try {
+          const filteredKids = await db.getKidsByClassId(selectedClass.class_id);
+          setClassKids(filteredKids);
+        } catch (error) {
+          console.error('Error filtering kids by class:', error);
+          setClassKids([]);
+        }
+      } else {
+        setClassKids([]);
+      }
+    };
+
+    filterKidsByClass();
+  }, [selectedClass, kids]);
+
   // Sort kids by preferred name (if exists) or legal name, then by surname
-  const sortedKids = [...kids].sort((a, b) => {
-    const aFirstName = a.preferred_name || a.name;
-    const bFirstName = b.preferred_name || b.name;
+  const sortedKids = [...classKids].sort((a, b) => {
+    const aFirstName = a.preferred_name || a.first_name;
+    const bFirstName = b.preferred_name || b.first_name;
     
     if (aFirstName.toLowerCase() !== bFirstName.toLowerCase()) {
       return aFirstName.toLowerCase().localeCompare(bFirstName.toLowerCase());
     }
     
-    return a.surname.toLowerCase().localeCompare(b.surname.toLowerCase());
+    return a.last_name.toLowerCase().localeCompare(b.last_name.toLowerCase());
   });
+
+  const formatClassDisplay = (classObj: typeof selectedClass) => {
+    if (!classObj) return '';
+    return `${classObj.school_name} - ${classObj.class_name} (${classObj.school_year})`;
+  };
 
   return (
     <>
       <div className="left-panel p-3">
+        {/* Selected Class Display */}
+        {selectedClass && (
+          <div className="mb-3 p-2 bg-light rounded">
+            <small className="text-muted d-block">{t('navigation:currentClass')}:</small>
+            <strong className="text-primary">{formatClassDisplay(selectedClass)}</strong>
+          </div>
+        )}
+
+        {/* No Class Selected Warning */}
+        {!selectedClass && (
+          <Alert variant="warning" className="mb-3 py-2">
+            <small>{t('navigation:selectClassToManageKids')}</small>
+          </Alert>
+        )}
+
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="mb-0">Class</h5>
+          <h5 className="mb-0">{t('navigation:kids')}</h5>
           <Button 
             variant="link" 
             className="p-0 text-decoration-none"
             onClick={() => navigate('/kids/add')}
-            title="Add Kid"
+            title={t('kids:actions.addKid')}
+            disabled={!selectedClass}
           >
             <Plus size={20} />
           </Button>
@@ -184,7 +235,7 @@ const LeftPanel: React.FC = () => {
             >
               <div className="kid-name-area flex-grow-1 d-flex align-items-center gap-2">
                 <span className="text-truncate">
-                  {(kid.preferred_name || kid.name)} {kid.surname}
+                  {(kid.preferred_name || kid.first_name)} {kid.last_name}
                 </span>
                 <Badge bg="secondary" className="d-flex align-items-center gap-1">
                   <PersonFill size={12} />
@@ -197,7 +248,7 @@ const LeftPanel: React.FC = () => {
                   size="sm"
                   className={`p-1 text-decoration-none icon-button edit-icon ${hoveredKidId === kid.kid_id ? 'visible' : 'invisible'}`}
                   onClick={(e) => handleEdit(kid, e)}
-                  title="Edit"
+                  title={t('common:actions.edit')}
                 >
                   <PencilSquare size={16} />
                 </Button>
@@ -206,16 +257,21 @@ const LeftPanel: React.FC = () => {
                   size="sm"
                   className={`p-1 text-decoration-none icon-button delete-icon ${hoveredKidId === kid.kid_id ? 'visible' : 'invisible'}`}
                   onClick={(e) => handleDeleteClick(kid, e)}
-                  title="Delete"
+                  title={t('common:actions.delete')}
                 >
                   <XLg size={16} />
                 </Button>
               </div>
             </ListGroup.Item>
           ))}
-          {kids.length === 0 && (
+          {sortedKids.length === 0 && selectedClass && (
             <ListGroup.Item variant="light" className="text-center border-0">
-              No kids added yet
+              {t('kids:messages.noKidsInClass')}
+            </ListGroup.Item>
+          )}
+          {!selectedClass && (
+            <ListGroup.Item variant="light" className="text-center border-0">
+              {t('navigation:selectClassToViewKids')}
             </ListGroup.Item>
           )}
         </ListGroup>
@@ -227,11 +283,11 @@ const LeftPanel: React.FC = () => {
               size="sm"
               className="flex-fill d-flex align-items-center justify-content-center gap-2"
               onClick={handleExport}
-              disabled={isExporting || kids.length === 0}
-              title="Export class data as JSON"
+              disabled={isExporting || !selectedClass || sortedKids.length === 0}
+              title={t('navigation:exportClassDataTooltip')}
             >
               <Download size={16} />
-              {isExporting ? 'Exporting...' : 'Export Class'}
+              {isExporting ? t('common:buttons.exporting') : t('navigation:exportClass')}
             </Button>
             <Button 
               variant="outline-success" 
@@ -239,10 +295,10 @@ const LeftPanel: React.FC = () => {
               className="flex-fill d-flex align-items-center justify-content-center gap-2"
               onClick={handleImportClick}
               disabled={isImporting}
-              title="Import class data from JSON"
+              title={t('navigation:importClassDataTooltip')}
             >
               <Upload size={16} />
-              {isImporting ? 'Importing...' : 'Import Class'}
+              {isImporting ? t('common:buttons.importing') : t('navigation:importClass')}
             </Button>
           </div>
           <input
@@ -258,18 +314,22 @@ const LeftPanel: React.FC = () => {
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={cancelDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>{t('common:dialogs.confirmDelete')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete <strong>{kidToDelete?.name} {kidToDelete?.surname}</strong>? 
-          This action cannot be undone.
+          {t('kids:dialogs.confirmDeleteKid', { 
+            firstName: kidToDelete?.first_name, 
+            lastName: kidToDelete?.last_name 
+          })}
+          <br />
+          {t('common:dialogs.actionCannotBeUndone')}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={cancelDelete}>
-            Cancel
+            {t('common:buttons.cancel')}
           </Button>
           <Button variant="danger" onClick={confirmDelete}>
-            Delete
+            {t('common:buttons.delete')}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -277,32 +337,34 @@ const LeftPanel: React.FC = () => {
       {/* Import Confirmation Modal */}
       <Modal show={showImportConfirmModal} onHide={handleCancelImport} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Import</Modal.Title>
+          <Modal.Title>{t('navigation:dialogs.confirmImport')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {importValidationResult?.statistics && (
             <>
               <Alert variant="info">
-                <h6>Import Summary:</h6>
+                <h6>{t('navigation:dialogs.importSummary')}:</h6>
                 <ul className="mb-0">
-                  <li><strong>{importValidationResult.statistics.newKids}</strong> new kids will be added</li>
-                  <li><strong>{importValidationResult.statistics.updatedKids}</strong> existing kids will be updated</li>
-                  <li><strong>{importValidationResult.statistics.unchangedKids}</strong> kids will remain unchanged</li>
+                  <li><strong>{importValidationResult.statistics.newKids}</strong> {t('navigation:dialogs.newKidsWillBeAdded')}</li>
+                  <li><strong>{importValidationResult.statistics.updatedKids}</strong> {t('navigation:dialogs.existingKidsWillBeUpdated')}</li>
+                  <li><strong>{importValidationResult.statistics.unchangedKids}</strong> {t('navigation:dialogs.kidsWillRemainUnchanged')}</li>
                 </ul>
               </Alert>
               <p className="mb-0">
-                The import file contains <strong>{importValidationResult.statistics.totalInFile}</strong> kids. 
-                Your current database has <strong>{importValidationResult.statistics.totalInDatabase}</strong> kids.
+                {t('navigation:dialogs.importFileStats', {
+                  totalInFile: importValidationResult.statistics.totalInFile,
+                  totalInDatabase: importValidationResult.statistics.totalInDatabase
+                })}
               </p>
             </>
           )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelImport} disabled={isImporting}>
-            Cancel
+            {t('common:buttons.cancel')}
           </Button>
           <Button variant="success" onClick={handleConfirmImport} disabled={isImporting}>
-            {isImporting ? 'Importing...' : 'Confirm Import'}
+            {isImporting ? t('common:buttons.importing') : t('navigation:actions.confirmImport')}
           </Button>
         </Modal.Footer>
       </Modal>

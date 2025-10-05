@@ -58,25 +58,25 @@ describe('exportUtils', () => {
     const mockKids: Kid[] = [
       {
         kid_id: '123e4567-e89b-12d3-a456-426614174000',
-        name: 'John',
-        surname: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         gender: 'male',
         level: 'kindergartner',
         special_education: false,
         guardians: [],
-        createdAt: '2023-01-01T00:00:00.000Z',
-        updatedAt: '2023-01-01T00:00:00.000Z',
+        created_at: '2023-01-01T00:00:00.000Z',
+        updated_at: '2023-01-01T00:00:00.000Z',
       },
       {
         kid_id: '123e4567-e89b-12d3-a456-426614174001',
-        name: 'Jane',
-        surname: 'Smith',
+        first_name: 'Jane',
+        last_name: 'Smith',
         gender: 'female',
         level: 'pre-kindergartner',
         special_education: false,
         guardians: [],
-        createdAt: '2023-01-01T00:00:00.000Z',
-        updatedAt: '2023-01-01T00:00:00.000Z',
+        created_at: '2023-01-01T00:00:00.000Z',
+        updated_at: '2023-01-01T00:00:00.000Z',
       },
     ];
 
@@ -132,14 +132,14 @@ describe('exportUtils', () => {
     const mockKids: Kid[] = [
       {
         kid_id: '123e4567-e89b-12d3-a456-426614174000',
-        name: 'John',
-        surname: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
         gender: 'male',
         level: 'kindergartner',
         special_education: false,
         guardians: [],
-        createdAt: '2023-01-01T00:00:00.000Z',
-        updatedAt: '2023-01-01T00:00:00.000Z',
+        created_at: '2023-01-01T00:00:00.000Z',
+        updated_at: '2023-01-01T00:00:00.000Z',
       },
     ];
 
@@ -159,9 +159,9 @@ describe('exportUtils', () => {
 
     await exportClassData();
 
-    // Verify Blob was created with kids array only
+    // Verify Blob was created with complete class data
     expect(BlobConstructor).toHaveBeenCalledWith(
-      [JSON.stringify(mockKids, null, 2)],
+      [JSON.stringify(mockClassData, null, 2)],
       { type: 'application/json' }
     );
   });

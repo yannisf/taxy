@@ -44,8 +44,8 @@ export class ValidationService {
     const kidSchema = {
       type: 'object',
       properties: {
-        name: { type: 'string', minLength: 1 },
-        surname: { type: 'string', minLength: 1 },
+        first_name: { type: 'string', minLength: 1 },
+        last_name: { type: 'string', minLength: 1 },
         gender: { type: 'string', enum: ['male', 'female', 'other'] },
         level: { type: 'string', enum: ['pre-kindergartner', 'kindergartner', 'kindergartner-repeating'] },
         guardians: { 
@@ -53,25 +53,25 @@ export class ValidationService {
           minItems: 0,
           items: {
             type: 'object',
-            required: ['name', 'surname', 'relation_with_kid']
+            required: ['first_name', 'last_name', 'relation_with_kid']
           }
         }
       },
-      required: ['name', 'surname', 'gender', 'level', 'guardians']
+      required: ['first_name', 'last_name', 'gender', 'level', 'guardians']
     };
 
     // Pre-compile guardian schema
     const guardianSchema = {
       type: 'object',
       properties: {
-        name: { type: 'string', minLength: 1 },
-        surname: { type: 'string', minLength: 1 },
+        first_name: { type: 'string', minLength: 1 },
+        last_name: { type: 'string', minLength: 1 },
         relation_with_kid: { 
           type: 'string', 
           enum: ['father', 'mother', 'sibling', 'grandparent', 'extended family', 'friend'] 
         }
       },
-      required: ['name', 'surname', 'relation_with_kid']
+            required: ['first_name', 'last_name', 'relation_with_kid']
     };
 
     this.kidValidator = this.ajv.compile(kidSchema);

@@ -1,0 +1,40 @@
+{
+  "menu": {
+    "kids": "Παιδιά",
+    "classes": "Τάξεις",
+    "reports": "Αναφορές",
+    "settings": "Ρυθμίσεις"
+  },
+  "breadcrumbs": {
+    "home": "Αρχική",
+    "kids": "Παιδιά",
+    "addKid": "Προσθήκη Παιδιού",
+    "editKid": "Επεξεργασία Παιδιού",
+    "kidDetails": "Στοιχεία Παιδιού"
+  },
+  "tabs": {
+    "overview": "Επισκόπηση",
+    "details": "Στοιχεία",
+    "guardians": "Κηδεμόνες",
+    "history": "Ιστορικό"
+  },
+  "currentClass": "Τρέχουσα Τάξη",
+  "selectClassToManageKids": "Παρακαλώ επιλέξτε μια τάξη από την κορυφή για να διαχειριστείτε τα παιδιά",
+  "kids": "Παιδιά",
+  "selectClassToViewKids": "Παρακαλώ επιλέξτε μια τάξη για να δείτε τα παιδιά",
+  "exportClass": "Εξαγωγή Τάξης",
+  "importClass": "Εισαγωγή Τάξης",
+  "exportClassDataTooltip": "Εξαγωγή δεδομένων τάξης ως JSON",
+  "importClassDataTooltip": "Εισαγωγή δεδομένων τάξης από JSON",
+  "dialogs": {
+    "confirmImport": "Επιβεβαίωση Εισαγωγής",
+    "importSummary": "Περίληψη Εισαγωγής",
+    "newKidsWillBeAdded": "νέα παιδιά θα προστεθούν",
+    "existingKidsWillBeUpdated": "υπάρχοντα παιδιά θα ενημερωθούν",
+    "kidsWillRemainUnchanged": "παιδιά θα παραμείνουν αμετάβλητα",
+    "importFileStats": "Το αρχείο εισαγωγής περιέχει {{totalInFile}} παιδιά. Η τρέχουσα βάση δεδομένων έχει {{totalInDatabase}} παιδιά."
+  },
+  "actions": {
+    "confirmImport": "Επιβεβαίωση Εισαγωγής"
+  }
+}

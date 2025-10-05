@@ -16,8 +16,8 @@ export interface Telephone {
 }
 
 export interface Guardian {
-  name: string;
-  surname: string;
+  first_name: string;
+  last_name: string;
   relation_with_kid: 'father' | 'mother' | 'sibling' | 'grandparent' | 'extended family' | 'friend';
   authorized_for_pickup?: boolean;
   same_address_as_kid?: boolean;
@@ -29,8 +29,8 @@ export interface Guardian {
 
 export interface Kid {
   kid_id: string;
-  name: string;
-  surname: string;
+  first_name: string;
+  last_name: string;
   preferred_name?: string;
   date_of_birth?: string;
   gender: 'male' | 'female' | 'other';
@@ -40,24 +40,50 @@ export interface Kid {
   private_notes?: string | null;
   special_education: boolean;
   guardians: Guardian[];
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
-export interface ClassRecord {
+export interface Class {
+  class_id: string;
   school_name: string;
   class_name: string;
   school_year: string;
+  kid_ids: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClassRecord {
+  class_id: string;
+  school_name: string;
+  class_name: string;
+  school_year: string;
+  kid_ids: string[];
   kids: Kid[];
+  created_at: string;
+  updated_at: string;
 }
 
 // Utility function to create a new kid with default UUID
-export function createKid(partialKid: Omit<Kid, 'kid_id' | 'createdAt' | 'updatedAt'>): Kid {
+export function createKid(partialKid: Omit<Kid, 'kid_id' | 'created_at' | 'updated_at'>): Kid {
   const now = new Date().toISOString();
   return {
     kid_id: uuidv4(),
-    createdAt: now,
-    updatedAt: now,
+    created_at: now,
+    updated_at: now,
     ...partialKid
+  };
+}
+
+// Utility function to create a new class with default UUID
+export function createClass(partialClass: Omit<Class, 'class_id' | 'created_at' | 'updated_at' | 'kid_ids'>): Class {
+  const now = new Date().toISOString();
+  return {
+    class_id: uuidv4(),
+    kid_ids: [],
+    created_at: now,
+    updated_at: now,
+    ...partialClass
   };
 }

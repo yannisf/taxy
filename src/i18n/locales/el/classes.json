@@ -1,0 +1,40 @@
+{
+  "title": {
+    "classes": "Τάξεις",
+    "createClass": "Δημιουργία Νέας Τάξης",
+    "newClass": "Νέα Τάξη",
+    "selectClass": "Επιλέξτε μια τάξη..."
+  },
+  "form": {
+    "schoolName": "Όνομα Σχολείου",
+    "className": "Όνομα Τάξης",
+    "schoolYear": "Σχολική Χρονιά",
+    "placeholders": {
+      "schoolName": "Εισάγετε όνομα σχολείου",
+      "className": "π.χ., Νηπιαγωγείο Α, Α' Δημοτικού Β",
+      "schoolYear": "2025-2026"
+    },
+    "validation": {
+      "schoolNameRequired": "Παρακαλώ δώστε όνομα σχολείου.",
+      "classNameRequired": "Παρακαλώ δώστε όνομα τάξης.",
+      "schoolYearRequired": "Παρακαλώ δώστε σχολική χρονιά σε μορφή YYYY-YYYY.",
+      "schoolYearFormat": "Η σχολική χρονιά πρέπει να είναι σε μορφή YYYY-YYYY (π.χ., 2025-2026)"
+    },
+    "help": {
+      "schoolYearFormat": "Μορφή: YYYY-YYYY (π.χ., 2025-2026)"
+    }
+  },
+  "actions": {
+    "createClass": "Δημιουργία Τάξης",
+    "selectClass": "Επιλογή Τάξης",
+    "newClass": "Νέα Τάξη"
+  },
+  "messages": {
+    "noClassesAvailable": "Δεν υπάρχουν διαθέσιμες τάξεις. Δημιουργήστε μια τάξη για να ξεκινήσετε.",
+    "selectClassToManage": "Παρακαλώ επιλέξτε μια τάξη για να διαχειριστείτε παιδιά.",
+    "selectFromTopBar": "Παρακαλώ επιλέξτε μια τάξη από την επάνω μπάρα για να ξεκινήσετε.",
+    "needSelectOrCreate": "Πρέπει να επιλέξετε ή να δημιουργήσετε μια τάξη πριν μπορέσετε να διαχειριστείτε παιδιά.",
+    "currentClass": "Τρέχουσα Τάξη:",
+    "classCreatedSuccess": "Η τάξη δημιουργήθηκε επιτυχώς!"
+  }
+}

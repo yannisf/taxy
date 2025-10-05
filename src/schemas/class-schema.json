@@ -6,6 +6,12 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "class_id": {
+      "type": "string",
+      "format": "uuid",
+      "readOnly": true,
+      "description": "System-generated unique identifier for the class."
+    },
     "school_name": {
       "type": "string",
       "description": "The official name of the school."
@@ -19,14 +25,35 @@
       "description": "The school year (e.g., '2025–2026' or '2025-2026').",
       "pattern": "^[0-9]{4}[–-][0-9]{4}$"
     },
+    "kid_ids": {
+      "type": "array",
+      "minItems": 0,
+      "description": "The list of kid IDs enrolled in this class. May be empty.",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
     "kids": {
       "type": "array",
       "minItems": 0,
       "description": "The list of children enrolled in this class. May be empty.",
       "items": { "$ref": "#/$defs/kid" }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the class record was created (ISO 8601 format).",
+      "readOnly": true
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the class record was last updated (ISO 8601 format).",
+      "readOnly": true
     }
   },
-  "required": ["school_name", "class_name", "school_year", "kids"],
+  "required": ["class_id", "school_name", "class_name", "school_year", "kid_ids", "kids", "created_at", "updated_at"],
   "$defs": {
     "address": {
       "title": "Address",
@@ -72,8 +99,8 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string", "description": "Guardian's given name." },
-        "surname": { "type": "string", "description": "Guardian's family name." },
+        "first_name": { "type": "string", "description": "Guardian's first name." },
+        "last_name": { "type": "string", "description": "Guardian's last name." },
         "relation_with_kid": {
           "type": "string",
           "description": "The guardian's relationship to the child.",
@@ -115,7 +142,7 @@
           "description": "Guardian's address. Optional. If omitted and 'same_address_as_kid' is true, the child's address applies."
         }
       },
-      "required": ["name", "surname", "relation_with_kid"]
+      "required": ["first_name", "last_name", "relation_with_kid"]
     },
     "kid": {
       "title": "Kid",
@@ -129,8 +156,8 @@
           "readOnly": true,
           "description": "System-generated unique identifier for the child."
         },
-        "name": { "type": "string", "description": "Child's given name." },
-        "surname": { "type": "string", "description": "Child's family name." },
+        "first_name": { "type": "string", "description": "Child's first name." },
+        "last_name": { "type": "string", "description": "Child's last name." },
         "preferred_name": { "type": "string", "description": "Name the child prefers to be called." },
         "date_of_birth": {
           "type": ["string", "null"],
@@ -169,13 +196,13 @@
           "description": "List of guardians associated with the child. May be empty or omitted.",
           "items": { "$ref": "#/$defs/guardian" }
         },
-        "createdAt": {
+        "created_at": {
           "type": "string",
           "format": "date-time",
           "description": "Timestamp when the kid record was created (ISO 8601 format).",
           "readOnly": true
         },
-        "updatedAt": {
+        "updated_at": {
           "type": "string",
           "format": "date-time",
           "description": "Timestamp when the kid record was last updated (ISO 8601 format).",
@@ -184,14 +211,14 @@
       },
       "required": [
         "kid_id",
-        "name",
-        "surname",
+        "first_name",
+        "last_name",
         "gender",
         "level",
         "special_education",
         "guardians",
-        "createdAt",
-        "updatedAt"
+        "created_at",
+        "updated_at"
       ]
     }
   }

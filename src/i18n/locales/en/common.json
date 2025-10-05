@@ -1,0 +1,82 @@
+{
+  "appName": "Class Management System",
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "update": "Update",
+    "create": "Create",
+    "confirm": "Confirm",
+    "close": "Close",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "loading": "Loading...",
+    "creating": "Creating...",
+    "updating": "Updating...",
+    "deleting": "Deleting...",
+    "importing": "Importing...",
+    "exporting": "Exporting..."
+  },
+  "labels": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "notes": "Notes",
+    "privateNotes": "Private Notes",
+    "dateOfBirth": "Date of Birth",
+    "gender": "Gender",
+    "required": "*",
+    "optional": "(Optional)"
+  },
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "selectGender": "Select gender"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "fieldRequired": "{{field}} is required",
+    "invalidFormat": "Invalid format",
+    "tooShort": "Too short",
+    "tooLong": "Too long"
+  },
+  "status": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "noData": "No data available"
+  },
+  "messages": {
+    "selectClass": "Please select a class from the top bar to get started.",
+    "noClassesAvailable": "No classes available. Create a class to get started."
+  },
+  "actions": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "export": "Export",
+    "import": "Import",
+    "print": "Print",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh"
+  },
+  "dialogs": {
+    "confirmDelete": "Confirm Delete",
+    "actionCannotBeUndone": "This action cannot be undone."
+  }
+}

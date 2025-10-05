@@ -37,8 +37,8 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     watch 
   } = useForm<Guardian>({
     defaultValues: guardian || {
-      name: '',
-      surname: '',
+      first_name: '',
+      last_name: '',
       relation_with_kid: 'mother',
       authorized_for_pickup: false,
       same_address_as_kid: true,
@@ -83,10 +83,10 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
   const headerTitle = useMemo(() => {
     if (isNew) return 'New Guardian';
     if (guardian) {
-      return `${guardian.name || 'Unnamed'} ${guardian.surname || ''} - ${guardian.relation_with_kid}`;
+      return `${guardian.first_name || 'Unnamed'} ${guardian.last_name || ''} - ${guardian.relation_with_kid}`;
     }
     return 'Guardian';
-  }, [isNew, guardian?.name, guardian?.surname, guardian?.relation_with_kid]);
+  }, [isNew, guardian?.first_name, guardian?.last_name, guardian?.relation_with_kid]);
 
   // Memoized address title for guardian
   const guardianAddressTitle = useMemo(() => {
@@ -132,48 +132,48 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             <Row>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>First Name</Form.Label>
                   <Controller
-                    name="name"
+                    name="first_name"
                     control={control}
-                    rules={{ required: 'Name is required' }}
+                    rules={{ required: 'First name is required' }}
                     render={({ field }) => (
                       <Form.Control
                         {...field}
                         value={field.value ?? ''}
                         type="text"
-                        placeholder="Enter guardian's name"
-                        isInvalid={!!errors.name}
+                        placeholder="Enter guardian's first name"
+                        isInvalid={!!errors.first_name}
                       />
                     )}
                   />
-                  {errors.name && (
+                  {errors.first_name && (
                     <Form.Control.Feedback type="invalid">
-                      {errors.name.message}
+                      {errors.first_name.message}
                     </Form.Control.Feedback>
                   )}
                 </Form.Group>
               </Col>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label>Surname</Form.Label>
+                  <Form.Label>Last Name</Form.Label>
                   <Controller
-                    name="surname"
+                    name="last_name"
                     control={control}
-                    rules={{ required: 'Surname is required' }}
+                    rules={{ required: 'Last name is required' }}
                     render={({ field }) => (
                       <Form.Control
                         {...field}
                         value={field.value ?? ''}
                         type="text"
-                        placeholder="Enter guardian's surname"
-                        isInvalid={!!errors.surname}
+                        placeholder="Enter guardian's last name"
+                        isInvalid={!!errors.last_name}
                       />
                     )}
                   />
-                  {errors.surname && (
+                  {errors.last_name && (
                     <Form.Control.Feedback type="invalid">
-                      {errors.surname.message}
+                      {errors.last_name.message}
                     </Form.Control.Feedback>
                   )}
                 </Form.Group>
@@ -363,7 +363,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete <strong>{guardian?.name} {guardian?.surname}</strong>? 
+          Are you sure you want to delete <strong>{guardian?.first_name} {guardian?.last_name}</strong>?
           This action cannot be undone.
         </Modal.Body>
         <Modal.Footer>

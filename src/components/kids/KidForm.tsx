@@ -7,6 +7,7 @@ import type { Kid, Guardian } from '../../types/models';
 import { validationService } from '../../services/validation';
 import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
+import { useClass } from '../../contexts/ClassContext';
 import GuardianAccordionItem from '../guardians/GuardianAccordionItem';
 import AddressForm from '../common/AddressForm';
 import { formatAddressString } from '../../utils/addressUtils';
@@ -24,6 +25,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
   const navigate = useNavigate();
   const { kidId } = useParams<{ kidId: string }>();
   const { refreshKids } = useKids();
+  const { selectedClass } = useClass();
   const { 
     control, 
     handleSubmit, 
@@ -32,8 +34,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
     reset 
   } = useForm<Kid>({
     defaultValues: initialData || {
-      name: '',
-      surname: '',
+      first_name: '',
+      last_name: '',
       gender: '' as any,
       level: '' as any,
       special_education: false,
@@ -96,10 +98,10 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
   const onSubmit = useCallback(async (data: Kid) => {
     try {
       // Ensure minimum required data
-      if (!data.name || !data.surname || !data.gender || !data.level) {
+      if (!data.first_name || !data.last_name || !data.gender || !data.level) {
         const missingFields = [];
-        if (!data.name) missingFields.push('Name');
-        if (!data.surname) missingFields.push('Surname');
+        if (!data.first_name) missingFields.push('First Name');
+        if (!data.last_name) missingFields.push('Last Name');
         if (!data.gender) missingFields.push('Gender');
         if (!data.level) missingFields.push('Level');
         
@@ -135,11 +137,24 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         ]);
       } else {
         // Create new kid
+        if (!selectedClass) {
+          setServerError('Please select a class before adding a kid.');
+          return;
+        }
+
         const kidToSave = createKid(data);
         await Promise.race([
           db.addKid(kidToSave),
           new Promise((_, reject) => 
             setTimeout(() => reject(new Error('Insertion timed out')), 5000)
+          )
+        ]);
+
+        // Add kid to the selected class
+        await Promise.race([
+          db.addKidToClass(selectedClass.class_id, kidToSave.kid_id),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Adding to class timed out')), 5000)
           )
         ]);
       }
@@ -165,46 +180,46 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Row>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Name <span style={{color: 'red'}}>*</span></Form.Label>
+              <Form.Label>First Name <span style={{color: 'red'}}>*</span></Form.Label>
               <Controller
-                name="name"
+                name="first_name"
                 control={control}
-                rules={{ required: 'Name is required' }}
+                rules={{ required: 'First name is required' }}
                 render={({ field }) => (
                   <Form.Control 
                     {...field} 
                     type="text" 
-                    placeholder="Enter name"
-                    isInvalid={!!errors.name}
+                    placeholder="Enter first name"
+                    isInvalid={!!errors.first_name}
                   />
                 )}
               />
-              {errors.name && (
+              {errors.first_name && (
                 <Form.Control.Feedback type="invalid">
-                  {errors.name.message}
+                  {errors.first_name.message}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
           </Col>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Surname <span style={{color: 'red'}}>*</span></Form.Label>
+              <Form.Label>Last Name <span style={{color: 'red'}}>*</span></Form.Label>
               <Controller
-                name="surname"
+                name="last_name"
                 control={control}
-                rules={{ required: 'Surname is required' }}
+                rules={{ required: 'Last name is required' }}
                 render={({ field }) => (
                   <Form.Control 
                     {...field} 
                     type="text" 
-                    placeholder="Enter surname"
-                    isInvalid={!!errors.surname}
+                    placeholder="Enter last name"
+                    isInvalid={!!errors.last_name}
                   />
                 )}
               />
-              {errors.surname && (
+              {errors.last_name && (
                 <Form.Control.Feedback type="invalid">
-                  {errors.surname.message}
+                  {errors.last_name.message}
                 </Form.Control.Feedback>
               )}
             </Form.Group>

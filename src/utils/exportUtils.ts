@@ -1,12 +1,19 @@
 import { db } from '../services/database';
 
-export const exportClassData = async () => {
+export const exportClassData = async (classId?: string) => {
   try {
-    // Get all class data using the existing database method
-    const classData = await db.exportData();
+    let classData;
     
-    // Create a JSON string from the data
-    const jsonString = JSON.stringify(classData.kids, null, 2);
+    if (classId) {
+      // Export specific class data
+      classData = await db.exportClassData(classId);
+    } else {
+      // Fall back to legacy export method
+      classData = await db.exportData();
+    }
+    
+    // Create a JSON string from the complete class record
+    const jsonString = JSON.stringify(classData, null, 2);
     
     // Create a blob with the JSON data
     const blob = new Blob([jsonString], { type: 'application/json' });
@@ -18,10 +25,13 @@ export const exportClassData = async () => {
     const link = document.createElement('a');
     link.href = url;
     
-    // Generate filename with current date
+    // Generate filename with current date and class info
     const now = new Date();
     const timestamp = now.toISOString().split('T')[0]; // YYYY-MM-DD format
-    link.download = `class-export-${timestamp}.json`;
+    const classIdentifier = classId && classData.class_name 
+      ? `${classData.school_name.replace(/\s+/g, '-')}-${classData.class_name.replace(/\s+/g, '-')}`
+      : 'class';
+    link.download = `${classIdentifier}-export-${timestamp}.json`;
     
     // Trigger download
     document.body.appendChild(link);

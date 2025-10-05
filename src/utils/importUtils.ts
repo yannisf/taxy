@@ -71,8 +71,8 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
       const validatedKid: Kid = {
         ...kidData,
         kid_id: kidData.kid_id || uuidv4(), // Generate UUID if missing
-        createdAt: kidData.createdAt || now,
-        updatedAt: now // Always update this during import
+        created_at: kidData.created_at || now,
+        updated_at: now // Always update this during import
       };
 
       validatedKids.push(validatedKid);

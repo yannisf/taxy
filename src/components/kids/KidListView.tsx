@@ -1,15 +1,47 @@
-import React from 'react';
-import { Container, Card, Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useKids } from '../../contexts/KidsContext';
+import { useClass } from '../../contexts/ClassContext';
+import { db } from '../../services/database';
+import type { Kid } from '../../types/models';
 
 const KidListView: React.FC = () => {
+  const { t } = useTranslation(['common', 'kids']);
   const { kids } = useKids();
+  const { selectedClass } = useClass();
+  const [classKids, setClassKids] = useState<Kid[]>([]);
   const navigate = useNavigate();
-  const kidCount = kids.length;
+
+  // Filter kids based on selected class
+  useEffect(() => {
+    const filterKidsByClass = async () => {
+      if (selectedClass) {
+        try {
+          const filteredKids = await db.getKidsByClassId(selectedClass.class_id);
+          setClassKids(filteredKids);
+        } catch (error) {
+          console.error('Error filtering kids by class:', error);
+          setClassKids([]);
+        }
+      } else {
+        setClassKids([]);
+      }
+    };
+
+    filterKidsByClass();
+  }, [selectedClass, kids]);
+
+  const kidCount = classKids.length;
 
   const handleAddKid = () => {
     navigate('/kids/add');
+  };
+
+  const formatClassDisplay = (classObj: typeof selectedClass) => {
+    if (!classObj) return '';
+    return `${classObj.school_name} - ${classObj.class_name} (${classObj.school_year})`;
   };
 
   return (
@@ -18,17 +50,29 @@ const KidListView: React.FC = () => {
         <Card className="text-center" style={{ maxWidth: '500px', width: '100%' }}>
           <Card.Body className="p-5">
             <div className="mb-4">
-              <h2 className="text-muted">Class Management System</h2>
+              <h2 className="text-muted">{t('common:appName')}</h2>
             </div>
             
-            {kidCount === 0 ? (
+            {!selectedClass ? (
               <>
                 <div className="mb-4">
+                  <Alert variant="info" className="mb-3">
+                    {t('common:messages.selectClass')}
+                  </Alert>
+                  <p className="text-muted">
+                    {t('common:messages.noClassesAvailable')}
+                  </p>
+                </div>
+              </>
+            ) : kidCount === 0 ? (
+              <>
+                <div className="mb-4">
+                  <h5 className="text-info mb-3">{formatClassDisplay(selectedClass)}</h5>
                   <p className="lead text-muted">
-                    Welcome! You haven't added any kids to your class yet.
+                    {t('kids:messages.noKidsInClass')}
                   </p>
                   <p className="text-muted">
-                    Get started by adding your first student.
+                    {t('kids:messages.getStarted')}
                   </p>
                 </div>
                 <Button 
@@ -36,22 +80,23 @@ const KidListView: React.FC = () => {
                   size="lg"
                   onClick={handleAddKid}
                 >
-                  Add Your First Kid
+                  {t('kids:title.addFirstKid')}
                 </Button>
               </>
             ) : (
               <>
                 <div className="mb-4">
-                  <h4 className="text-primary">{kidCount} Kid{kidCount > 1 ? 's' : ''} in Class</h4>
+                  <h5 className="text-info mb-3">{formatClassDisplay(selectedClass)}</h5>
+                  <h4 className="text-primary">{t('kids:messages.kidsInClass', { count: kidCount })}</h4>
                   <p className="text-muted">
-                    Select a kid from the left panel to view their details, edit their information, or add a new student.
+                    {t('kids:messages.selectFromPanel')}
                   </p>
                 </div>
                 <Button 
                   variant="outline-primary"
                   onClick={handleAddKid}
                 >
-                  Add Another Kid
+                  {t('kids:title.addAnotherKid')}
                 </Button>
               </>
             )}
