@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, Badge } from 'react-bootstrap';
 import type { Guardian } from '../../types/models';
 import AddressDisplay from '../common/AddressDisplay';
+import TelephoneDisplay from '../common/TelephoneDisplay';
 
 interface GuardianCardProps {
   guardian: Guardian;
@@ -32,8 +33,14 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
         </div>
 
         {guardian.telephones && guardian.telephones.length > 0 && (
-          <div className="small text-muted mb-2">
-            📞 {guardian.telephones.length} phone number{guardian.telephones.length > 1 ? 's' : ''}
+          <div className="mb-2">
+            {guardian.telephones.map((telephone, index) => (
+              <TelephoneDisplay 
+                key={index}
+                telephone={telephone}
+                className="small text-muted d-block"
+              />
+            ))}
           </div>
         )}
 
