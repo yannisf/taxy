@@ -248,3 +248,91 @@
 .bg-info {
   background-color: var(--bs-info) !important;
 }
+
+/* Accordion styling - active/selected items */
+.accordion-item .accordion-button:not(.collapsed) {
+  background-color: #d4f4e7; /* Pale green tone */
+  color: #004d2c; /* Dark green text for contrast */
+  border-color: #b3ecdb;
+}
+
+.accordion-item .accordion-button:not(.collapsed)::after {
+  filter: brightness(0.8); /* Darken the arrow icon slightly */
+}
+
+.accordion-item .accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.25);
+  border-color: #4dc080;
+}
+
+.accordion-item .accordion-button:hover:not(.collapsed) {
+  background-color: #c1ead7; /* Slightly darker pale green on hover */
+}
+
+/* Outline button active states - consistent with primary theme */
+.btn-outline-primary {
+  --bs-btn-color: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--bs-primary);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--bs-primary);
+  --bs-btn-active-border-color: var(--bs-primary);
+  --bs-btn-disabled-color: var(--bs-primary);
+  --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary.active,
+.btn-outline-primary.show {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.5) !important;
+}
+
+/* Outline secondary button styling */
+.btn-outline-secondary {
+  --bs-btn-color: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-secondary);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--bs-secondary);
+  --bs-btn-hover-border-color: var(--bs-secondary);
+  --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--bs-secondary);
+  --bs-btn-active-border-color: var(--bs-secondary);
+}
+
+.btn-outline-secondary:active,
+.btn-outline-secondary.active,
+.btn-outline-secondary.show {
+  background-color: var(--bs-secondary) !important;
+  border-color: var(--bs-secondary) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 148, 229, 0.5) !important;
+}
+
+/* Outline success button styling */
+.btn-outline-success {
+  --bs-btn-color: var(--bs-success);
+  --bs-btn-border-color: var(--bs-success);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--bs-success);
+  --bs-btn-hover-border-color: var(--bs-success);
+  --bs-btn-focus-shadow-rgb: var(--bs-success-rgb);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--bs-success);
+  --bs-btn-active-border-color: var(--bs-success);
+}
+
+.btn-outline-success:active,
+.btn-outline-success.active,
+.btn-outline-success.show {
+  background-color: var(--bs-success) !important;
+  border-color: var(--bs-success) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.5) !important;
+}
