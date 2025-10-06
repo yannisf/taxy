@@ -43,7 +43,7 @@ export const ClassProvider: React.FC<ClassProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [selectedClass]);
+  }, [selectedClass?.class_id]);
 
   const selectClass = useCallback(async (classId: string) => {
     try {

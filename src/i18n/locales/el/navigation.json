@@ -24,8 +24,10 @@
   "selectClassToViewKids": "Παρακαλώ επιλέξτε μια τάξη για να δείτε τα παιδιά",
   "exportClass": "Εξαγωγή Τάξης",
   "importClass": "Εισαγωγή Τάξης",
+  "generateCatalog": "Δημιουργία Καταλόγου",
   "exportClassDataTooltip": "Εξαγωγή δεδομένων τάξης ως JSON",
   "importClassDataTooltip": "Εισαγωγή δεδομένων τάξης από JSON",
+  "generateCatalogTooltip": "Δημιουργία καταλόγου PDF με στοιχεία επικοινωνίας",
   "dialogs": {
     "confirmImport": "Επιβεβαίωση Εισαγωγής",
     "importSummary": "Περίληψη Εισαγωγής",

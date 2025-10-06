@@ -24,8 +24,10 @@
   "selectClassToViewKids": "Please select a class to view kids",
   "exportClass": "Export Class",
   "importClass": "Import Class",
+  "generateCatalog": "Generate Catalog",
   "exportClassDataTooltip": "Export class data as JSON",
   "importClassDataTooltip": "Import class data from JSON",
+  "generateCatalogTooltip": "Generate PDF catalog with contact information",
   "dialogs": {
     "confirmImport": "Confirm Import",
     "importSummary": "Import Summary",

@@ -1,0 +1,783 @@
+[
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440001",
+    "first_name": "Emma",
+    "last_name": "Johnson",
+    "preferred_name": "Em",
+    "date_of_birth": "2019-03-15",
+    "gender": "female",
+    "level": "kindergartner",
+    "address": {
+      "street_name": "Oak Street",
+      "street_number": "123",
+      "neighborhood": "Downtown",
+      "postal_code": "12345",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Very creative child, loves art activities",
+    "private_notes": "Has mild anxiety in loud environments",
+    "special_education": false,
+    "guardians": [
+      {
+        "first_name": "Sarah",
+        "last_name": "Johnson",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5551234567",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5559876543",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "sarah.johnson@email.com",
+        "profession": "Software Engineer"
+      },
+      {
+        "first_name": "Michael",
+        "last_name": "Johnson",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5552345678",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5558765432",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "michael.johnson@email.com",
+        "profession": "Teacher"
+      }
+    ],
+    "created_at": "2024-08-15T10:30:00Z",
+    "updated_at": "2024-09-01T14:22:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440002",
+    "first_name": "Liam",
+    "last_name": "Smith",
+    "preferred_name": null,
+    "date_of_birth": "2018-11-22",
+    "gender": "male",
+    "level": "kindergartner-repeating",
+    "address": {
+      "street_name": "Maple Avenue",
+      "street_number": "456",
+      "neighborhood": "Westside",
+      "postal_code": "12346",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Excellent at mathematics, very curious about numbers",
+    "private_notes": null,
+    "special_education": true,
+    "guardians": [
+      {
+        "first_name": "Jennifer",
+        "last_name": "Smith",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5553456789",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5557654321",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "jennifer.smith@email.com",
+        "profession": "Nurse"
+      },
+      {
+        "first_name": "Robert",
+        "last_name": "Smith",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": false,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5554567890",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5556543210",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "robert.smith@email.com",
+        "profession": "Electrician",
+        "address": {
+          "street_name": "Pine Street",
+          "street_number": "789",
+          "neighborhood": "Eastside",
+          "postal_code": "12347",
+          "city": "Springfield",
+          "country": "USA"
+        }
+      },
+      {
+        "first_name": "Margaret",
+        "last_name": "Davis",
+        "relation_with_kid": "grandparent",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": false,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5555678901",
+            "telephone_type": "home"
+          },
+          {
+            "country_code": "+1",
+            "number": "5555432109",
+            "telephone_type": "mobile"
+          }
+        ],
+        "email": "margaret.davis@email.com",
+        "profession": "Retired",
+        "address": {
+          "street_name": "Elm Street",
+          "street_number": "321",
+          "neighborhood": "Northside",
+          "postal_code": "12348",
+          "city": "Springfield",
+          "country": "USA"
+        }
+      }
+    ],
+    "created_at": "2024-08-16T09:15:00Z",
+    "updated_at": "2024-09-02T11:45:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440003",
+    "first_name": "Olivia",
+    "last_name": "Williams",
+    "preferred_name": "Liv",
+    "date_of_birth": "2019-07-08",
+    "gender": "female",
+    "level": "kindergartner",
+    "address": {
+      "street_name": "Cedar Lane",
+      "street_number": "654",
+      "neighborhood": "Riverside",
+      "postal_code": "12349",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Great leader, helps other children with activities",
+    "private_notes": "Parents going through divorce - needs extra emotional support",
+    "special_education": false,
+    "guardians": [
+      {
+        "first_name": "Amanda",
+        "last_name": "Williams",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5556789012",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5554321098",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "amanda.williams@email.com",
+        "profession": "Marketing Manager"
+      },
+      {
+        "first_name": "David",
+        "last_name": "Williams",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": false,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5557890123",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5553210987",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "david.williams@email.com",
+        "profession": "Accountant",
+        "address": {
+          "street_name": "Birch Road",
+          "street_number": "987",
+          "neighborhood": "Hillcrest",
+          "postal_code": "12350",
+          "city": "Springfield",
+          "country": "USA"
+        }
+      }
+    ],
+    "created_at": "2024-08-17T13:20:00Z",
+    "updated_at": "2024-09-03T16:30:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440004",
+    "first_name": "Noah",
+    "last_name": "Brown",
+    "preferred_name": null,
+    "date_of_birth": "2019-01-12",
+    "gender": "male",
+    "level": "kindergartner",
+    "address": {
+      "street_name": "Willow Drive",
+      "street_number": "147",
+      "neighborhood": "Meadowbrook",
+      "postal_code": "12351",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Loves outdoor activities and building with blocks",
+    "private_notes": null,
+    "special_education": false,
+    "guardians": [
+      {
+        "first_name": "Lisa",
+        "last_name": "Brown",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5558901234",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5552109876",
+            "telephone_type": "work"
+          },
+          {
+            "country_code": "+1",
+            "number": "5551098765",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "lisa.brown@email.com",
+        "profession": "Pediatrician"
+      }
+    ],
+    "created_at": "2024-08-18T08:45:00Z",
+    "updated_at": "2024-09-04T12:15:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440005",
+    "first_name": "Sophia",
+    "last_name": "Miller",
+    "preferred_name": "Sophie",
+    "date_of_birth": "2019-05-25",
+    "gender": "female",
+    "level": "kindergartner",
+    "address": {
+      "street_name": "Rose Boulevard",
+      "street_number": "258",
+      "neighborhood": "Garden District",
+      "postal_code": "12352",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Bilingual (English/Spanish), very social",
+    "private_notes": "Family speaks Spanish at home",
+    "special_education": false,
+    "guardians": [
+      {
+        "first_name": "Maria",
+        "last_name": "Miller",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5559012345",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5551987654",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "maria.miller@email.com",
+        "profession": "Translator"
+      },
+      {
+        "first_name": "Carlos",
+        "last_name": "Miller",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5550123456",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5558765432",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "carlos.miller@email.com",
+        "profession": "Construction Manager"
+      },
+      {
+        "first_name": "Elena",
+        "last_name": "Rodriguez",
+        "relation_with_kid": "grandparent",
+        "authorized_for_pickup": false,
+        "same_address_as_kid": false,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5551234567",
+            "telephone_type": "home"
+          },
+          {
+            "country_code": "+1",
+            "number": "5557654321",
+            "telephone_type": "mobile"
+          }
+        ],
+        "email": "elena.rodriguez@email.com",
+        "profession": "Retired Teacher",
+        "address": {
+          "street_name": "Sunset Avenue",
+          "street_number": "369",
+          "neighborhood": "Old Town",
+          "postal_code": "12353",
+          "city": "Springfield",
+          "country": "USA"
+        }
+      }
+    ],
+    "created_at": "2024-08-19T15:10:00Z",
+    "updated_at": "2024-09-05T09:20:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440006",
+    "first_name": "Ethan",
+    "last_name": "Garcia",
+    "preferred_name": null,
+    "date_of_birth": "2018-12-03",
+    "gender": "male",
+    "level": "kindergartner-repeating",
+    "address": {
+      "street_name": "Valley Road",
+      "street_number": "741",
+      "neighborhood": "Greenview",
+      "postal_code": "12354",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Very energetic, loves sports and physical activities",
+    "private_notes": "ADHD - needs movement breaks",
+    "special_education": true,
+    "guardians": [
+      {
+        "first_name": "Isabella",
+        "last_name": "Garcia",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5552345678",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5556543210",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "isabella.garcia@email.com",
+        "profession": "Physical Therapist"
+      },
+      {
+        "first_name": "Antonio",
+        "last_name": "Garcia",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5553456789",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5555432109",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "antonio.garcia@email.com",
+        "profession": "Firefighter"
+      }
+    ],
+    "created_at": "2024-08-20T11:35:00Z",
+    "updated_at": "2024-09-06T14:50:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440007",
+    "first_name": "Ava",
+    "last_name": "Martinez",
+    "preferred_name": null,
+    "date_of_birth": "2019-09-17",
+    "gender": "female",
+    "level": "pre-kindergartner",
+    "address": {
+      "street_name": "Highland Street",
+      "street_number": "852",
+      "neighborhood": "Parkside",
+      "postal_code": "12355",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Very quiet and observant, excellent listener",
+    "private_notes": null,
+    "special_education": false,
+    "guardians": [
+      {
+        "first_name": "Carmen",
+        "last_name": "Martinez",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5554567890",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5554321098",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "carmen.martinez@email.com",
+        "profession": "Librarian"
+      },
+      {
+        "first_name": "Luis",
+        "last_name": "Martinez",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5555678901",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5553210987",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "luis.martinez@email.com",
+        "profession": "Chef"
+      },
+      {
+        "first_name": "Ana",
+        "last_name": "Fernandez",
+        "relation_with_kid": "extended family",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": false,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5556789012",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5552109876",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "ana.fernandez@email.com",
+        "profession": "Social Worker",
+        "address": {
+          "street_name": "Spring Street",
+          "street_number": "963",
+          "neighborhood": "Lakeside",
+          "postal_code": "12356",
+          "city": "Springfield",
+          "country": "USA"
+        }
+      }
+    ],
+    "created_at": "2024-08-21T12:00:00Z",
+    "updated_at": "2024-09-07T10:30:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440008",
+    "first_name": "Mason",
+    "last_name": "Anderson",
+    "preferred_name": "Mase",
+    "date_of_birth": "2019-04-14",
+    "gender": "male",
+    "level": "kindergartner",
+    "address": {
+      "street_name": "Summit Avenue",
+      "street_number": "159",
+      "neighborhood": "Hilltop",
+      "postal_code": "12357",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Technology enthusiast, very good with tablets and computers",
+    "private_notes": null,
+    "special_education": false,
+    "guardians": [
+      {
+        "first_name": "Rachel",
+        "last_name": "Anderson",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5557890123",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5551098765",
+            "telephone_type": "work"
+          },
+          {
+            "country_code": "+1",
+            "number": "5558765432",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "rachel.anderson@email.com",
+        "profession": "Web Developer"
+      },
+      {
+        "first_name": "Kevin",
+        "last_name": "Anderson",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5558901234",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5559876543",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "kevin.anderson@email.com",
+        "profession": "Data Analyst"
+      }
+    ],
+    "created_at": "2024-08-22T14:25:00Z",
+    "updated_at": "2024-09-08T16:45:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440009",
+    "first_name": "Isabella",
+    "last_name": "Taylor",
+    "preferred_name": "Bella",
+    "date_of_birth": "2019-06-30",
+    "gender": "female",
+    "level": "kindergartner",
+    "address": {
+      "street_name": "Meadow Lane",
+      "street_number": "426",
+      "neighborhood": "Woodlands",
+      "postal_code": "12358",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Loves music and singing, participates in school choir",
+    "private_notes": "Parents recently separated",
+    "special_education": false,
+    "guardians": [
+      {
+        "first_name": "Jessica",
+        "last_name": "Taylor",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5559012345",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5558765432",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "jessica.taylor@email.com",
+        "profession": "Music Teacher"
+      },
+      {
+        "first_name": "James",
+        "last_name": "Peterson",
+        "relation_with_kid": "friend",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": false,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5550123456",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5557654321",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "james.peterson@email.com",
+        "profession": "Artist",
+        "address": {
+          "street_name": "Forest Drive",
+          "street_number": "537",
+          "neighborhood": "Oakwood",
+          "postal_code": "12359",
+          "city": "Springfield",
+          "country": "USA"
+        }
+      }
+    ],
+    "created_at": "2024-08-23T09:40:00Z",
+    "updated_at": "2024-09-09T13:25:00Z"
+  },
+  {
+    "kid_id": "550e8400-e29b-41d4-a716-446655440010",
+    "first_name": "Lucas",
+    "last_name": "Thompson",
+    "preferred_name": "Luke",
+    "date_of_birth": "2018-10-05",
+    "gender": "male",
+    "level": "kindergartner-repeating",
+    "address": {
+      "street_name": "River Road",
+      "street_number": "684",
+      "neighborhood": "Riverside",
+      "postal_code": "12360",
+      "city": "Springfield",
+      "country": "USA"
+    },
+    "notes": "Excellent at problem-solving, loves puzzles and brain teasers",
+    "private_notes": "On the autism spectrum - needs routine and clear instructions",
+    "special_education": true,
+    "guardians": [
+      {
+        "first_name": "Michelle",
+        "last_name": "Thompson",
+        "relation_with_kid": "mother",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5551234567",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5556543210",
+            "telephone_type": "work"
+          }
+        ],
+        "email": "michelle.thompson@email.com",
+        "profession": "Special Education Teacher"
+      },
+      {
+        "first_name": "Brian",
+        "last_name": "Thompson",
+        "relation_with_kid": "father",
+        "authorized_for_pickup": true,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5552345678",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5555432109",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "brian.thompson@email.com",
+        "profession": "IT Support Specialist"
+      },
+        {
+          "first_name": "Emma",
+          "last_name": "Thompson",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+1",
+              "number": "5553456789",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+1",
+              "number": "5554321087",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "emma.thompson.sister@email.com",
+          "profession": "High School Student"
+        }
+    ],
+    "created_at": "2024-08-24T16:15:00Z",
+    "updated_at": "2024-09-10T11:10:00Z"
+  }
+]

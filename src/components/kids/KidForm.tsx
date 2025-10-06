@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Button, Container, Row, Col, Alert, Accordion, Card } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -36,8 +36,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
     defaultValues: initialData || {
       first_name: '',
       last_name: '',
-      gender: '' as any,
-      level: '' as any,
+      gender: 'male' as const,
+      level: 'pre-kindergartner' as const,
       special_education: false,
       guardians: [],
       notes: '',
@@ -45,55 +45,46 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
     }
   });
 
-  // Memoized callback functions for guardian management
-  const handleSaveGuardian = useCallback((index: number, updatedGuardian: Guardian) => {
+  // Guardian management functions
+  const handleSaveGuardian = (index: number, updatedGuardian: Guardian) => {
     const newGuardians = [...guardians];
     newGuardians[index] = updatedGuardian;
     setGuardians(newGuardians);
     setActiveKey(null);
-  }, [guardians]);
+  };
 
-  const handleDeleteGuardian = useCallback((guardian: Guardian) => {
+  const handleDeleteGuardian = (guardian: Guardian) => {
     setGuardians(prev => prev.filter(g => g !== guardian));
     setActiveKey(null);
-  }, []);
+  };
 
-  const handleSaveNewGuardian = useCallback((newGuardian: Guardian) => {
+  const handleSaveNewGuardian = (newGuardian: Guardian) => {
     setGuardians(prev => [...prev, newGuardian]);
     setShowNewGuardian(false);
     setActiveKey(null);
-  }, []);
+  };
 
-  const handleCancelNewGuardian = useCallback(() => {
+  const handleCancelNewGuardian = () => {
     setShowNewGuardian(false);
     setActiveKey(null);
-  }, []);
+  };
 
-  const handleAddGuardianClick = useCallback(() => {
+  const handleAddGuardianClick = () => {
     setShowNewGuardian(true);
     setActiveKey('new-guardian');
-  }, []);
+  };
 
-  // Memoized guardian count
-  const guardianCount = useMemo(() => guardians.length, [guardians.length]);
+  // Simple values - no need for memoization
+  const guardianCount = guardians.length;
+  const addressString = formatAddressString(initialData?.address);
+  const addressTitle = addressString ? `Address: ${addressString}` : 'Address';
+  const addressExpanded = !addressString; // Expanded if no address, collapsed if address exists
 
-  // Memoized address title
-  const addressTitle = useMemo(() => {
-    const addressString = formatAddressString(initialData?.address);
-    return addressString ? `Address: ${addressString}` : 'Address';
-  }, [initialData?.address]);
-
-  // Address accordion expanded state
-  const addressExpanded = useMemo(() => {
-    const addressString = formatAddressString(initialData?.address);
-    return !addressString; // Expanded if no address, collapsed if address exists
-  }, [initialData?.address]);
-
-  const handleCancel = useCallback(() => {
+  const handleCancel = () => {
     if (kidId) {
       navigate(`/kids/${kidId}`);
     }
-  }, [kidId, navigate]);
+  };
 
   const onSubmit = useCallback(async (data: Kid) => {
     try {

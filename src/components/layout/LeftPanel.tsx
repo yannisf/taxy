@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { ListGroup, Button, Modal, Badge, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { PencilSquare, XLg, PersonFill, Plus, Download, Upload } from 'react-bootstrap-icons';
+import { PencilSquare, XLg, PersonFill, Plus, Download, Upload, FilePdf } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
+import { useClassKids } from '../../hooks/useClassKids';
 import type { Kid } from '../../types/models';
 import { exportClassData } from '../../utils/exportUtils';
+import { generateClassCatalogPDF } from '../../utils/pdfUtils';
+import { formatClassDisplay } from '../../utils/classUtils';
 import { 
   validateImportFile, 
   performImport,
@@ -17,21 +20,19 @@ import {
 
 const LeftPanel: React.FC = () => {
   const { t } = useTranslation(['navigation', 'kids', 'common', 'messages']);
-  const { kids, refreshKids } = useKids();
+  const { refreshKids } = useKids();
   const { selectedClass } = useClass();
+  const classKids = useClassKids();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [kidToDelete, setKidToDelete] = useState<Kid | null>(null);
   const [hoveredKidId, setHoveredKidId] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [isGeneratingCatalog, setIsGeneratingCatalog] = useState(false);
   const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
   const [importValidationResult, setImportValidationResult] = useState<ImportValidationResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    refreshKids();
-  }, [refreshKids]);
 
   const handleKidClick = (kid: Kid) => {
     navigate(`/kids/${kid.kid_id}`);
@@ -123,11 +124,11 @@ const LeftPanel: React.FC = () => {
   };
 
   const handleConfirmImport = async () => {
-    if (!importValidationResult?.validatedKids) return;
+    if (!importValidationResult?.validatedKids || !selectedClass) return;
 
     setIsImporting(true);
     try {
-      const result = await performImport(importValidationResult.validatedKids);
+      const result = await performImport(importValidationResult.validatedKids, selectedClass.class_id);
       
       if (result.success) {
         toast.success(result.message);
@@ -150,43 +151,31 @@ const LeftPanel: React.FC = () => {
     setImportValidationResult(null);
   };
 
-  // Filter kids based on selected class
-  const [classKids, setClassKids] = useState<Kid[]>([]);
-
-  useEffect(() => {
-    const filterKidsByClass = async () => {
-      if (selectedClass) {
-        try {
-          const filteredKids = await db.getKidsByClassId(selectedClass.class_id);
-          setClassKids(filteredKids);
-        } catch (error) {
-          console.error('Error filtering kids by class:', error);
-          setClassKids([]);
-        }
-      } else {
-        setClassKids([]);
-      }
-    };
-
-    filterKidsByClass();
-  }, [selectedClass, kids]);
-
-  // Sort kids by preferred name (if exists) or legal name, then by surname
-  const sortedKids = [...classKids].sort((a, b) => {
-    const aFirstName = a.preferred_name || a.first_name;
-    const bFirstName = b.preferred_name || b.first_name;
-    
-    if (aFirstName.toLowerCase() !== bFirstName.toLowerCase()) {
-      return aFirstName.toLowerCase().localeCompare(bFirstName.toLowerCase());
+  const handleGenerateCatalog = async () => {
+    if (!selectedClass) {
+      toast.error(t('messages:error.selectClassToExport'));
+      return;
     }
-    
-    return a.last_name.toLowerCase().localeCompare(b.last_name.toLowerCase());
-  });
 
-  const formatClassDisplay = (classObj: typeof selectedClass) => {
-    if (!classObj) return '';
-    return `${classObj.school_name} - ${classObj.class_name} (${classObj.school_year})`;
+    setIsGeneratingCatalog(true);
+    try {
+      // Create a ClassRecord object from the selected class and kids
+      const classRecord = {
+        ...selectedClass,
+        kids: classKids
+      };
+      await generateClassCatalogPDF(classRecord, classKids);
+      toast.success(t('messages:success.catalogGenerated'));
+    } catch (error) {
+      console.error('Catalog generation failed:', error);
+      toast.error(t('messages:error.failedToGenerateCatalog'));
+    } finally {
+      setIsGeneratingCatalog(false);
+    }
   };
+
+  // Kids are already sorted by the useClassKids hook
+  const sortedKids = classKids;
 
   return (
     <>
@@ -276,39 +265,54 @@ const LeftPanel: React.FC = () => {
           )}
         </ListGroup>
         
-        <div className="mt-3 pt-3 border-top">
-          <div className="d-flex gap-2">
-            <Button 
-              variant="outline-primary" 
-              size="sm"
-              className="flex-fill d-flex align-items-center justify-content-center gap-2"
-              onClick={handleExport}
-              disabled={isExporting || !selectedClass || sortedKids.length === 0}
-              title={t('navigation:exportClassDataTooltip')}
-            >
-              <Download size={16} />
-              {isExporting ? t('common:buttons.exporting') : t('navigation:exportClass')}
-            </Button>
-            <Button 
-              variant="outline-success" 
-              size="sm"
-              className="flex-fill d-flex align-items-center justify-content-center gap-2"
-              onClick={handleImportClick}
-              disabled={isImporting}
-              title={t('navigation:importClassDataTooltip')}
-            >
-              <Upload size={16} />
-              {isImporting ? t('common:buttons.importing') : t('navigation:importClass')}
-            </Button>
+        {selectedClass && (
+          <div className="mt-3 pt-3 border-top">
+            <div className="d-flex gap-2 mb-2">
+              <Button 
+                variant="outline-primary" 
+                size="sm"
+                className="flex-fill d-flex align-items-center justify-content-center gap-2"
+                onClick={handleExport}
+                disabled={isExporting || classKids.length === 0}
+                title={t('navigation:exportClassDataTooltip')}
+              >
+                <Download size={16} />
+                {isExporting ? t('common:buttons.exporting') : t('navigation:exportClass')}
+              </Button>
+              <Button 
+                variant="outline-success" 
+                size="sm"
+                className="flex-fill d-flex align-items-center justify-content-center gap-2"
+                onClick={handleImportClick}
+                disabled={isImporting}
+                title={t('navigation:importClassDataTooltip')}
+              >
+                <Upload size={16} />
+                {isImporting ? t('common:buttons.importing') : t('navigation:importClass')}
+              </Button>
+            </div>
+            <div className="d-flex">
+              <Button 
+                variant="outline-danger" 
+                size="sm"
+                className="flex-fill d-flex align-items-center justify-content-center gap-2"
+                onClick={handleGenerateCatalog}
+                disabled={isGeneratingCatalog || classKids.length === 0}
+                title={t('navigation:generateCatalogTooltip')}
+              >
+                <FilePdf size={16} />
+                {isGeneratingCatalog ? t('common:buttons.generating') : t('navigation:generateCatalog')}
+              </Button>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              style={{ display: 'none' }}
+              onChange={handleFileSelect}
+            />
           </div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".json"
-            style={{ display: 'none' }}
-            onChange={handleFileSelect}
-          />
-        </div>
+        )}
       </div>
 
       {/* Delete Confirmation Modal */}

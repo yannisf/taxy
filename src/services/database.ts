@@ -134,6 +134,19 @@ export class ClassManagementDatabase extends Dexie {
     }
   }
 
+  async addKidsToClass(classId: string, kidIds: string[]) {
+    const classObj = await this.getClassById(classId);
+    if (!classObj) throw new Error('Class not found');
+    
+    // Get unique kid IDs that aren't already in the class
+    const newKidIds = kidIds.filter(kidId => !classObj.kid_ids.includes(kidId));
+    
+    if (newKidIds.length > 0) {
+      const updatedKidIds = [...classObj.kid_ids, ...newKidIds];
+      await this.updateClass(classId, { kid_ids: updatedKidIds });
+    }
+  }
+
   async removeKidFromClass(classId: string, kidId: string) {
     const classObj = await this.getClassById(classId);
     if (!classObj) throw new Error('Class not found');

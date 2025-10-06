@@ -10,7 +10,8 @@
     "classUpdated": "Η τάξη ενημερώθηκε επιτυχώς!",
     "dataExported": "Τα δεδομένα εξήχθησαν επιτυχώς!",
     "dataImported": "Τα δεδομένα εισήχθησαν επιτυχώς!",
-    "classDataExported": "Τα δεδομένα τάξης εξήχθησαν επιτυχώς!"
+    "classDataExported": "Τα δεδομένα τάξης εξήχθησαν επιτυχώς!",
+    "catalogGenerated": "Ο κατάλογος τάξης δημιουργήθηκε επιτυχώς!"
   },
   "error": {
     "kidNotFound": "Το παιδί δεν βρέθηκε",
@@ -27,7 +28,8 @@
     "networkError": "Παρουσιάστηκε σφάλμα δικτύου",
     "fileError": "Σφάλμα λειτουργίας αρχείου",
     "selectClassToExport": "Παρακαλώ επιλέξτε μια τάξη για εξαγωγή",
-    "failedToExportClassData": "Αποτυχία εξαγωγής δεδομένων τάξης"
+    "failedToExportClassData": "Αποτυχία εξαγωγής δεδομένων τάξης",
+    "failedToGenerateCatalog": "Αποτυχία δημιουργίας καταλόγου"
   },
   "warning": {
     "unsavedChanges": "Έχετε μη αποθηκευμένες αλλαγές",

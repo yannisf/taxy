@@ -3,8 +3,9 @@ import { Form, Row, Col, Button, Modal } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
 import { X, GripVertical } from 'react-bootstrap-icons';
 import type { Control, FieldErrors } from 'react-hook-form';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import type { Telephone } from '../../types/models';
-import { validateTelephoneNumber, validateCountryCode } from '../../utils/telephoneUtils';
+import { validateTelephoneNumber, validateCountryCode, getTelephoneTypeIcon } from '../../utils/telephoneUtils';
 
 interface TelephoneFormProps {
   control: Control<Record<string, unknown>>;
@@ -14,7 +15,7 @@ interface TelephoneFormProps {
   disabled?: boolean;
   showRemoveButton?: boolean;
   showDragHandle?: boolean;
-  dragListeners?: Record<string, Function>;
+  dragListeners?: SyntheticListenerMap;
 }
 
 const TelephoneForm: React.FC<TelephoneFormProps> = ({ 
@@ -37,7 +38,7 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
   return (
     <div className="d-flex align-items-start gap-2 mb-3">
       {showDragHandle && (
-        <div className="pt-2" style={{ cursor: 'grab' }}>
+        <div className="pt-2" style={{ cursor: 'grab' }} {...dragListeners}>
           <GripVertical size={16} className="text-muted" />
         </div>
       )}
@@ -52,7 +53,7 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
                 control={control}
                 rules={{ 
                   required: 'Country code is required',
-                  validate: (value) => validateCountryCode(value) || 'Invalid country code format (e.g., +30)'
+                  validate: (value) => validateCountryCode(value || '') || 'Invalid country code format (e.g., +30)'
                 }}
                 render={({ field }) => (
                   <Form.Control
@@ -81,7 +82,7 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
                 control={control}
                 rules={{ 
                   required: 'Phone number is required',
-                  validate: (value) => validateTelephoneNumber(value) || 'Invalid phone number (4-15 digits only)'
+                  validate: (value) => validateTelephoneNumber(value || '') || 'Invalid phone number (4-15 digits only)'
                 }}
                 render={({ field }) => (
                   <Form.Control
@@ -116,10 +117,10 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
                     disabled={disabled}
                     isInvalid={!!errors?.telephone_type}
                   >
-                    <option value="mobile">📱 Mobile</option>
-                    <option value="home">🏠 Home</option>
-                    <option value="work">💼 Work</option>
-                    <option value="other">📞 Other</option>
+                    <option value="mobile">{getTelephoneTypeIcon('mobile')} Mobile</option>
+                    <option value="home">{getTelephoneTypeIcon('home')} Home</option>
+                    <option value="work">{getTelephoneTypeIcon('work')} Work</option>
+                    <option value="other">{getTelephoneTypeIcon('other')} Other</option>
                   </Form.Select>
                 )}
               />

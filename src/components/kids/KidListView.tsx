@@ -1,37 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Container, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
-import { db } from '../../services/database';
-import type { Kid } from '../../types/models';
+import { useClassKids } from '../../hooks/useClassKids';
+import { formatClassDisplay } from '../../utils/classUtils';
 
 const KidListView: React.FC = () => {
   const { t } = useTranslation(['common', 'kids']);
-  const { kids } = useKids();
   const { selectedClass } = useClass();
-  const [classKids, setClassKids] = useState<Kid[]>([]);
+  const classKids = useClassKids();
   const navigate = useNavigate();
-
-  // Filter kids based on selected class
-  useEffect(() => {
-    const filterKidsByClass = async () => {
-      if (selectedClass) {
-        try {
-          const filteredKids = await db.getKidsByClassId(selectedClass.class_id);
-          setClassKids(filteredKids);
-        } catch (error) {
-          console.error('Error filtering kids by class:', error);
-          setClassKids([]);
-        }
-      } else {
-        setClassKids([]);
-      }
-    };
-
-    filterKidsByClass();
-  }, [selectedClass, kids]);
 
   const kidCount = classKids.length;
 
@@ -39,10 +18,6 @@ const KidListView: React.FC = () => {
     navigate('/kids/add');
   };
 
-  const formatClassDisplay = (classObj: typeof selectedClass) => {
-    if (!classObj) return '';
-    return `${classObj.school_name} - ${classObj.class_name} (${classObj.school_year})`;
-  };
 
   return (
     <Container className="mt-3">

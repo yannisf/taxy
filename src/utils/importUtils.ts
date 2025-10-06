@@ -106,9 +106,14 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
 /**
  * Performs the actual import operation
  */
-export const performImport = async (validatedKids: Kid[]): Promise<ImportResult> => {
+export const performImport = async (validatedKids: Kid[], classId?: string): Promise<ImportResult> => {
   try {
     const statistics = await db.mergeKids(validatedKids);
+    
+    // If a class ID is provided, add all imported kids to the class
+    if (classId) {
+      await db.addKidsToClass(classId, validatedKids.map(kid => kid.kid_id));
+    }
     
     return {
       success: true,

@@ -21,7 +21,8 @@
     "updating": "Updating...",
     "deleting": "Deleting...",
     "importing": "Importing...",
-    "exporting": "Exporting..."
+    "exporting": "Exporting...",
+    "generating": "Generating..."
   },
   "labels": {
     "firstName": "First Name",

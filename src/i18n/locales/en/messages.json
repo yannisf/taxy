@@ -10,7 +10,8 @@
     "classUpdated": "Class updated successfully!",
     "dataExported": "Data exported successfully!",
     "dataImported": "Data imported successfully!",
-    "classDataExported": "Class data exported successfully!"
+    "classDataExported": "Class data exported successfully!",
+    "catalogGenerated": "Class catalog generated successfully!"
   },
   "error": {
     "kidNotFound": "Kid not found",
@@ -27,7 +28,8 @@
     "networkError": "Network error occurred",
     "fileError": "File operation error",
     "selectClassToExport": "Please select a class to export",
-    "failedToExportClassData": "Failed to export class data"
+    "failedToExportClassData": "Failed to export class data",
+    "failedToGenerateCatalog": "Failed to generate catalog"
   },
   "warning": {
     "unsavedChanges": "You have unsaved changes",

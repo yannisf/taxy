@@ -21,7 +21,8 @@
     "updating": "Ενημέρωση...",
     "deleting": "Διαγραφή...",
     "importing": "Εισαγωγή...",
-    "exporting": "Εξαγωγή..."
+    "exporting": "Εξαγωγή...",
+    "generating": "Δημιουργία..."
   },
   "labels": {
     "firstName": "Όνομα",
