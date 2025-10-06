@@ -35,13 +35,22 @@
     "dateOfBirth": "Date of Birth",
     "gender": "Gender",
     "required": "*",
-    "optional": "(Optional)"
+    "optional": "(Optional)",
+    "created": "Created",
+    "lastUpdated": "Last Updated",
+    "editDetails": "Edit kid details"
   },
   "gender": {
     "male": "Male",
     "female": "Female",
     "other": "Other",
     "selectGender": "Select gender"
+  },
+  "placeholders": {
+    "firstName": "Enter first name",
+    "lastName": "Enter last name",
+    "notes": "General notes about the child",
+    "privateNotes": "Confidential notes (restricted access)"
   },
   "validation": {
     "required": "This field is required",

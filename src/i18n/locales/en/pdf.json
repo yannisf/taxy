@@ -1,0 +1,25 @@
+{
+  "title": {
+    "classCatalog": "Class Catalog",
+    "generatedOn": "Generated on:",
+    "schoolYear": "School Year:"
+  },
+  "table": {
+    "headers": {
+      "number": "#",
+      "studentName": "Student Name",
+      "guardianInformation": "Guardian Information"
+    }
+  },
+  "messages": {
+    "noGuardians": "No guardians"
+  },
+  "relations": {
+    "father": "FATHER",
+    "mother": "MOTHER",
+    "sibling": "SIBLING",
+    "grandparent": "GRANDPARENT",
+    "extendedFamily": "EXTENDED FAMILY",
+    "friend": "FRIEND"
+  }
+}

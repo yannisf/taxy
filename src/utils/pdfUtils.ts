@@ -1,47 +1,78 @@
 import type { TDocumentDefinitions, Content } from 'pdfmake/interfaces';
 import type { Kid, Guardian, Telephone, ClassRecord } from '../types/models';
+import type { TFunction } from 'i18next';
 
 /**
- * Formats a telephone number
+ * Formats a telephone number for PDF (XXX XXX XXXX format, no country code)
  */
-function formatTelephone(telephone: Telephone): string {
-  return `${telephone.country_code} ${telephone.number}`;
+function formatPhoneForPDF(telephone: Telephone): string {
+  const number = telephone.number;
+  // Format as XXX XXX XXXX
+  if (number.length >= 10) {
+    return `${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
+  } else if (number.length >= 7) {
+    return `${number.slice(0, 3)} ${number.slice(3)}`;
+  }
+  return number;
 }
 
 /**
- * Formats guardian information for display in the PDF
+ * Creates a text array for guardians with proper formatting
  */
-function formatGuardianInfo(guardian: Guardian): string[] {
-  const lines: string[] = [];
+function createGuardianTextArray(guardians: Guardian[], t: TFunction): Content[] {
+  const textArray: Content[] = [];
   
-  // Guardian name
-  lines.push(`${guardian.first_name} ${guardian.last_name}`);
+  guardians.forEach((guardian, guardianIndex) => {
+    if (guardianIndex > 0) {
+      textArray.push({ text: '\n', fontSize: 10 });
+    }
+    
+    // Guardian name (normal size)
+    textArray.push({
+      text: `${guardian.first_name} ${guardian.last_name} `,
+      fontSize: 10
+    });
+    
+    // Relation (xx-small bold, no space before)
+    const relationKey = `pdf:relations.${guardian.relation_with_kid}`;
+    const relationText = t(relationKey, { defaultValue: guardian.relation_with_kid.toUpperCase() });
+    textArray.push({
+      text: relationText,
+      fontSize: 7,
+      bold: true
+    });
+    
+    // Phone numbers
+    if (guardian.telephones && guardian.telephones.length > 0) {
+      const phoneTexts = guardian.telephones
+        .slice(0, 3)
+        .map(formatPhoneForPDF);
+      textArray.push({
+        text: ` | ${phoneTexts.join(' | ')}`,
+        fontSize: 10
+      });
+    } else {
+      textArray.push({
+        text: ' |',
+        fontSize: 10
+      });
+    }
+  });
   
-  // Relation in small bold text
-  lines.push(`${guardian.relation_with_kid.toUpperCase()}`);
-  
-  // Telephones (up to 3)
-  if (guardian.telephones && guardian.telephones.length > 0) {
-    const telephoneTexts = guardian.telephones
-      .slice(0, 3)
-      .map(formatTelephone);
-    lines.push(`| ${telephoneTexts.join(' | ')}`);
-  }
-  
-  return lines;
+  return textArray;
 }
 
 /**
  * Creates the table data for the PDF
  */
-function createTableData(kids: Kid[]): Content[][] {
+function createTableData(kids: Kid[], t: TFunction): Content[][] {
   const tableData: Content[][] = [];
   
   // Header row
   tableData.push([
-    { text: '#', style: 'tableHeader' },
-    { text: 'Student Name', style: 'tableHeader' },
-    { text: 'Guardian Information', style: 'tableHeader' }
+    { text: t('pdf:table.headers.number'), style: 'tableHeader' },
+    { text: t('pdf:table.headers.studentName'), style: 'tableHeader' },
+    { text: t('pdf:table.headers.guardianInformation'), style: 'tableHeader' }
   ]);
   
   kids.forEach((kid, index) => {
@@ -52,42 +83,17 @@ function createTableData(kids: Kid[]): Content[][] {
       tableData.push([
         { text: (index + 1).toString(), style: 'tableCell' },
         { text: kidName, style: 'tableCell' },
-        { text: 'No guardians', style: 'tableCell', italics: true, color: '#666666' }
+        { text: t('pdf:messages.noGuardians'), style: 'tableCell', italics: true, color: '#666666' }
       ]);
     } else {
-      // Kid with guardians
-      const guardianCells: Content[] = [];
-      
-      kid.guardians.forEach((guardian, guardianIndex) => {
-        const guardianLines = formatGuardianInfo(guardian);
-        
-        if (guardianIndex > 0) {
-          guardianCells.push({ text: '\n', fontSize: 6 }); // Separator between guardians
-        }
-        
-        guardianLines.forEach((line, lineIndex) => {
-          if (lineIndex === 1) {
-            // Relation line - xx-small bold
-            guardianCells.push({
-              text: line,
-              fontSize: 8,
-              margin: [0, 0, 0, 2]
-            });
-          } else {
-            // Name and telephone lines
-            guardianCells.push({
-              text: line,
-              fontSize: 10,
-              margin: [0, 0, 0, 1]
-            });
-          }
-        });
-      });
-      
+      // Kid with guardians - each guardian on a separate line
       tableData.push([
         { text: (index + 1).toString(), style: 'tableCell' },
         { text: kidName, style: 'tableCell' },
-        guardianCells
+        { 
+          text: createGuardianTextArray(kid.guardians, t),
+          style: 'tableCell'
+        }
       ]);
     }
   });
@@ -98,7 +104,7 @@ function createTableData(kids: Kid[]): Content[][] {
 /**
  * Generates and downloads the class catalog PDF
  */
-export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Kid[]): Promise<void> {
+export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Kid[], t: TFunction): Promise<void> {
   // Dynamic import to ensure proper initialization
   const pdfMakeModule = await import('pdfmake/build/pdfmake');
   const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
@@ -111,7 +117,11 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   pdfMake.vfs = (pdfFontsModule as any).default || pdfFontsModule;
   
-  const currentDate = new Date().toLocaleDateString();
+  const currentDate = new Date().toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
   const fileName = `${classRecord.school_name}_${classRecord.class_name}_${classRecord.school_year}_catalog.pdf`;
   
   console.log('Generating PDF with filename:', fileName);
@@ -126,18 +136,14 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
       columns: [
         {
           width: '*',
-          text: [
-            { text: 'Class Catalog\n', style: 'header' },
-            { text: `${classRecord.school_name} - ${classRecord.class_name}\n`, style: 'subheader' },
-            { text: `School Year: ${classRecord.school_year}`, style: 'subheader' }
-          ]
+          text: `${classRecord.school_name} / ${classRecord.class_name} / ${classRecord.school_year}`,
+          style: 'header',
+          alignment: 'left'
         },
         {
           width: 'auto',
-          text: [
-            { text: 'Generated on:\n', style: 'dateLabel' },
-            { text: currentDate, style: 'dateValue' }
-          ],
+          text: `${t('pdf:title.generatedOn')} ${currentDate}`,
+          style: 'dateInfo',
           alignment: 'right'
         }
       ],
@@ -148,8 +154,8 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
       {
         table: {
           headerRows: 1,
-          widths: ['auto', '*', '*'],
-          body: createTableData(kids)
+          widths: [30, 'auto', '*'],
+          body: createTableData(kids, t)
         },
         layout: {
           fillColor: function(rowIndex: number) {
@@ -172,13 +178,9 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
         fontSize: 14,
         color: '#34495e'
       },
-      dateLabel: {
-        fontSize: 10,
+      dateInfo: {
+        fontSize: 8,
         color: '#6c757d'
-      },
-      dateValue: {
-        fontSize: 12,
-        color: '#495057'
       },
       tableHeader: {
         fontSize: 12,
@@ -188,8 +190,8 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
       },
       tableCell: {
         fontSize: 10,
-        margin: [8, 6, 8, 6],
-        lineHeight: 1.3
+        margin: [8, 3, 8, 3],
+        lineHeight: 1.2
       }
     },
     

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Form, Button, Container, Row, Col, Alert, Accordion, Card } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { createKid } from '../../types/models';
 import type { Kid, Guardian } from '../../types/models';
 import { validationService } from '../../services/validation';
@@ -26,6 +27,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
   const { kidId } = useParams<{ kidId: string }>();
   const { refreshKids } = useKids();
   const { selectedClass } = useClass();
+  const { t } = useTranslation();
   const { 
     control, 
     handleSubmit, 
@@ -77,7 +79,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
   // Simple values - no need for memoization
   const guardianCount = guardians.length;
   const addressString = formatAddressString(initialData?.address);
-  const addressTitle = addressString ? `Address: ${addressString}` : 'Address';
+  const addressTitle = addressString ? `${t('common:labels.address')}: ${addressString}` : t('common:labels.address');
   const addressExpanded = !addressString; // Expanded if no address, collapsed if address exists
 
   const handleCancel = () => {
@@ -91,12 +93,12 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
       // Ensure minimum required data
       if (!data.first_name || !data.last_name || !data.gender || !data.level) {
         const missingFields = [];
-        if (!data.first_name) missingFields.push('First Name');
-        if (!data.last_name) missingFields.push('Last Name');
-        if (!data.gender) missingFields.push('Gender');
-        if (!data.level) missingFields.push('Level');
+        if (!data.first_name) missingFields.push(t('common:labels.firstName'));
+        if (!data.last_name) missingFields.push(t('common:labels.lastName'));
+        if (!data.gender) missingFields.push(t('common:labels.gender'));
+        if (!data.level) missingFields.push(t('kids:form.level'));
         
-        const errorMessage = `Missing required fields: ${missingFields.join(', ')}`;
+        const errorMessage = t('kids:messages.validation.missingFields', { fields: missingFields.join(', ') });
         setServerError(errorMessage);
         return;
       }
@@ -129,7 +131,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
       } else {
         // Create new kid
         if (!selectedClass) {
-          setServerError('Please select a class before adding a kid.');
+          setServerError(t('kids:messages.validation.selectClass'));
           return;
         }
 
@@ -156,7 +158,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
       onSubmitSuccess();
     } catch (error) {
       console.error('Kid insertion error:', error);
-      setServerError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      setServerError(error instanceof Error ? error.message : t('common:status.error'));
     }
   }, [guardians, initialData, refreshKids, onSubmitSuccess, reset]);
 
@@ -171,16 +173,16 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Row>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>First Name <span style={{color: 'red'}}>*</span></Form.Label>
+              <Form.Label>{t('common:labels.firstName')} <span style={{color: 'red'}}>{t('common:labels.required')}</span></Form.Label>
               <Controller
                 name="first_name"
                 control={control}
-                rules={{ required: 'First name is required' }}
+                rules={{ required: t('common:validation.fieldRequired', { field: t('common:labels.firstName') }) }}
                 render={({ field }) => (
                   <Form.Control 
                     {...field} 
                     type="text" 
-                    placeholder="Enter first name"
+                    placeholder={t('common:placeholders.firstName')}
                     isInvalid={!!errors.first_name}
                   />
                 )}
@@ -194,16 +196,16 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           </Col>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Last Name <span style={{color: 'red'}}>*</span></Form.Label>
+              <Form.Label>{t('common:labels.lastName')} <span style={{color: 'red'}}>{t('common:labels.required')}</span></Form.Label>
               <Controller
                 name="last_name"
                 control={control}
-                rules={{ required: 'Last name is required' }}
+                rules={{ required: t('common:validation.fieldRequired', { field: t('common:labels.lastName') }) }}
                 render={({ field }) => (
                   <Form.Control 
                     {...field} 
                     type="text" 
-                    placeholder="Enter last name"
+                    placeholder={t('common:placeholders.lastName')}
                     isInvalid={!!errors.last_name}
                   />
                 )}
@@ -220,17 +222,17 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Row>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Gender <span style={{color: 'red'}}>*</span></Form.Label>
+              <Form.Label>{t('common:labels.gender')} <span style={{color: 'red'}}>{t('common:labels.required')}</span></Form.Label>
               <Controller
                 name="gender"
                 control={control}
-                rules={{ required: 'Gender is required' }}
+                rules={{ required: t('common:validation.fieldRequired', { field: t('common:labels.gender') }) }}
                 render={({ field }) => (
                   <Form.Select {...field} isInvalid={!!errors.gender}>
-                    <option value="" disabled>Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
+                    <option value="" disabled>{t('common:gender.selectGender')}</option>
+                    <option value="male">{t('common:gender.male')}</option>
+                    <option value="female">{t('common:gender.female')}</option>
+                    <option value="other">{t('common:gender.other')}</option>
                   </Form.Select>
                 )}
               />
@@ -243,17 +245,17 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           </Col>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Level <span style={{color: 'red'}}>*</span></Form.Label>
+              <Form.Label>{t('kids:form.level')} <span style={{color: 'red'}}>{t('common:labels.required')}</span></Form.Label>
               <Controller
                 name="level"
                 control={control}
-                rules={{ required: 'Level is required' }}
+                rules={{ required: t('common:validation.fieldRequired', { field: t('kids:form.level') }) }}
                 render={({ field }) => (
                   <Form.Select {...field} isInvalid={!!errors.level}>
-                    <option value="" disabled>Select level</option>
-                    <option value="pre-kindergartner">Pre-Kindergartner</option>
-                    <option value="kindergartner">Kindergartner</option>
-                    <option value="kindergartner-repeating">Kindergartner (Repeating)</option>
+                    <option value="" disabled>{t('kids:levels.selectLevel')}</option>
+                    <option value="pre-kindergartner">{t('kids:levels.preKindergarten')}</option>
+                    <option value="kindergartner">{t('kids:levels.kindergarten')}</option>
+                    <option value="kindergartner-repeating">{t('kids:levels.kindergartenRepeating')}</option>
                   </Form.Select>
                 )}
               />
@@ -269,7 +271,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Row>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Preferred Name</Form.Label>
+              <Form.Label>{t('kids:form.preferredName')}</Form.Label>
               <Controller
                 name="preferred_name"
                 control={control}
@@ -278,7 +280,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
                     {...field}
                     value={field.value ?? ''}
                     type="text" 
-                    placeholder="Enter preferred name"
+                    placeholder={t('kids:form.placeholders.preferredName')}
                   />
                 )}
               />
@@ -286,7 +288,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           </Col>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Date of Birth</Form.Label>
+              <Form.Label>{t('common:labels.dateOfBirth')}</Form.Label>
               <Controller
                 name="date_of_birth"
                 control={control}
@@ -305,7 +307,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Form.Group className="mb-3">
           <Form.Check 
             type="checkbox"
-            label="Special Education"
+            label={t('kids:form.specialEducation')}
             {...register('special_education')}
           />
         </Form.Group>
@@ -313,22 +315,22 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Row>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Notes</Form.Label>
+              <Form.Label>{t('common:labels.notes')}</Form.Label>
               <Form.Control 
                 {...register('notes')}
                 as="textarea" 
-                placeholder="General notes about the child"
+                placeholder={t('common:placeholders.notes')}
                 rows={4} 
               />
             </Form.Group>
           </Col>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Private Notes</Form.Label>
+              <Form.Label>{t('common:labels.privateNotes')}</Form.Label>
               <Form.Control 
                 {...register('private_notes')}
                 as="textarea" 
-                placeholder="Confidential notes (restricted access)"
+                placeholder={t('common:placeholders.privateNotes')}
                 rows={4} 
               />
             </Form.Group>
@@ -352,21 +354,21 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Card className="mb-4">
           <Card.Header>
             <div className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">Guardians ({guardianCount})</h5>
+              <h5 className="mb-0">{t('guardians:title.guardians')} ({guardianCount})</h5>
               <Button 
                 variant="outline-primary" 
                 size="sm"
                 onClick={handleAddGuardianClick}
                 disabled={showNewGuardian}
               >
-                + Add Guardian
+                + {t('guardians:actions.addGuardian')}
               </Button>
             </div>
           </Card.Header>
           <Card.Body>
             {guardians.length === 0 && !showNewGuardian ? (
               <Alert variant="info" className="mb-0">
-                No guardians added yet. Click "Add Guardian" to get started.
+                {t('guardians:messages.noGuardians')}
               </Alert>
             ) : (
               <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key as string | null)}>
@@ -396,11 +398,11 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
 
         <div className="d-flex gap-2">
           <Button variant="primary" type="submit">
-            {initialData ? 'Update Kid' : 'Add Kid'}
+            {initialData ? t('kids:actions.updateKid') : t('kids:actions.addKid')}
           </Button>
           {initialData && (
             <Button variant="secondary" type="button" onClick={handleCancel}>
-              Cancel
+              {t('common:buttons.cancel')}
             </Button>
           )}
         </div>

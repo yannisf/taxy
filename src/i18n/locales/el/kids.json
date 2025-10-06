@@ -8,21 +8,12 @@
     "addAnotherKid": "Προσθέστε Άλλο Παιδί"
   },
   "form": {
-    "firstName": "Όνομα",
-    "lastName": "Επώνυμο",
     "preferredName": "Προτιμώμενο Όνομα",
-    "dateOfBirth": "Ημερομηνία Γέννησης",
-    "gender": "Φύλο",
     "level": "Επίπεδο",
     "specialEducation": "Ειδική Αγωγή",
-    "notes": "Σημειώσεις",
-    "privateNotes": "Ιδιωτικές Σημειώσεις",
+    "notSpecified": "Δεν προσδιορίστηκε",
     "placeholders": {
-      "firstName": "Εισάγετε όνομα",
-      "lastName": "Εισάγετε επώνυμο",
-      "preferredName": "Εισάγετε προτιμώμενο όνομα",
-      "notes": "Γενικές σημειώσεις για το παιδί",
-      "privateNotes": "Εμπιστευτικές σημειώσεις (περιορισμένη πρόσβαση)"
+      "preferredName": "Εισάγετε προτιμώμενο όνομα"
     }
   },
   "levels": {

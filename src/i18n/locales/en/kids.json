@@ -8,21 +8,12 @@
     "addAnotherKid": "Add Another Kid"
   },
   "form": {
-    "firstName": "First Name",
-    "lastName": "Last Name",
     "preferredName": "Preferred Name",
-    "dateOfBirth": "Date of Birth",
-    "gender": "Gender",
     "level": "Level",
     "specialEducation": "Special Education",
-    "notes": "Notes",
-    "privateNotes": "Private Notes",
+    "notSpecified": "Not specified",
     "placeholders": {
-      "firstName": "Enter first name",
-      "lastName": "Enter last name",
-      "preferredName": "Enter preferred name",
-      "notes": "General notes about the child",
-      "privateNotes": "Confidential notes (restricted access)"
+      "preferredName": "Enter preferred name"
     }
   },
   "levels": {

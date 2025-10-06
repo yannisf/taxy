@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Alert } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import KidForm from './KidForm';
 import type { Kid } from '../../types/models';
@@ -11,6 +12,7 @@ const KidEditView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchKid = async () => {
@@ -21,11 +23,11 @@ const KidEditView: React.FC = () => {
           if (fetchedKid) {
             setKid(fetchedKid);
           } else {
-            setError('Kid not found');
+            setError(t('kids:messages.kidNotFound'));
           }
         } catch (err) {
           console.error('Error fetching kid:', err);
-          setError('Failed to load kid data');
+          setError(t('common:status.error'));
         } finally {
           setLoading(false);
         }
@@ -45,8 +47,8 @@ const KidEditView: React.FC = () => {
   if (loading) {
     return (
       <Container className="mt-3">
-        <h2>Edit Kid</h2>
-        <p>Loading kid data...</p>
+        <h2>{t('kids:title.editKid')}</h2>
+        <p>{t('kids:messages.loadingDetails')}</p>
       </Container>
     );
   }
@@ -54,7 +56,7 @@ const KidEditView: React.FC = () => {
   if (error) {
     return (
       <Container className="mt-3">
-        <h2>Edit Kid</h2>
+        <h2>{t('kids:title.editKid')}</h2>
         <Alert variant="danger">
           {error}
         </Alert>
@@ -65,9 +67,9 @@ const KidEditView: React.FC = () => {
   if (!kid) {
     return (
       <Container className="mt-3">
-        <h2>Edit Kid</h2>
+        <h2>{t('kids:title.editKid')}</h2>
         <Alert variant="warning">
-          Kid not found.
+          {t('kids:messages.kidNotFound')}
         </Alert>
       </Container>
     );
@@ -75,7 +77,7 @@ const KidEditView: React.FC = () => {
 
   return (
     <Container className="mt-3">
-      <h2>Edit Kid: {kid.first_name} {kid.last_name}</h2>
+      <h2>{t('kids:title.editKid')}: {kid.first_name} {kid.last_name}</h2>
       <KidForm 
         initialData={kid}
         onSubmitSuccess={handleSubmitSuccess} 

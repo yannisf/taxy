@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Row, Col, Alert, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { PencilSquare, CheckLg, InfoCircle } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import GuardianCard from '../guardians/GuardianCard';
 import AddressDisplay from '../common/AddressDisplay';
@@ -12,6 +13,7 @@ const KidDetailsView: React.FC = () => {
   const { kidId } = useParams<{ kidId: string }>();
   const navigate = useNavigate();
   const [kid, setKid] = useState<Kid | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchKid = async () => {
@@ -39,7 +41,7 @@ const KidDetailsView: React.FC = () => {
   if (!kid) {
     return (
       <Container className="mt-3">
-        <p>Loading kid details...</p>
+        <p>{t('kids:messages.loadingDetails')}</p>
       </Container>
     );
   }
@@ -55,8 +57,8 @@ const KidDetailsView: React.FC = () => {
               overlay={
                 <Tooltip>
                   <div>
-                    <strong>Created:</strong> {formatDateDisplay(kid.created_at, true)}<br />
-                    <strong>Last Updated:</strong> {formatDateDisplay(kid.updated_at, true)}
+                    <strong>{t('common:labels.created')}:</strong> {formatDateDisplay(kid.created_at, true)}<br />
+                    <strong>{t('common:labels.lastUpdated')}:</strong> {formatDateDisplay(kid.updated_at, true)}
                   </div>
                 </Tooltip>
               }
@@ -72,27 +74,27 @@ const KidDetailsView: React.FC = () => {
               className="text-primary" 
               style={{ cursor: 'pointer' }}
               onClick={handleEditClick}
-              title="Edit kid details"
+              title={t('common:labels.editDetails')}
             />
           </div>
         </Card.Header>
         <Card.Body>
-          <p><strong>First Name:</strong> {kid.first_name}</p>
-          <p><strong>Last Name:</strong> {kid.last_name}</p>
-          <p><strong>Preferred Name:</strong> {kid.preferred_name || 'Not specified'}</p>
-          <p><strong>Date of Birth:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
-          <p><strong>Gender:</strong> {kid.gender}</p>
-          <p><strong>Level:</strong> {kid.level}</p>
+          <p><strong>{t('common:labels.firstName')}:</strong> {kid.first_name}</p>
+          <p><strong>{t('common:labels.lastName')}:</strong> {kid.last_name}</p>
+          <p><strong>{t('kids:form.preferredName')}:</strong> {kid.preferred_name || t('kids:form.notSpecified')}</p>
+          <p><strong>{t('common:labels.dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
+          <p><strong>{t('common:labels.gender')}:</strong> {kid.gender}</p>
+          <p><strong>{t('kids:form.level')}:</strong> {kid.level}</p>
           {kid.special_education && (
-            <p><strong>Special education</strong> <CheckLg className="text-success" /></p>
+            <p><strong>{t('kids:status.specialEducation')}</strong> <CheckLg className="text-success" /></p>
           )}
           
           {/* Address within main card */}
-          <p><strong>Address:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
+          <p><strong>{t('common:labels.address')}:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
           
           {kid.notes && (
             <div className="mt-3">
-              <strong>Notes:</strong>
+              <strong>{t('common:labels.notes')}:</strong>
               <p>{kid.notes}</p>
             </div>
           )}
@@ -103,13 +105,13 @@ const KidDetailsView: React.FC = () => {
       {/* Guardians Section */}
       <Card className="mt-3">
         <Card.Header className="d-flex align-items-center gap-2">
-          <h4 className="mb-0">Guardians</h4>
+          <h4 className="mb-0">{t('guardians:title.guardians')}</h4>
           <Badge bg="secondary">{kid.guardians?.length || 0}</Badge>
         </Card.Header>
         <Card.Body>
           {!kid.guardians || kid.guardians.length === 0 ? (
             <Alert variant="info" className="mb-0">
-              No guardians have been added for this student yet.
+              {t('kids:messages.noGuardians')}
             </Alert>
           ) : (
             <Row>

@@ -1,0 +1,25 @@
+{
+  "title": {
+    "classCatalog": "Κατάλογος Τάξης",
+    "generatedOn": "Δημιουργήθηκε στις:",
+    "schoolYear": "Σχολικό Έτος:"
+  },
+  "table": {
+    "headers": {
+      "number": "#",
+      "studentName": "Όνομα Μαθητή",
+      "guardianInformation": "Στοιχεία Κηδεμόνων"
+    }
+  },
+  "messages": {
+    "noGuardians": "Χωρίς κηδεμόνες"
+  },
+  "relations": {
+    "father": "ΠΑΤΕΡΑΣ",
+    "mother": "ΜΗΤΕΡΑ",
+    "sibling": "ΑΔΕΛΦΟΣ/Η",
+    "grandparent": "ΠΑΠΠΟΥΣ/Α",
+    "extendedFamily": "ΣΥΓΓΕΝΗΣ",
+    "friend": "ΦΙΛΟΣ"
+  }
+}

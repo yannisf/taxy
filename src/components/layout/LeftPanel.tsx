@@ -164,7 +164,7 @@ const LeftPanel: React.FC = () => {
         ...selectedClass,
         kids: classKids
       };
-      await generateClassCatalogPDF(classRecord, classKids);
+      await generateClassCatalogPDF(classRecord, classKids, t);
       toast.success(t('messages:success.catalogGenerated'));
     } catch (error) {
       console.error('Catalog generation failed:', error);

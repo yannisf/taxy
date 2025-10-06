@@ -10,6 +10,7 @@ import guardiansEn from './locales/en/guardians.json';
 import classesEn from './locales/en/classes.json';
 import formsEn from './locales/en/forms.json';
 import messagesEn from './locales/en/messages.json';
+import pdfEn from './locales/en/pdf.json';
 
 import commonEl from './locales/el/common.json';
 import navigationEl from './locales/el/navigation.json';
@@ -18,6 +19,7 @@ import guardiansEl from './locales/el/guardians.json';
 import classesEl from './locales/el/classes.json';
 import formsEl from './locales/el/forms.json';
 import messagesEl from './locales/el/messages.json';
+import pdfEl from './locales/el/pdf.json';
 
 const resources = {
   en: {
@@ -28,6 +30,7 @@ const resources = {
     classes: classesEn,
     forms: formsEn,
     messages: messagesEn,
+    pdf: pdfEn,
   },
   el: {
     common: commonEl,
@@ -37,6 +40,7 @@ const resources = {
     classes: classesEl,
     forms: formsEl,
     messages: messagesEl,
+    pdf: pdfEl,
   },
 };
 
@@ -64,7 +68,7 @@ i18n
 
     // Default namespace
     defaultNS: 'common',
-    ns: ['common', 'navigation', 'kids', 'guardians', 'classes', 'forms', 'messages'],
+    ns: ['common', 'navigation', 'kids', 'guardians', 'classes', 'forms', 'messages', 'pdf'],
   });
 
 export default i18n;
