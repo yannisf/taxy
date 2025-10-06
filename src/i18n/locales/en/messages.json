@@ -11,7 +11,8 @@
     "dataExported": "Data exported successfully!",
     "dataImported": "Data imported successfully!",
     "classDataExported": "Class data exported successfully!",
-    "catalogGenerated": "Class catalog generated successfully!"
+    "catalogGenerated": "Class catalog generated successfully!",
+    "guardianEmailsExported": "Guardian emails exported successfully! {{count}} emails downloaded."
   },
   "error": {
     "kidNotFound": "Kid not found",
@@ -29,7 +30,9 @@
     "fileError": "File operation error",
     "selectClassToExport": "Please select a class to export",
     "failedToExportClassData": "Failed to export class data",
-    "failedToGenerateCatalog": "Failed to generate catalog"
+    "failedToGenerateCatalog": "Failed to generate catalog",
+    "failedToExportGuardianEmails": "Failed to export guardian emails",
+    "noGuardianEmailsFound": "No guardians with email addresses found in this class"
   },
   "warning": {
     "unsavedChanges": "You have unsaved changes",

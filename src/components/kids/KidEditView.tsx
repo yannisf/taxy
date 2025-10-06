@@ -44,6 +44,28 @@ const KidEditView: React.FC = () => {
     }
   };
 
+  const handleCancel = () => {
+    // Navigate back to the kid's detail view (same as cancel behavior)
+    if (kidId) {
+      navigate(`/kids/${kidId}`);
+    }
+  };
+
+  // Keyboard navigation - Escape key to cancel/close edit mode
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        handleCancel();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [kidId]);
+
   if (loading) {
     return (
       <Container className="mt-3">

@@ -85,6 +85,28 @@
   color: #0d6efd !important;
 }
 
+/* Icon Action Buttons - Consistent styling for all action buttons */
+.icon-action-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.icon-action-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.icon-action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 /* Ensure smooth transitions */
 .icon-button {
   transition: color 0.2s ease;

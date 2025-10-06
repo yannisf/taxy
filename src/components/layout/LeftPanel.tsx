@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ListGroup, Button, Modal, Badge, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { PencilSquare, XLg, PersonFill, Plus, Download, Upload, FilePdf } from 'react-bootstrap-icons';
+import { PencilSquare, XLg, PersonFill, Plus, Download, Upload, FilePdf, Envelope, BoxArrowLeft } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
@@ -9,7 +9,7 @@ import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
 import type { Kid } from '../../types/models';
-import { exportClassData } from '../../utils/exportUtils';
+import { exportClassData, exportGuardianEmails } from '../../utils/exportUtils';
 import { generateClassCatalogPDF } from '../../utils/pdfUtils';
 import { formatClassDisplay } from '../../utils/classUtils';
 import { 
@@ -21,7 +21,13 @@ import {
 const LeftPanel: React.FC = () => {
   const { t } = useTranslation(['navigation', 'kids', 'common', 'messages']);
   const { refreshKids } = useKids();
-  const { selectedClass } = useClass();
+  const { selectedClass, clearSelectedClass } = useClass();
+  
+  const handleCloseClass = () => {
+    clearSelectedClass();
+    // Navigate to default kids route to clear the main panel
+    navigate('/kids');
+  };
   const classKids = useClassKids();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [kidToDelete, setKidToDelete] = useState<Kid | null>(null);
@@ -29,6 +35,7 @@ const LeftPanel: React.FC = () => {
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [isGeneratingCatalog, setIsGeneratingCatalog] = useState(false);
+  const [isExportingEmails, setIsExportingEmails] = useState(false);
   const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
   const [importValidationResult, setImportValidationResult] = useState<ImportValidationResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -174,6 +181,28 @@ const LeftPanel: React.FC = () => {
     }
   };
 
+  const handleExportGuardianEmails = async () => {
+    if (!selectedClass) {
+      toast.error(t('messages:error.selectClassToExport'));
+      return;
+    }
+
+    setIsExportingEmails(true);
+    try {
+      const result = await exportGuardianEmails(classKids, selectedClass.class_name, selectedClass.school_name);
+      toast.success(t('messages:success.guardianEmailsExported', { count: result.count }));
+    } catch (error) {
+      console.error('Guardian emails export failed:', error);
+      if (error instanceof Error && error.message === 'No guardians with email addresses found') {
+        toast.error(t('messages:error.noGuardianEmailsFound'));
+      } else {
+        toast.error(t('messages:error.failedToExportGuardianEmails'));
+      }
+    } finally {
+      setIsExportingEmails(false);
+    }
+  };
+
   // Kids are already sorted by the useClassKids hook
   const sortedKids = classKids;
 
@@ -182,9 +211,75 @@ const LeftPanel: React.FC = () => {
       <div className="left-panel p-3">
         {/* Selected Class Display */}
         {selectedClass && (
-          <div className="mb-3 p-2 bg-light rounded">
-            <small className="text-muted d-block">{t('navigation:currentClass')}:</small>
-            <strong className="text-primary">{formatClassDisplay(selectedClass)}</strong>
+          <div className="mb-3 p-3 bg-light rounded">
+            <div className="mb-2">
+              <div className="text-primary fw-bold">{selectedClass.school_name}</div>
+              <div className="text-dark">
+                {selectedClass.class_name} 
+                <small className="text-muted ms-2">({selectedClass.school_year})</small>
+              </div>
+            </div>
+            <div className="d-flex gap-2">
+              <Button 
+                variant="outline-primary" 
+                size="sm"
+                className="icon-action-button d-flex align-items-center justify-content-center"
+                onClick={handleExport}
+                disabled={isExporting || classKids.length === 0}
+                title={isExporting ? t('common:buttons.exporting') : t('navigation:exportClassDataTooltip')}
+              >
+                <Download size={18} />
+              </Button>
+              <Button 
+                variant="outline-success" 
+                size="sm"
+                className="icon-action-button d-flex align-items-center justify-content-center"
+                onClick={handleImportClick}
+                disabled={isImporting}
+                title={isImporting ? t('common:buttons.importing') : t('navigation:importClassDataTooltip')}
+              >
+                <Upload size={18} />
+              </Button>
+              <Button 
+                variant="outline-danger" 
+                size="sm"
+                className="icon-action-button d-flex align-items-center justify-content-center"
+                onClick={handleGenerateCatalog}
+                disabled={isGeneratingCatalog || classKids.length === 0}
+                title={isGeneratingCatalog ? t('common:buttons.generating') : t('navigation:generateCatalogTooltip')}
+              >
+                <FilePdf size={18} />
+              </Button>
+              <Button 
+                variant="outline-info" 
+                size="sm"
+                className="icon-action-button d-flex align-items-center justify-content-center"
+                onClick={handleExportGuardianEmails}
+                disabled={isExportingEmails || classKids.length === 0}
+                title={isExportingEmails ? t('common:buttons.exporting') : t('navigation:exportGuardianEmailsTooltip')}
+              >
+                <Envelope size={18} />
+              </Button>
+              <Button 
+                variant="outline-secondary" 
+                size="sm"
+                className="icon-action-button d-flex align-items-center justify-content-center"
+                onClick={handleCloseClass}
+                title={t('navigation:closeClassTooltip')}
+              >
+                <BoxArrowLeft size={18} />
+              </Button>
+              <Button 
+                variant="outline-primary" 
+                size="sm"
+                className="icon-action-button d-flex align-items-center justify-content-center"
+                onClick={() => navigate('/kids/add')}
+                disabled={!selectedClass}
+                title={t('kids:actions.addKid')}
+              >
+                <Plus size={18} />
+              </Button>
+            </div>
           </div>
         )}
 
@@ -197,15 +292,6 @@ const LeftPanel: React.FC = () => {
 
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="mb-0">{t('navigation:kids')}</h5>
-          <Button 
-            variant="link" 
-            className="p-0 text-decoration-none"
-            onClick={() => navigate('/kids/add')}
-            title={t('kids:actions.addKid')}
-            disabled={!selectedClass}
-          >
-            <Plus size={20} />
-          </Button>
         </div>
         
         <ListGroup variant="flush">
@@ -266,52 +352,13 @@ const LeftPanel: React.FC = () => {
         </ListGroup>
         
         {selectedClass && (
-          <div className="mt-3 pt-3 border-top">
-            <div className="d-flex gap-2 mb-2">
-              <Button 
-                variant="outline-primary" 
-                size="sm"
-                className="flex-fill d-flex align-items-center justify-content-center gap-2"
-                onClick={handleExport}
-                disabled={isExporting || classKids.length === 0}
-                title={t('navigation:exportClassDataTooltip')}
-              >
-                <Download size={16} />
-                {isExporting ? t('common:buttons.exporting') : t('navigation:exportClass')}
-              </Button>
-              <Button 
-                variant="outline-success" 
-                size="sm"
-                className="flex-fill d-flex align-items-center justify-content-center gap-2"
-                onClick={handleImportClick}
-                disabled={isImporting}
-                title={t('navigation:importClassDataTooltip')}
-              >
-                <Upload size={16} />
-                {isImporting ? t('common:buttons.importing') : t('navigation:importClass')}
-              </Button>
-            </div>
-            <div className="d-flex">
-              <Button 
-                variant="outline-danger" 
-                size="sm"
-                className="flex-fill d-flex align-items-center justify-content-center gap-2"
-                onClick={handleGenerateCatalog}
-                disabled={isGeneratingCatalog || classKids.length === 0}
-                title={t('navigation:generateCatalogTooltip')}
-              >
-                <FilePdf size={16} />
-                {isGeneratingCatalog ? t('common:buttons.generating') : t('navigation:generateCatalog')}
-              </Button>
-            </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".json"
-              style={{ display: 'none' }}
-              onChange={handleFileSelect}
-            />
-          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            style={{ display: 'none' }}
+            onChange={handleFileSelect}
+          />
         )}
       </div>
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Row, Col, Alert, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { PencilSquare, CheckLg, InfoCircle } from 'react-bootstrap-icons';
+import { Container, Card, Row, Col, Alert, Badge, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
+import { PencilSquare, CheckLg, InfoCircle, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
+import { useClassKids } from '../../hooks/useClassKids';
 import GuardianCard from '../guardians/GuardianCard';
 import AddressDisplay from '../common/AddressDisplay';
 import { formatDateDisplay } from '../../utils/dateUtils';
@@ -13,7 +14,8 @@ const KidDetailsView: React.FC = () => {
   const { kidId } = useParams<{ kidId: string }>();
   const navigate = useNavigate();
   const [kid, setKid] = useState<Kid | null>(null);
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'kids', 'guardians', 'navigation']);
+  const classKids = useClassKids();
 
   useEffect(() => {
     const fetchKid = async () => {
@@ -26,11 +28,69 @@ const KidDetailsView: React.FC = () => {
     fetchKid();
   }, [kidId]);
 
+  // Navigation logic
+  const getCurrentKidIndex = () => {
+    if (!kidId || classKids.length === 0) return -1;
+    return classKids.findIndex(k => k.kid_id === kidId);
+  };
+
+  const getPreviousKid = () => {
+    const currentIndex = getCurrentKidIndex();
+    if (currentIndex <= 0) return null;
+    return classKids[currentIndex - 1];
+  };
+
+  const getNextKid = () => {
+    const currentIndex = getCurrentKidIndex();
+    if (currentIndex < 0 || currentIndex >= classKids.length - 1) return null;
+    return classKids[currentIndex + 1];
+  };
+
+  const handlePrevious = () => {
+    const previousKid = getPreviousKid();
+    if (previousKid) {
+      navigate(`/kids/${previousKid.kid_id}`);
+    }
+  };
+
+  const handleNext = () => {
+    const nextKid = getNextKid();
+    if (nextKid) {
+      navigate(`/kids/${nextKid.kid_id}`);
+    }
+  };
+
   const handleEditClick = () => {
     if (kidId) {
       navigate(`/kids/${kidId}/edit`);
     }
   };
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle navigation if no input elements are focused
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        handlePrevious();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        handleNext();
+      } else if (event.key.toLowerCase() === 'e') {
+        event.preventDefault();
+        handleEditClick();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handlePrevious, handleNext, handleEditClick]);
 
   const getDisplayName = () => {
     if (!kid) return '';
@@ -52,6 +112,46 @@ const KidDetailsView: React.FC = () => {
         <Card.Header className="d-flex justify-content-between align-items-center">
           <h2>{getDisplayName()}</h2>
           <div className="d-flex align-items-center gap-2">
+            {/* Previous Kid Button */}
+            <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip>{t('navigation:kidNavigation.previousTooltip')}</Tooltip>}
+            >
+              <Button
+                variant="link"
+                size="sm"
+                className="p-1 text-decoration-none"
+                onClick={handlePrevious}
+                disabled={!getPreviousKid()}
+                style={{ 
+                  cursor: getPreviousKid() ? 'pointer' : 'not-allowed',
+                  opacity: getPreviousKid() ? 1 : 0.5
+                }}
+              >
+                <ChevronLeft size={24} className="text-primary" />
+              </Button>
+            </OverlayTrigger>
+
+            {/* Next Kid Button */}
+            <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip>{t('navigation:kidNavigation.nextTooltip')}</Tooltip>}
+            >
+              <Button
+                variant="link"
+                size="sm"
+                className="p-1 text-decoration-none"
+                onClick={handleNext}
+                disabled={!getNextKid()}
+                style={{ 
+                  cursor: getNextKid() ? 'pointer' : 'not-allowed',
+                  opacity: getNextKid() ? 1 : 0.5
+                }}
+              >
+                <ChevronRight size={24} className="text-primary" />
+              </Button>
+            </OverlayTrigger>
+
             <OverlayTrigger
               placement="bottom"
               overlay={
@@ -69,19 +169,25 @@ const KidDetailsView: React.FC = () => {
                 style={{ cursor: 'pointer' }}
               />
             </OverlayTrigger>
-            <PencilSquare 
-              size={24} 
-              className="text-primary" 
-              style={{ cursor: 'pointer' }}
-              onClick={handleEditClick}
-              title={t('common:labels.editDetails')}
-            />
+            <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip>{t('common:labels.editDetails')} ({t('navigation:keyboardShortcuts.editMode')})</Tooltip>}
+            >
+              <PencilSquare 
+                size={24} 
+                className="text-primary" 
+                style={{ cursor: 'pointer' }}
+                onClick={handleEditClick}
+              />
+            </OverlayTrigger>
           </div>
         </Card.Header>
         <Card.Body>
           <p><strong>{t('common:labels.firstName')}:</strong> {kid.first_name}</p>
           <p><strong>{t('common:labels.lastName')}:</strong> {kid.last_name}</p>
-          <p><strong>{t('kids:form.preferredName')}:</strong> {kid.preferred_name || t('kids:form.notSpecified')}</p>
+          {kid.preferred_name && (
+            <p><strong>{t('kids:form.preferredName')}:</strong> {kid.preferred_name}</p>
+          )}
           <p><strong>{t('common:labels.dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
           <p><strong>{t('common:labels.gender')}:</strong> {kid.gender}</p>
           <p><strong>{t('kids:form.level')}:</strong> {kid.level}</p>

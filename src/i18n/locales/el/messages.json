@@ -11,7 +11,8 @@
     "dataExported": "Τα δεδομένα εξήχθησαν επιτυχώς!",
     "dataImported": "Τα δεδομένα εισήχθησαν επιτυχώς!",
     "classDataExported": "Τα δεδομένα τάξης εξήχθησαν επιτυχώς!",
-    "catalogGenerated": "Ο κατάλογος τάξης δημιουργήθηκε επιτυχώς!"
+    "catalogGenerated": "Ο κατάλογος τάξης δημιουργήθηκε επιτυχώς!",
+    "guardianEmailsExported": "Τα email κηδεμόνων εξήχθησαν επιτυχώς! {{count}} emails κατέβηκαν."
   },
   "error": {
     "kidNotFound": "Το παιδί δεν βρέθηκε",
@@ -29,7 +30,9 @@
     "fileError": "Σφάλμα λειτουργίας αρχείου",
     "selectClassToExport": "Παρακαλώ επιλέξτε μια τάξη για εξαγωγή",
     "failedToExportClassData": "Αποτυχία εξαγωγής δεδομένων τάξης",
-    "failedToGenerateCatalog": "Αποτυχία δημιουργίας καταλόγου"
+    "failedToGenerateCatalog": "Αποτυχία δημιουργίας καταλόγου",
+    "failedToExportGuardianEmails": "Αποτυχία εξαγωγής email κηδεμόνων",
+    "noGuardianEmailsFound": "Δεν βρέθηκαν κηδεμόνες με διευθύνσεις email σε αυτήν την τάξη"
   },
   "warning": {
     "unsavedChanges": "Έχετε μη αποθηκευμένες αλλαγές",
