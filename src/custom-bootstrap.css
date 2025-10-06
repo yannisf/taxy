@@ -1,0 +1,250 @@
+/* Custom Bootstrap Theme with Logo Colors */
+/* ======================================== */
+
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* CSS Custom Properties for Logo Colors */
+:root {
+  /* Logo colors */
+  --logo-orange: #ffa600;
+  --logo-green: #00a15a;
+  --logo-blue: #0094e5;
+  --logo-red: #ed0018;
+  
+  /* Bootstrap color overrides */
+  --bs-primary: var(--logo-green);
+  --bs-primary-rgb: 0, 161, 90;
+  --bs-secondary: var(--logo-blue);
+  --bs-secondary-rgb: 0, 148, 229;
+  --bs-success: var(--logo-green);
+  --bs-success-rgb: 0, 161, 90;
+  --bs-warning: var(--logo-orange);
+  --bs-warning-rgb: 255, 166, 0;
+  --bs-danger: var(--logo-red);
+  --bs-danger-rgb: 237, 0, 24;
+  --bs-info: var(--logo-blue);
+  --bs-info-rgb: 0, 148, 229;
+}
+
+/* Primary button styling */
+.btn-primary {
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-bg: #008849;
+  --bs-btn-hover-border-color: #007a42;
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+  --bs-btn-active-bg: #008849;
+  --bs-btn-active-border-color: #007a42;
+}
+
+/* Secondary button styling */
+.btn-secondary {
+  --bs-btn-bg: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-secondary);
+  --bs-btn-hover-bg: #0082ca;
+  --bs-btn-hover-border-color: #0077bd;
+  --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb);
+  --bs-btn-active-bg: #0082ca;
+  --bs-btn-active-border-color: #0077bd;
+}
+
+/* Warning button styling */
+.btn-warning {
+  --bs-btn-color: #212529;
+  --bs-btn-bg: var(--bs-warning);
+  --bs-btn-border-color: var(--bs-warning);
+  --bs-btn-hover-color: #212529;
+  --bs-btn-hover-bg: #e69500;
+  --bs-btn-hover-border-color: #d48806;
+  --bs-btn-focus-shadow-rgb: var(--bs-warning-rgb);
+  --bs-btn-active-color: #212529;
+  --bs-btn-active-bg: #e69500;
+  --bs-btn-active-border-color: #d48806;
+}
+
+/* Danger button styling */
+.btn-danger {
+  --bs-btn-bg: var(--bs-danger);
+  --bs-btn-border-color: var(--bs-danger);
+  --bs-btn-hover-bg: #c5001a;
+  --bs-btn-hover-border-color: #b00017;
+  --bs-btn-focus-shadow-rgb: var(--bs-danger-rgb);
+  --bs-btn-active-bg: #c5001a;
+  --bs-btn-active-border-color: #b00017;
+}
+
+/* Success button styling */
+.btn-success {
+  --bs-btn-bg: var(--bs-success);
+  --bs-btn-border-color: var(--bs-success);
+  --bs-btn-hover-bg: #008849;
+  --bs-btn-hover-border-color: #007a42;
+  --bs-btn-focus-shadow-rgb: var(--bs-success-rgb);
+  --bs-btn-active-bg: #008849;
+  --bs-btn-active-border-color: #007a42;
+}
+
+/* Info button styling */
+.btn-info {
+  --bs-btn-bg: var(--bs-info);
+  --bs-btn-border-color: var(--bs-info);
+  --bs-btn-hover-bg: #0082ca;
+  --bs-btn-hover-border-color: #0077bd;
+  --bs-btn-focus-shadow-rgb: var(--bs-info-rgb);
+  --bs-btn-active-bg: #0082ca;
+  --bs-btn-active-border-color: #0077bd;
+}
+
+/* Alert styling */
+.alert-primary {
+  --bs-alert-color: #004d2c;
+  --bs-alert-bg: #d4f4e7;
+  --bs-alert-border-color: #b3ecdb;
+}
+
+.alert-secondary {
+  --bs-alert-color: #003d5c;
+  --bs-alert-bg: #cce8f5;
+  --bs-alert-border-color: #99daef;
+}
+
+.alert-success {
+  --bs-alert-color: #004d2c;
+  --bs-alert-bg: #d4f4e7;
+  --bs-alert-border-color: #b3ecdb;
+}
+
+.alert-warning {
+  --bs-alert-color: #664400;
+  --bs-alert-bg: #fff2cc;
+  --bs-alert-border-color: #ffe699;
+}
+
+.alert-danger {
+  --bs-alert-color: #5f000a;
+  --bs-alert-bg: #f8d7da;
+  --bs-alert-border-color: #f1aeb5;
+}
+
+.alert-info {
+  --bs-alert-color: #003d5c;
+  --bs-alert-bg: #cce8f5;
+  --bs-alert-border-color: #99daef;
+}
+
+/* Badge styling */
+.badge.text-bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.badge.text-bg-secondary {
+  background-color: var(--bs-secondary) !important;
+}
+
+.badge.text-bg-success {
+  background-color: var(--bs-success) !important;
+}
+
+.badge.text-bg-warning {
+  background-color: var(--bs-warning) !important;
+  color: #212529 !important;
+}
+
+.badge.text-bg-danger {
+  background-color: var(--bs-danger) !important;
+}
+
+.badge.text-bg-info {
+  background-color: var(--bs-info) !important;
+}
+
+/* Form focus styling */
+.form-control:focus,
+.form-select:focus {
+  border-color: #4dc080;
+  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.25);
+}
+
+/* Progress bar styling */
+.progress-bar {
+  background-color: var(--bs-primary);
+}
+
+.progress-bar-striped {
+  background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+}
+
+/* Link styling */
+.link-primary {
+  color: var(--bs-primary) !important;
+}
+
+.link-secondary {
+  color: var(--bs-secondary) !important;
+}
+
+/* Custom navbar styling */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Custom card styling */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+/* Text color utilities */
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+
+.text-secondary {
+  color: var(--bs-secondary) !important;
+}
+
+.text-success {
+  color: var(--bs-success) !important;
+}
+
+.text-warning {
+  color: var(--bs-warning) !important;
+}
+
+.text-danger {
+  color: var(--bs-danger) !important;
+}
+
+.text-info {
+  color: var(--bs-info) !important;
+}
+
+/* Background color utilities */
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+
+.bg-secondary {
+  background-color: var(--bs-secondary) !important;
+}
+
+.bg-success {
+  background-color: var(--bs-success) !important;
+}
+
+.bg-warning {
+  background-color: var(--bs-warning) !important;
+}
+
+.bg-danger {
+  background-color: var(--bs-danger) !important;
+}
+
+.bg-info {
+  background-color: var(--bs-info) !important;
+}
