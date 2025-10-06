@@ -572,14 +572,4 @@ Error: Build failed with X errors
 
 ---
 
-## 📄 License
-
-This project is private and proprietary. All rights reserved.
-
-## 📞 Support
-
-For support and questions, please contact the development team or create an issue in the project repository.
-
----
-
 **Happy coding! 🚀**
