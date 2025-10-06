@@ -11,7 +11,6 @@ import { useClassKids } from '../../hooks/useClassKids';
 import type { Kid } from '../../types/models';
 import { exportClassData, exportGuardianEmails } from '../../utils/exportUtils';
 import { generateClassCatalogPDF } from '../../utils/pdfUtils';
-import { formatClassDisplay } from '../../utils/classUtils';
 import { 
   validateImportFile, 
   performImport,
@@ -110,9 +109,14 @@ const LeftPanel: React.FC = () => {
       return;
     }
 
+    if (!selectedClass) {
+      toast.error(t('messages:error.selectClassToImport'));
+      return;
+    }
+
     setIsImporting(true);
     try {
-      const validationResult = await validateImportFile(file);
+      const validationResult = await validateImportFile(file, selectedClass.class_id);
       
       if (!validationResult.valid) {
         toast.error('Invalid import file');
@@ -399,8 +403,19 @@ const LeftPanel: React.FC = () => {
                   <li><strong>{importValidationResult.statistics.newKids}</strong> {t('navigation:dialogs.newKidsWillBeAdded')}</li>
                   <li><strong>{importValidationResult.statistics.updatedKids}</strong> {t('navigation:dialogs.existingKidsWillBeUpdated')}</li>
                   <li><strong>{importValidationResult.statistics.unchangedKids}</strong> {t('navigation:dialogs.kidsWillRemainUnchanged')}</li>
+                  {importValidationResult.statistics.conflictingKids > 0 && (
+                    <li><strong>{importValidationResult.statistics.conflictingKids}</strong> kids have IDs that exist in other classes (will be imported with new IDs)</li>
+                  )}
                 </ul>
               </Alert>
+              {importValidationResult.statistics.conflictingKids > 0 && (
+                <Alert variant="warning">
+                  <strong>⚠️ ID Conflicts Detected</strong>
+                  <div className="mt-2">
+                    {importValidationResult.statistics.conflictingKids} kid(s) in the import file have IDs that already exist in other classes. These kids will be imported with new unique IDs to avoid conflicts, while the original kids in other classes remain intact.
+                  </div>
+                </Alert>
+              )}
               <p className="mb-0">
                 {t('navigation:dialogs.importFileStats', {
                   totalInFile: importValidationResult.statistics.totalInFile,

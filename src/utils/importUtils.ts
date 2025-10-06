@@ -7,6 +7,7 @@ export interface ImportStatistics {
   newKids: number;
   updatedKids: number;
   unchangedKids: number;
+  conflictingKids: number;  // Kids with IDs that exist in other classes
   totalInFile: number;
   totalInDatabase: number;
 }
@@ -16,6 +17,7 @@ export interface ImportValidationResult {
   errors: string[];
   statistics?: ImportStatistics;
   validatedKids?: Kid[];
+  conflictingKids?: Kid[];  // Kids that will get new UUIDs due to conflicts
 }
 
 export interface ImportResult {
@@ -27,7 +29,7 @@ export interface ImportResult {
 /**
  * Validates and analyzes a JSON file for import
  */
-export const validateImportFile = async (file: File): Promise<ImportValidationResult> => {
+export const validateImportFile = async (file: File, classId: string): Promise<ImportValidationResult> => {
   try {
     // Read file content
     const fileContent = await readFileContent(file);
@@ -85,14 +87,15 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
       };
     }
 
-    // Calculate statistics
-    const statistics = await calculateImportStatistics(validatedKids);
+    // Calculate statistics and identify conflicts
+    const { statistics, conflictingKids } = await calculateImportStatisticsWithConflicts(validatedKids, classId);
 
     return {
       valid: true,
       errors: [],
       statistics,
-      validatedKids
+      validatedKids,
+      conflictingKids: conflictingKids.length > 0 ? conflictingKids : undefined
     };
 
   } catch (error) {
@@ -106,18 +109,13 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
 /**
  * Performs the actual import operation
  */
-export const performImport = async (validatedKids: Kid[], classId?: string): Promise<ImportResult> => {
+export const performImport = async (validatedKids: Kid[], classId: string): Promise<ImportResult> => {
   try {
-    const statistics = await db.mergeKids(validatedKids);
-    
-    // If a class ID is provided, add all imported kids to the class
-    if (classId) {
-      await db.addKidsToClass(classId, validatedKids.map(kid => kid.kid_id));
-    }
+    const statistics = await db.mergeKidsToClass(classId, validatedKids);
     
     return {
       success: true,
-      message: `Successfully imported ${statistics.newKids + statistics.updatedKids} kids`,
+      message: `Successfully imported ${statistics.newKids + statistics.updatedKids + statistics.conflictingKids} kids`,
       statistics
     };
   } catch (error) {
@@ -129,33 +127,48 @@ export const performImport = async (validatedKids: Kid[], classId?: string): Pro
 };
 
 /**
- * Calculate import statistics by comparing with existing data
+ * Calculate import statistics and identify conflicting kids
  */
-async function calculateImportStatistics(importKids: Kid[]): Promise<ImportStatistics> {
-  const existingKids = await db.getKids();
-  const existingIds = new Set(existingKids.map(kid => kid.kid_id));
+async function calculateImportStatisticsWithConflicts(importKids: Kid[], classId: string): Promise<{
+  statistics: ImportStatistics;
+  conflictingKids: Kid[];
+}> {
+  const existingClassKids = await db.getKidsByClassId(classId);
+  const allExistingKids = await db.getKids();
+  
+  const existingClassKidIds = new Set(existingClassKids.map(kid => kid.kid_id));
+  const allExistingKidIds = new Set(allExistingKids.map(kid => kid.kid_id));
   
   let newKids = 0;
   let updatedKids = 0;
+  const conflictingKids: Kid[] = [];
   
   for (const kid of importKids) {
-    if (existingIds.has(kid.kid_id)) {
+    if (existingClassKidIds.has(kid.kid_id)) {
+      // Kid exists in current class - will be updated
       updatedKids++;
+    } else if (allExistingKidIds.has(kid.kid_id)) {
+      // Kid exists in database but not in current class - conflict
+      conflictingKids.push(kid);
     } else {
+      // Kid doesn't exist anywhere - new
       newKids++;
     }
   }
   
   const importIds = new Set(importKids.map(kid => kid.kid_id));
-  const unchangedKids = existingKids.filter(kid => !importIds.has(kid.kid_id)).length;
+  const unchangedKids = existingClassKids.filter(kid => !importIds.has(kid.kid_id)).length;
   
-  return {
+  const statistics: ImportStatistics = {
     newKids,
     updatedKids,
     unchangedKids,
+    conflictingKids: conflictingKids.length,
     totalInFile: importKids.length,
-    totalInDatabase: existingKids.length
+    totalInDatabase: existingClassKids.length
   };
+  
+  return { statistics, conflictingKids };
 }
 
 /**

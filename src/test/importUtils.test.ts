@@ -8,7 +8,9 @@ import type { Kid } from '../types/models';
 vi.mock('../services/database', () => ({
   db: {
     getKids: vi.fn(),
+    getKidsByClassId: vi.fn(),
     mergeKids: vi.fn(),
+    mergeKidsToClass: vi.fn(),
   },
 }));
 
@@ -35,6 +37,7 @@ describe('importUtils', () => {
 
     // Set up default empty database
     (db.getKids as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+    (db.getKidsByClassId as ReturnType<typeof vi.fn>).mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -74,7 +77,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file);
+      const result = await validateImportFile(file, 'test-class-id');
 
       expect(result.valid).toBe(true);
       expect(result.errors).toEqual([]);
@@ -105,7 +108,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file);
+      const result = await validateImportFile(file, 'test-class-id');
 
       expect(result.valid).toBe(false);
       expect(result.errors).toContain('Invalid JSON format. Please ensure the file contains valid JSON.');
@@ -128,7 +131,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file);
+      const result = await validateImportFile(file, 'test-class-id');
 
       expect(result.valid).toBe(false);
       expect(result.errors).toContain('Import file must contain an array of kids.');
@@ -167,7 +170,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file);
+      const result = await validateImportFile(file, 'test-class-id');
 
       expect(result.valid).toBe(false);
       expect(result.errors).toContain('Kid 1: First name is required');
@@ -201,7 +204,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file);
+      const result = await validateImportFile(file, 'test-class-id');
 
       expect(result.valid).toBe(true);
       expect(result.validatedKids?.[0].kid_id).toBe('mocked-uuid-1234');
@@ -237,7 +240,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file);
+      const result = await validateImportFile(file, 'test-class-id');
 
       expect(result.valid).toBe(true);
       expect(result.validatedKids?.[0].kid_id).toBe('existing-id-123');
@@ -282,6 +285,7 @@ describe('importUtils', () => {
       ];
 
       (db.getKids as ReturnType<typeof vi.fn>).mockResolvedValue(existingKids);
+      (db.getKidsByClassId as ReturnType<typeof vi.fn>).mockResolvedValue(existingKids);
 
       const file = createMockFile(JSON.stringify(importKids));
       
@@ -297,7 +301,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file);
+      const result = await validateImportFile(file, 'test-class-id');
 
       expect(result.valid).toBe(true);
       expect(result.statistics).toEqual({
@@ -336,14 +340,14 @@ describe('importUtils', () => {
         totalInDatabase: 0,
       };
 
-      (db.mergeKids as ReturnType<typeof vi.fn>).mockResolvedValue(mockStatistics);
+      (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockResolvedValue(mockStatistics);
 
-      const result = await performImport(validatedKids);
+      const result = await performImport(validatedKids, 'test-class-id');
 
       expect(result.success).toBe(true);
       expect(result.message).toBe('Successfully imported 1 kids');
       expect(result.statistics).toEqual(mockStatistics);
-      expect(db.mergeKids).toHaveBeenCalledWith(validatedKids);
+      expect(db.mergeKidsToClass).toHaveBeenCalledWith('test-class-id', validatedKids);
     });
 
     it('should handle import errors gracefully', async () => {
@@ -362,9 +366,9 @@ describe('importUtils', () => {
       ];
 
       const mockError = new Error('Database transaction failed');
-      (db.mergeKids as ReturnType<typeof vi.fn>).mockRejectedValue(mockError);
+      (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockRejectedValue(mockError);
 
-      const result = await performImport(validatedKids);
+      const result = await performImport(validatedKids, 'test-class-id');
 
       expect(result.success).toBe(false);
       expect(result.message).toBe('Import failed: Database transaction failed');
@@ -381,9 +385,9 @@ describe('importUtils', () => {
         totalInDatabase: 3,
       };
 
-      (db.mergeKids as ReturnType<typeof vi.fn>).mockResolvedValue(mockStatistics);
+      (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockResolvedValue(mockStatistics);
 
-      const result = await performImport(validatedKids);
+      const result = await performImport(validatedKids, 'test-class-id');
 
       expect(result.success).toBe(true);
       expect(result.message).toBe('Successfully imported 5 kids'); // 3 new + 2 updated

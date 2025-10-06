@@ -1,4 +1,5 @@
 import Dexie from 'dexie';
+import { v4 as uuidv4 } from 'uuid';
 import type { Kid, Class, ClassRecord } from '../types/models';
 import type { ImportStatistics } from '../utils/importUtils';
 
@@ -256,8 +257,89 @@ export class ClassManagementDatabase extends Dexie {
         newKids,
         updatedKids,
         unchangedKids,
+        conflictingKids: 0, // Legacy method doesn't handle conflicts
         totalInFile: kidsToMerge.length,
         totalInDatabase: existingKids.length
+      };
+    });
+  }
+
+  // Merge kids to a specific class with transaction support for import functionality
+  async mergeKidsToClass(classId: string, kidsToMerge: Kid[]): Promise<ImportStatistics> {
+    return this.transaction('rw', [this.kids, this.classes], async () => {
+      // Get the class to ensure it exists
+      const classObj = await this.getClassById(classId);
+      if (!classObj) {
+        throw new Error('Class not found');
+      }
+
+      // Get existing kids in this class for accurate statistics
+      const existingClassKids = await this.getKidsByClassId(classId);
+      const existingClassKidIds = new Set(existingClassKids.map(kid => kid.kid_id));
+      
+      // Get all existing kids in database to check for conflicts
+      const allExistingKids = await this.getKids();
+      const allExistingKidIds = new Set(allExistingKids.map(kid => kid.kid_id));
+      
+      let newKids = 0;
+      let updatedKids = 0;
+      let conflictingKids = 0;
+      const processedKidIds: string[] = [];
+      
+      // Process each kid in the import
+      for (const kid of kidsToMerge) {
+        if (existingClassKidIds.has(kid.kid_id)) {
+          // Kid exists in current class - update it
+          const existingKid = existingClassKids.find(k => k.kid_id === kid.kid_id);
+          const updatedKid = {
+            ...kid,
+            created_at: existingKid?.created_at || kid.created_at,
+            updated_at: new Date().toISOString()
+          };
+          await this.kids.put(updatedKid);
+          processedKidIds.push(kid.kid_id);
+          updatedKids++;
+        } else if (allExistingKidIds.has(kid.kid_id)) {
+          // Kid exists in database but not in current class - conflict, generate new UUID
+          const newKidWithNewId = {
+            ...kid,
+            kid_id: uuidv4(), // Generate new UUID
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          await this.addKid(newKidWithNewId);
+          processedKidIds.push(newKidWithNewId.kid_id);
+          conflictingKids++;
+        } else {
+          // Kid doesn't exist anywhere - add as new
+          await this.addKid(kid);
+          processedKidIds.push(kid.kid_id);
+          newKids++;
+        }
+      }
+      
+      // Add all processed kids to the class (only adds if not already in class)
+      const newKidIdsForClass = processedKidIds.filter(kidId => !classObj.kid_ids.includes(kidId));
+      
+      if (newKidIdsForClass.length > 0) {
+        const updatedKidIds = [...classObj.kid_ids, ...newKidIdsForClass];
+        await this.classes.update(classId, { 
+          kid_ids: updatedKidIds,
+          updated_at: new Date().toISOString()
+        });
+      }
+      
+      // Calculate unchanged kids (kids that were in the class but not in the import)
+      const importIds = new Set(kidsToMerge.map(kid => kid.kid_id));
+      const unchangedKids = existingClassKids.filter(kid => !importIds.has(kid.kid_id)).length;
+      
+      return {
+        newKids,
+        updatedKids,
+        unchangedKids,
+        conflictingKids,
+        totalInFile: kidsToMerge.length,
+        totalInDatabase: existingClassKids.length
       };
     });
   }

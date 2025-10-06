@@ -10,7 +10,9 @@ import path from 'path';
 vi.mock('../services/database', () => ({
   db: {
     getKids: vi.fn(),
+    getKidsByClassId: vi.fn(),
     mergeKids: vi.fn(),
+    mergeKidsToClass: vi.fn(),
     addKidsToClass: vi.fn(),
     getClassById: vi.fn(),
   },
@@ -39,6 +41,7 @@ describe('Test Data Import Integration', () => {
 
     // Set up default empty database
     (db.getKids as ReturnType<typeof vi.fn>).mockResolvedValue([]);
+    (db.getKidsByClassId as ReturnType<typeof vi.fn>).mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -81,7 +84,7 @@ describe('Test Data Import Integration', () => {
     const originalFileReader = setupMockFileReader(JSON.stringify(testData));
 
     try {
-      const validationResult = await validateImportFile(file);
+      const validationResult = await validateImportFile(file, 'test-class-id');
 
       expect(validationResult.valid).toBe(true);
       expect(validationResult.errors).toEqual([]);
@@ -96,6 +99,7 @@ describe('Test Data Import Integration', () => {
         newKids: 10,        // All kids are new (empty database)
         updatedKids: 0,     // No existing kids to update
         unchangedKids: 0,   // No existing kids remain unchanged
+        conflictingKids: 0, // No conflicts with empty database
         totalInFile: 10,
         totalInDatabase: 0
       });
@@ -106,18 +110,19 @@ describe('Test Data Import Integration', () => {
           newKids: 10,
           updatedKids: 0,
           unchangedKids: 0,
+          conflictingKids: 0,
           totalInFile: 10,
           totalInDatabase: 0,
         };
 
-        (db.mergeKids as ReturnType<typeof vi.fn>).mockResolvedValue(mockImportStatistics);
+        (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockResolvedValue(mockImportStatistics);
 
-        const importResult = await performImport(validationResult.validatedKids);
+        const importResult = await performImport(validationResult.validatedKids, 'test-class-id');
 
         expect(importResult.success).toBe(true);
         expect(importResult.message).toBe('Successfully imported 10 kids');
         expect(importResult.statistics).toEqual(mockImportStatistics);
-        expect(db.mergeKids).toHaveBeenCalledWith(validationResult.validatedKids);
+        expect(db.mergeKidsToClass).toHaveBeenCalledWith('test-class-id', validationResult.validatedKids);
       }
 
     } finally {
@@ -238,18 +243,20 @@ describe('Test Data Import Integration', () => {
     }));
 
     (db.getKids as ReturnType<typeof vi.fn>).mockResolvedValue(existingKids);
+    (db.getKidsByClassId as ReturnType<typeof vi.fn>).mockResolvedValue(existingKids);
 
     const file = createMockFileFromJson(testData);
     const originalFileReader = setupMockFileReader(JSON.stringify(testData));
 
     try {
-      const validationResult = await validateImportFile(file);
+      const validationResult = await validateImportFile(file, 'test-class-id');
 
       expect(validationResult.valid).toBe(true);
       expect(validationResult.statistics).toEqual({
         newKids: 7,         // 7 new kids
         updatedKids: 3,     // 3 existing kids will be updated
         unchangedKids: 0,   // No kids remain unchanged (all existing kids are in import)
+        conflictingKids: 0, // No conflicts in this test scenario
         totalInFile: 10,
         totalInDatabase: 3
       });
@@ -280,28 +287,25 @@ describe('Test Data Import Integration', () => {
     const originalFileReader = setupMockFileReader(JSON.stringify(testData));
 
     try {
-      const validationResult = await validateImportFile(file);
+      const validationResult = await validateImportFile(file, 'test-class-id');
       
       if (validationResult.validatedKids) {
         const mockImportStatistics = {
           newKids: 10,
           updatedKids: 0,
           unchangedKids: 0,
+          conflictingKids: 0,
           totalInFile: 10,
           totalInDatabase: 0,
         };
 
-        (db.mergeKids as ReturnType<typeof vi.fn>).mockResolvedValue(mockImportStatistics);
+        (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockResolvedValue(mockImportStatistics);
 
         // Test import with class ID
         const importResult = await performImport(validationResult.validatedKids, 'test-class-id');
 
         expect(importResult.success).toBe(true);
-        expect(db.mergeKids).toHaveBeenCalledWith(validationResult.validatedKids);
-        expect(db.addKidsToClass).toHaveBeenCalledWith(
-          'test-class-id',
-          validationResult.validatedKids.map(kid => kid.kid_id)
-        );
+        expect(db.mergeKidsToClass).toHaveBeenCalledWith('test-class-id', validationResult.validatedKids);
       }
 
     } finally {
@@ -314,35 +318,21 @@ describe('Test Data Import Integration', () => {
     const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
     
     // Mock class not found
-    (db.addKidsToClass as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Class not found'));
+    (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Class not found'));
 
     const file = createMockFileFromJson(testData);
     const originalFileReader = setupMockFileReader(JSON.stringify(testData));
 
     try {
-      const validationResult = await validateImportFile(file);
+      const validationResult = await validateImportFile(file, 'test-class-id');
       
       if (validationResult.validatedKids) {
-        const mockImportStatistics = {
-          newKids: 10,
-          updatedKids: 0,
-          unchangedKids: 0,
-          totalInFile: 10,
-          totalInDatabase: 0,
-        };
-
-        (db.mergeKids as ReturnType<typeof vi.fn>).mockResolvedValue(mockImportStatistics);
-
         // Test import with invalid class ID
         const importResult = await performImport(validationResult.validatedKids, 'invalid-class-id');
 
         expect(importResult.success).toBe(false);
         expect(importResult.message).toBe('Import failed: Class not found');
-        expect(db.mergeKids).toHaveBeenCalledWith(validationResult.validatedKids);
-        expect(db.addKidsToClass).toHaveBeenCalledWith(
-          'invalid-class-id',
-          validationResult.validatedKids.map(kid => kid.kid_id)
-        );
+        expect(db.mergeKidsToClass).toHaveBeenCalledWith('invalid-class-id', validationResult.validatedKids);
       }
 
     } finally {
@@ -367,7 +357,7 @@ describe('Test Data Import Integration', () => {
       'country_code', 'number', 'telephone_type'
     ];
 
-    testData.forEach((kid: any, kidIndex: number) => {
+    testData.forEach((kid: any) => {
       // Check required kid fields
       requiredKidFields.forEach(field => {
         expect(kid).toHaveProperty(field);
@@ -378,7 +368,7 @@ describe('Test Data Import Integration', () => {
       expect(kid.guardians).toBeInstanceOf(Array);
       expect(kid.guardians.length).toBeGreaterThan(0);
 
-      kid.guardians.forEach((guardian: any, guardianIndex: number) => {
+      kid.guardians.forEach((guardian: any) => {
         // Check required guardian fields
         requiredGuardianFields.forEach(field => {
           expect(guardian).toHaveProperty(field);
@@ -389,7 +379,7 @@ describe('Test Data Import Integration', () => {
         expect(guardian.telephones).toBeInstanceOf(Array);
         expect(guardian.telephones.length).toBeGreaterThanOrEqual(2);
 
-        guardian.telephones.forEach((telephone: any, phoneIndex: number) => {
+        guardian.telephones.forEach((telephone: any) => {
           // Check required telephone fields
           requiredTelephoneFields.forEach(field => {
             expect(telephone).toHaveProperty(field);
