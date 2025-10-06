@@ -1,4 +1,4 @@
-# Class Management Application
+# Taxy
 
 A comprehensive React-based class management system for educational institutions to manage students, guardians, and class information with multilingual support.
 
