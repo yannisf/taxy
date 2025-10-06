@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Row, Col, Button, Modal } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
 import { X, GripVertical } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 import type { Control, FieldErrors } from 'react-hook-form';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import type { Telephone } from '../../types/models';
@@ -28,6 +29,7 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
   showDragHandle = false,
   dragListeners
 }) => {
+  const { t } = useTranslation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleDeleteConfirm = () => {
@@ -47,20 +49,20 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
         <Row>
           <Col md={3}>
             <Form.Group className="mb-3">
-              <Form.Label>Country Code</Form.Label>
+              <Form.Label>{t('forms:telephone.countryCode')}</Form.Label>
               <Controller
                 name={`${fieldPrefix}.country_code`}
                 control={control}
                 rules={{ 
-                  required: 'Country code is required',
-                  validate: (value) => validateCountryCode(value || '') || 'Invalid country code format (e.g., +30)'
+                  required: t('forms:telephone.validation.countryCodeRequired'),
+                  validate: (value) => validateCountryCode(value || '') || t('forms:telephone.validation.invalidCountryCode')
                 }}
                 render={({ field }) => (
                   <Form.Control
                     {...field}
                     value={field.value ?? '+30'}
                     type="text"
-                    placeholder="+30"
+                    placeholder={t('forms:telephone.placeholders.countryCode')}
                     disabled={disabled}
                     isInvalid={!!errors?.country_code}
                   />
@@ -76,20 +78,20 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
           
           <Col md={5}>
             <Form.Group className="mb-3">
-              <Form.Label>Number</Form.Label>
+              <Form.Label>{t('forms:telephone.number')}</Form.Label>
               <Controller
                 name={`${fieldPrefix}.number`}
                 control={control}
                 rules={{ 
-                  required: 'Phone number is required',
-                  validate: (value) => validateTelephoneNumber(value || '') || 'Invalid phone number (4-15 digits only)'
+                  required: t('forms:telephone.validation.numberRequired'),
+                  validate: (value) => validateTelephoneNumber(value || '') || t('forms:telephone.validation.invalidNumber')
                 }}
                 render={({ field }) => (
                   <Form.Control
                     {...field}
                     value={field.value ?? ''}
                     type="text"
-                    placeholder="1234567890"
+                    placeholder={t('forms:telephone.placeholders.number')}
                     disabled={disabled}
                     isInvalid={!!errors?.number}
                   />
@@ -105,11 +107,11 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
           
           <Col md={4}>
             <Form.Group className="mb-3">
-              <Form.Label>Type</Form.Label>
+              <Form.Label>{t('forms:telephone.type')}</Form.Label>
               <Controller
                 name={`${fieldPrefix}.telephone_type`}
                 control={control}
-                rules={{ required: 'Type is required' }}
+                rules={{ required: t('forms:telephone.validation.typeRequired') }}
                 render={({ field }) => (
                   <Form.Select 
                     {...field} 
@@ -117,10 +119,10 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
                     disabled={disabled}
                     isInvalid={!!errors?.telephone_type}
                   >
-                    <option value="mobile">{getTelephoneTypeIcon('mobile')} Mobile</option>
-                    <option value="home">{getTelephoneTypeIcon('home')} Home</option>
-                    <option value="work">{getTelephoneTypeIcon('work')} Work</option>
-                    <option value="other">{getTelephoneTypeIcon('other')} Other</option>
+                    <option value="mobile">{getTelephoneTypeIcon('mobile')} {t('forms:telephone.mobile')}</option>
+                    <option value="home">{getTelephoneTypeIcon('home')} {t('forms:telephone.home')}</option>
+                    <option value="work">{getTelephoneTypeIcon('work')} {t('forms:telephone.work')}</option>
+                    <option value="other">{getTelephoneTypeIcon('other')} {t('forms:telephone.other')}</option>
                   </Form.Select>
                 )}
               />
@@ -141,7 +143,7 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
             size="sm"
             onClick={() => setShowDeleteModal(true)}
             className="p-2"
-            title="Remove telephone"
+            title={t('forms:telephone.actions.removeTelephone')}
             disabled={disabled}
           >
             <X size={20} />
@@ -152,17 +154,17 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>{t('forms:telephone.actions.confirmDelete')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete this telephone number? This action cannot be undone.
+          {t('forms:telephone.actions.deleteMessage')}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Cancel
+            {t('common:buttons.cancel')}
           </Button>
           <Button variant="danger" onClick={handleDeleteConfirm}>
-            Delete
+            {t('common:buttons.delete')}
           </Button>
         </Modal.Footer>
       </Modal>

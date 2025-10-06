@@ -1,4 +1,1 @@
-- when changing a class while a kid is loaded, the kid should be unloaded and the class welcome page should be shown.
-- in the right hand panel under the class along with the rest of the buttons there should be a pencil button to edit the class info. Upon clicking it, the modal with the form to edit the class should be appear.
-- The address and telephones subforms are not intenationalized.
 - maintain an index of distinct firstNames, another for lastNames.

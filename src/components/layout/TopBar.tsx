@@ -3,6 +3,7 @@ import { Navbar, Container, Button, Form, Alert } from 'react-bootstrap';
 import { PlusCircle } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useClass } from '../../contexts/ClassContext';
 import ClassModal from '../classes/ClassModal';
 import LanguageSelector from '../common/LanguageSelector';
@@ -10,12 +11,22 @@ import LanguageSelector from '../common/LanguageSelector';
 const TopBar: React.FC = () => {
   const { t } = useTranslation(['common', 'classes', 'messages']);
   const { classes, selectedClass, selectClass, createClass } = useClass();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
   const handleClassSelect = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const classId = event.target.value;
     if (classId) {
+      // Check if a kid is currently loaded (routes like /kids/:kidId or /kids/:kidId/edit)
+      const isKidLoaded = location.pathname.match(/^\/kids\/[^/]+($|\/edit$)/);
+      
+      // If a kid is loaded, navigate to the class welcome page first
+      if (isKidLoaded) {
+        navigate('/kids');
+      }
+      
       await selectClass(classId);
     }
   };

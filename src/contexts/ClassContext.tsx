@@ -11,6 +11,7 @@ interface ClassContextType {
   selectClass: (classId: string) => Promise<void>;
   clearSelectedClass: () => void;
   createClass: (classData: Omit<Class, 'class_id' | 'created_at' | 'updated_at' | 'kid_ids'>) => Promise<Class>;
+  updateClass: (classId: string, classData: { school_name: string; class_name: string; school_year: string }) => Promise<void>;
   deleteClass: (classId: string) => Promise<void>;
 }
 
@@ -75,6 +76,25 @@ export const ClassProvider: React.FC<ClassProviderProps> = ({ children }) => {
     }
   }, [refreshClasses]);
 
+  const updateClass = useCallback(async (classId: string, classData: { school_name: string; class_name: string; school_year: string }) => {
+    try {
+      await db.updateClass(classId, classData);
+      
+      // If the updated class is the selected one, update the selected class state
+      if (selectedClass?.class_id === classId) {
+        const updatedClass = await db.getClassById(classId);
+        if (updatedClass) {
+          setSelectedClass(updatedClass);
+        }
+      }
+      
+      await refreshClasses();
+    } catch (error) {
+      console.error('Error updating class:', error);
+      throw error;
+    }
+  }, [selectedClass, refreshClasses]);
+
   const deleteClass = useCallback(async (classId: string) => {
     try {
       await db.deleteClass(classId);
@@ -121,6 +141,7 @@ export const ClassProvider: React.FC<ClassProviderProps> = ({ children }) => {
     selectClass,
     clearSelectedClass,
     createClass,
+    updateClass,
     deleteClass
   };
 

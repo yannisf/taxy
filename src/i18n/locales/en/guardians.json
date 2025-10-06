@@ -57,7 +57,17 @@
     "noTelephones": "📞 No telephone numbers added yet. Click \"Add Telephone\" to get started.",
     "sameAddress": "📍 This guardian uses the same address as the kid",
     "pickupAuthorized": "✓ Pickup Authorized",
-    "sameAddressBadge": "📍 Same Address"
+    "sameAddressBadge": "📍 Same Address",
+    "confirmDelete": "Confirm Delete",
+    "deleteMessage": "Are you sure you want to delete {name}? This action cannot be undone.",
+    "newGuardian": "New Guardian",
+    "guardian": "Guardian",
+    "addressTitle": "Guardian Address",
+    "validationFailed": "Validation failed"
+  },
+  "validation": {
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required"
   },
   "badges": {
     "pickupAuthorized": "✓ Pickup Authorized",

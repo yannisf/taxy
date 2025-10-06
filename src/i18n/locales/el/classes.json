@@ -2,6 +2,7 @@
   "title": {
     "classes": "Τάξεις",
     "createClass": "Δημιουργία Νέας Τάξης",
+    "editClass": "Επεξεργασία Τάξης",
     "newClass": "Νέα Τάξη",
     "selectClass": "Επιλέξτε μια τάξη..."
   },
@@ -26,6 +27,8 @@
   },
   "actions": {
     "createClass": "Δημιουργία Τάξης",
+    "editClass": "Επεξεργασία Τάξης",
+    "updateClass": "Ενημέρωση Τάξης",
     "selectClass": "Επιλογή Τάξης",
     "newClass": "Νέα Τάξη"
   },

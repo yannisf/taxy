@@ -23,7 +23,23 @@
     "mobile": "Mobile",
     "home": "Home",
     "work": "Work",
-    "other": "Other"
+    "other": "Other",
+    "placeholders": {
+      "countryCode": "+30",
+      "number": "1234567890"
+    },
+    "validation": {
+      "countryCodeRequired": "Country code is required",
+      "numberRequired": "Phone number is required",
+      "typeRequired": "Type is required",
+      "invalidCountryCode": "Invalid country code format (e.g., +30)",
+      "invalidNumber": "Invalid phone number (4-15 digits only)"
+    },
+    "actions": {
+      "removeTelephone": "Remove telephone",
+      "confirmDelete": "Confirm Delete",
+      "deleteMessage": "Are you sure you want to delete this telephone number? This action cannot be undone."
+    }
   },
   "validation": {
     "required": "This field is required",

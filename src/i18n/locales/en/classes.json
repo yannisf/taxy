@@ -2,6 +2,7 @@
   "title": {
     "classes": "Classes",
     "createClass": "Create New Class",
+    "editClass": "Edit Class",
     "newClass": "New Class",
     "selectClass": "Select a class..."
   },
@@ -26,6 +27,8 @@
   },
   "actions": {
     "createClass": "Create Class",
+    "editClass": "Edit Class",
+    "updateClass": "Update Class",
     "selectClass": "Select Class",
     "newClass": "New Class"
   },

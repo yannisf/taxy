@@ -16,11 +16,12 @@ import {
   performImport,
   type ImportValidationResult
 } from '../../utils/importUtils';
+import ClassModal from '../../components/classes/ClassModal';
 
 const LeftPanel: React.FC = () => {
   const { t } = useTranslation(['navigation', 'kids', 'common', 'messages']);
   const { refreshKids } = useKids();
-  const { selectedClass, clearSelectedClass } = useClass();
+  const { selectedClass, clearSelectedClass, updateClass } = useClass();
   
   const handleCloseClass = () => {
     clearSelectedClass();
@@ -37,6 +38,8 @@ const LeftPanel: React.FC = () => {
   const [isExportingEmails, setIsExportingEmails] = useState(false);
   const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
   const [importValidationResult, setImportValidationResult] = useState<ImportValidationResult | null>(null);
+  const [showEditClassModal, setShowEditClassModal] = useState(false);
+  const [isUpdatingClass, setIsUpdatingClass] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -207,6 +210,26 @@ const LeftPanel: React.FC = () => {
     }
   };
 
+  const handleEditClass = () => {
+    setShowEditClassModal(true);
+  };
+
+  const handleUpdateClass = async (classData: { school_name: string; class_name: string; school_year: string }) => {
+    if (!selectedClass) return;
+
+    setIsUpdatingClass(true);
+    try {
+      await updateClass(selectedClass.class_id, classData);
+      toast.success(t('messages:success.classUpdated'));
+      setShowEditClassModal(false);
+    } catch (error) {
+      console.error('Error updating class:', error);
+      throw error;
+    } finally {
+      setIsUpdatingClass(false);
+    }
+  };
+
   // Kids are already sorted by the useClassKids hook
   const sortedKids = classKids;
 
@@ -224,6 +247,15 @@ const LeftPanel: React.FC = () => {
               </div>
             </div>
             <div className="d-flex gap-2">
+              <Button 
+                variant="outline-secondary" 
+                size="sm"
+                className="icon-action-button d-flex align-items-center justify-content-center"
+                onClick={handleEditClass}
+                title={t('classes:actions.editClass')}
+              >
+                <PencilSquare size={18} />
+              </Button>
               <Button 
                 variant="outline-primary" 
                 size="sm"
@@ -427,6 +459,20 @@ const LeftPanel: React.FC = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Edit Class Modal */}
+      <ClassModal
+        show={showEditClassModal}
+        onHide={() => setShowEditClassModal(false)}
+        onSubmit={handleUpdateClass}
+        loading={isUpdatingClass}
+        mode="edit"
+        initialData={selectedClass ? {
+          school_name: selectedClass.school_name,
+          class_name: selectedClass.class_name,
+          school_year: selectedClass.school_year
+        } : undefined}
+      />
     </>
   );
 };

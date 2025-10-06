@@ -11,14 +11,27 @@ interface ClassModalProps {
     school_year: string;
   }) => Promise<void>;
   loading?: boolean;
+  mode?: 'create' | 'edit';
+  initialData?: {
+    school_name: string;
+    class_name: string;
+    school_year: string;
+  };
 }
 
-const ClassModal: React.FC<ClassModalProps> = ({ show, onHide, onSubmit, loading = false }) => {
+const ClassModal: React.FC<ClassModalProps> = ({ 
+  show, 
+  onHide, 
+  onSubmit, 
+  loading = false, 
+  mode = 'create',
+  initialData 
+}) => {
   const { t } = useTranslation(['classes', 'common', 'messages']);
   const [formData, setFormData] = useState({
-    school_name: '',
-    class_name: '',
-    school_year: ''
+    school_name: initialData?.school_name || '',
+    class_name: initialData?.class_name || '',
+    school_year: initialData?.school_year || ''
   });
   const [error, setError] = useState<string | null>(null);
   const [validated, setValidated] = useState(false);
@@ -66,37 +79,56 @@ const ClassModal: React.FC<ClassModalProps> = ({ show, onHide, onSubmit, loading
   };
 
   const handleClose = () => {
-    setFormData({
-      school_name: '',
-      class_name: '',
-      school_year: ''
-    });
+    if (mode === 'create') {
+      setFormData({
+        school_name: '',
+        class_name: '',
+        school_year: ''
+      });
+    } else {
+      setFormData({
+        school_name: initialData?.school_name || '',
+        class_name: initialData?.class_name || '',
+        school_year: initialData?.school_year || ''
+      });
+    }
     setError(null);
     setValidated(false);
     onHide();
   };
 
   const handleShow = () => {
-    // Set default school year when modal opens
-    if (show && !formData.school_year) {
-      setFormData(prev => ({
-        ...prev,
-        school_year: defaultSchoolYear
-      }));
+    if (mode === 'create') {
+      // Set default school year when modal opens for create mode
+      if (show && !formData.school_year) {
+        setFormData(prev => ({
+          ...prev,
+          school_year: defaultSchoolYear
+        }));
+      }
+    } else if (mode === 'edit' && initialData) {
+      // Set initial data for edit mode
+      setFormData({
+        school_name: initialData.school_name,
+        class_name: initialData.class_name,
+        school_year: initialData.school_year
+      });
     }
   };
 
-  // Update school year when modal shows
+  // Update data when modal shows or mode/initialData changes
   React.useEffect(() => {
     if (show) {
       handleShow();
     }
-  }, [show]);
+  }, [show, mode, initialData]);
 
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>{t('classes:title.createClass')}</Modal.Title>
+        <Modal.Title>
+          {mode === 'create' ? t('classes:title.createClass') : t('classes:title.editClass')}
+        </Modal.Title>
       </Modal.Header>
       
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -162,7 +194,10 @@ const ClassModal: React.FC<ClassModalProps> = ({ show, onHide, onSubmit, loading
             {t('common:buttons.cancel')}
           </Button>
           <Button variant="primary" type="submit" disabled={loading}>
-            {loading ? t('common:buttons.creating') : t('classes:actions.createClass')}
+            {loading 
+              ? (mode === 'create' ? t('common:buttons.creating') : t('common:buttons.updating'))
+              : (mode === 'create' ? t('classes:actions.createClass') : t('classes:actions.updateClass'))
+            }
           </Button>
         </Modal.Footer>
       </Form>
