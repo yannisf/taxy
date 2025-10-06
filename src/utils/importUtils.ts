@@ -113,9 +113,12 @@ export const performImport = async (validatedKids: Kid[], classId: string): Prom
   try {
     const statistics = await db.mergeKidsToClass(classId, validatedKids);
     
+    // Calculate total imported kids (handle potential undefined values)
+    const totalImported = (statistics.newKids || 0) + (statistics.updatedKids || 0) + (statistics.conflictingKids || 0);
+    
     return {
       success: true,
-      message: `Successfully imported ${statistics.newKids + statistics.updatedKids + statistics.conflictingKids} kids`,
+      message: `Successfully imported ${totalImported} kids`,
       statistics
     };
   } catch (error) {

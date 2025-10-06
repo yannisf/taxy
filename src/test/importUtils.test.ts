@@ -308,6 +308,7 @@ describe('importUtils', () => {
         newKids: 1,        // New kid without ID
         updatedKids: 1,    // Existing kid with same ID
         unchangedKids: 0,  // No kids will remain unchanged (all existing kids are being updated)
+        conflictingKids: 0, // No conflicts in this test case
         totalInFile: 2,
         totalInDatabase: 1,
       });
@@ -336,6 +337,7 @@ describe('importUtils', () => {
         newKids: 1,
         updatedKids: 0,
         unchangedKids: 0,
+        conflictingKids: 0,
         totalInFile: 1,
         totalInDatabase: 0,
       };
@@ -381,6 +383,7 @@ describe('importUtils', () => {
         newKids: 3,
         updatedKids: 2,
         unchangedKids: 1,
+        conflictingKids: 0,
         totalInFile: 5,
         totalInDatabase: 3,
       };
