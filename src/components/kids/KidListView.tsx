@@ -31,9 +31,6 @@ const KidListView: React.FC = () => {
             {!selectedClass ? (
               <>
                 <div className="mb-4">
-                  <Alert variant="info" className="mb-3">
-                    {t('common:messages.selectClass')}
-                  </Alert>
                   <p className="text-muted">
                     {t('common:messages.noClassesAvailable')}
                   </p>

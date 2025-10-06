@@ -1,3 +1,4 @@
-- Provide a button to download all the emails of all guardians in the form of csv with columns: "first_name, last_name, email".
+- when changing a class while a kid is loaded, the kid should be unloaded and the class welcome page should be shown.
+- in the right hand panel under the class along with the rest of the buttons there should be a pencil button to edit the class info. Upon clicking it, the modal with the form to edit the class should be appear.
+- The address and telephones subforms are not intenationalized.
 - maintain an index of distinct firstNames, another for lastNames.
-- Instead of the buttons on the left hand panel under the list use always visible icon-buttons (just an icon, no label) along with the plus icon that adds kids on the header of the kid list. The icons should have a tooltip explaining their function. All the button set on top: import class/export class/export catalog/add kid should have the same style.

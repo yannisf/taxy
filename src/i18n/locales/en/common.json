@@ -1,5 +1,5 @@
 {
-  "appName": "Class Management System",
+  "appName": "Taxy",
   "buttons": {
     "save": "Save",
     "cancel": "Cancel",
@@ -70,7 +70,7 @@
   },
   "messages": {
     "selectClass": "Please select a class from the top bar to get started.",
-    "noClassesAvailable": "No classes available. Create a class to get started."
+    "noClassesAvailable": "No classes available. Create or select a class to get started."
   },
   "actions": {
     "view": "View",

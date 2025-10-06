@@ -49,7 +49,10 @@ const TopBar: React.FC = () => {
     <>
       <Navbar bg="light" expand="lg">
         <Container fluid>
-          <Navbar.Brand>{t('common:appName')}</Navbar.Brand>
+          <Navbar.Brand>
+            <img src="/logo.png" alt="Taxy Logo"   style={{ maxWidth: '10%', height: 'auto', paddingRight: '1em' }} />
+            {t('common:appName')}
+            </Navbar.Brand>
           
           <div className="d-flex align-items-center gap-3 ms-auto">
             {!selectedClass && classes.length === 0 && (
@@ -58,12 +61,6 @@ const TopBar: React.FC = () => {
               </Alert>
             )}
             
-            {!selectedClass && classes.length > 0 && (
-              <Alert variant="info" className="mb-0 py-1 px-2 small">
-                {t('classes:messages.selectClassToManage')}
-              </Alert>
-            )}
-
             {classes.length > 0 && (
               <Form.Select
                 value={selectedClass?.class_id || ''}

@@ -287,13 +287,6 @@ const LeftPanel: React.FC = () => {
           </div>
         )}
 
-        {/* No Class Selected Warning */}
-        {!selectedClass && (
-          <Alert variant="warning" className="mb-3 py-2">
-            <small>{t('navigation:selectClassToManageKids')}</small>
-          </Alert>
-        )}
-
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="mb-0">{t('navigation:kids')}</h5>
         </div>
