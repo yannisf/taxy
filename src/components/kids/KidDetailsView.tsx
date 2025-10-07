@@ -254,7 +254,7 @@ const KidDetailsView: React.FC = () => {
         </Card.Header>
         <Card.Body>
           {!kid.guardians || kid.guardians.length === 0 ? (
-            <Alert variant="info" className="mb-0">
+            <Alert variant="secondary" className="mb-0">
               {t('kids:messages.noGuardians')}
             </Alert>
           ) : (

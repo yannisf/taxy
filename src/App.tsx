@@ -16,6 +16,7 @@ import KidEditView from './components/kids/KidEditView';
 // Import contexts
 import { KidsProvider } from './contexts/KidsContext';
 import { ClassProvider } from './contexts/ClassContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 // Import Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,9 +25,10 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App: React.FC = () => {
   return (
-    <ClassProvider>
-      <KidsProvider>
-        <Router>
+    <ThemeProvider>
+      <ClassProvider>
+        <KidsProvider>
+          <Router>
           <div className="App d-flex flex-column min-vh-100">
             <TopBar />
             <Container fluid className="flex-grow-1">
@@ -57,9 +59,10 @@ const App: React.FC = () => {
             draggable
             pauseOnHover
           />
-        </Router>
-      </KidsProvider>
-    </ClassProvider>
+          </Router>
+        </KidsProvider>
+      </ClassProvider>
+    </ThemeProvider>
   );
 };
 

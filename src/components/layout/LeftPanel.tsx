@@ -204,10 +204,10 @@ const LeftPanel: React.FC = () => {
       <div className="left-panel p-3">
         {/* Selected Class Display */}
         {selectedClass && (
-          <div className="mb-3 p-3 bg-light rounded">
+          <div className="mb-3 p-3 bg-body-secondary rounded">
             <div className="mb-2">
               <div className="text-primary fw-bold">{selectedClass.school_name}</div>
-              <div className="text-dark">
+              <div>
                 {selectedClass.class_name} 
                 <small className="text-muted ms-2">({selectedClass.school_year})</small>
               </div>

@@ -367,7 +367,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           </Card.Header>
           <Card.Body>
             {guardians.length === 0 && !showNewGuardian ? (
-              <Alert variant="info" className="mb-0">
+              <Alert variant="secondary" className="mb-0">
                 {t('guardians:messages.noGuardians')}
               </Alert>
             ) : (

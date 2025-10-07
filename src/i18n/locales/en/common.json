@@ -88,5 +88,7 @@
   "dialogs": {
     "confirmDelete": "Confirm Delete",
     "actionCannotBeUndone": "This action cannot be undone."
-  }
+  },
+  "darkMode": "Switch to dark mode",
+  "lightMode": "Switch to light mode"
 }

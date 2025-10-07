@@ -1,7 +1,5 @@
 - handle enumerated types more stylishly (relation_type, level, gender).
 - when editing the number of guardians on the card header should be a badge
-- on the left hand panel, remove the hidden buttons to edit or delete a kid and align the guardian count badge to the right.
-- the panels have shadows now. Remove the shadows.
 - introduce a new kid property "extended_day_care" (boolean).
 - support a dark style option for the app.
 - maintain an index of distinct firstNames, another for lastNames.

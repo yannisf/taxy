@@ -297,7 +297,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
 
             {/* Show message when same address as kid is checked */}
             {watch('same_address_as_kid') && (
-              <div className="mb-3 p-3 bg-light rounded">
+              <div className="mb-3 p-3 bg-body-secondary rounded">
                 <small className="text-muted">
                   {t('guardians:messages.sameAddress')}
                 </small>
@@ -324,7 +324,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
               </Card.Header>
               <Card.Body>
                 {telephoneFields.length === 0 ? (
-                  <Alert variant="info" className="mb-0">
+                  <Alert variant="secondary" className="mb-0">
                     {t('guardians:messages.noTelephones')}
                   </Alert>
                 ) : (

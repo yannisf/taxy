@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Navbar, Container, Button, Form, Alert } from 'react-bootstrap';
-import { PlusCircle } from 'react-bootstrap-icons';
+import { PlusCircle, MoonStars, Sun } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useClass } from '../../contexts/ClassContext';
 import ClassModal from '../classes/ClassModal';
 import LanguageSelector from '../common/LanguageSelector';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const TopBar: React.FC = () => {
   const { t } = useTranslation(['common', 'classes', 'messages']);
   const { classes, selectedClass, selectClass, createClass } = useClass();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -58,7 +60,7 @@ const TopBar: React.FC = () => {
 
   return (
     <>
-      <Navbar bg="light" expand="lg">
+      <Navbar bg={theme === 'light' ? 'light' : 'dark'} variant={theme === 'light' ? 'light' : 'dark'} expand="lg">
         <Container fluid>
           <Navbar.Brand>
             <img src="/logo.png" alt="Taxy Logo"   style={{ maxWidth: '10%', height: 'auto', paddingRight: '1em' }} />
@@ -96,6 +98,16 @@ const TopBar: React.FC = () => {
             >
               <PlusCircle size={16} />
               {t('classes:actions.newClass')}
+            </Button>
+            
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={toggleTheme}
+              className="d-flex align-items-center"
+              title={theme === 'light' ? t('common:darkMode') : t('common:lightMode')}
+            >
+              {theme === 'light' ? <MoonStars size={16} /> : <Sun size={16} />}
             </Button>
             
             <LanguageSelector />
