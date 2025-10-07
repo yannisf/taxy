@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Accordion, Button, Modal, Form, Row, Col, Card, Alert } from 'react-bootstrap';
+import { Accordion, Button, Modal, Form, Row, Col, Card } from 'react-bootstrap';
 import { X } from 'react-bootstrap-icons';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -324,9 +324,9 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
               </Card.Header>
               <Card.Body>
                 {telephoneFields.length === 0 ? (
-                  <Alert variant="secondary" className="mb-0">
+                  <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
                     {t('guardians:messages.noTelephones')}
-                  </Alert>
+                  </div>
                 ) : (
                   <>
                     {telephoneFields.map((field, index) => (

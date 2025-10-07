@@ -367,9 +367,9 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           </Card.Header>
           <Card.Body>
             {guardians.length === 0 && !showNewGuardian ? (
-              <Alert variant="secondary" className="mb-0">
+              <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
                 {t('guardians:messages.noGuardians')}
-              </Alert>
+              </div>
             ) : (
               <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key as string | null)}>
                 {guardians.map((guardian, index) => (
