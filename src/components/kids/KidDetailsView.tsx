@@ -229,6 +229,9 @@ const KidDetailsView: React.FC = () => {
           <p><strong>{t('common:labels.dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
           <p><strong>{t('common:labels.gender')}:</strong> {kid.gender}</p>
           <p><strong>{t('kids:form.level')}:</strong> {kid.level}</p>
+          {kid.extended_day_care && (
+            <p><strong>{t('kids:form.extendedDayCare')}</strong> <CheckLg className="text-success" /></p>
+          )}
           {kid.special_education && (
             <p><strong>{t('kids:status.specialEducation')}</strong> <CheckLg className="text-success" /></p>
           )}

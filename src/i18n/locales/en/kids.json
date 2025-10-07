@@ -10,6 +10,7 @@
   "form": {
     "preferredName": "Preferred Name",
     "level": "Level",
+    "extendedDayCare": "Extended Day Care",
     "specialEducation": "Special Education",
     "notSpecified": "Not specified",
     "placeholders": {

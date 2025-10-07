@@ -38,6 +38,7 @@ export interface Kid {
   address?: Address;
   notes?: string | null;
   private_notes?: string | null;
+  extended_day_care: boolean;
   special_education: boolean;
   guardians: Guardian[];
   created_at: string;

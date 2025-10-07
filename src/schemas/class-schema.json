@@ -187,6 +187,10 @@
           "description": "Confidential notes (restricted access).",
           "writeOnly": true
         },
+        "extended_day_care": {
+          "type": "boolean",
+          "description": "Indicates whether the child participates in extended day care."
+        },
         "special_education": {
           "type": "boolean",
           "description": "Indicates whether the child participates in special education."
@@ -215,6 +219,7 @@
         "last_name",
         "gender",
         "level",
+        "extended_day_care",
         "special_education",
         "guardians",
         "created_at",

@@ -35,11 +35,12 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
     register,
     reset 
   } = useForm<Kid>({
-    defaultValues: initialData || {
+      defaultValues: initialData || {
       first_name: '',
       last_name: '',
       gender: 'male' as const,
       level: 'pre-kindergartner' as const,
+      extended_day_care: false,
       special_education: false,
       guardians: [],
       notes: '',
@@ -303,6 +304,14 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
             </Form.Group>
           </Col>
         </Row>
+
+        <Form.Group className="mb-3">
+          <Form.Check 
+            type="checkbox"
+            label={t('kids:form.extendedDayCare')}
+            {...register('extended_day_care')}
+          />
+        </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Check 
