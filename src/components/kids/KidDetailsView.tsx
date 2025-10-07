@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Row, Col, Alert, Badge, OverlayTrigger, Tooltip, Button } from 'react-bootstrap';
-import { PencilSquare, CheckLg, InfoCircle, ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
+import { Container, Card, Row, Col, Alert, Badge, OverlayTrigger, Tooltip, Button, Modal } from 'react-bootstrap';
+import { PencilSquare, CheckLg, InfoCircle, ChevronLeft, ChevronRight, XLg } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useClassKids } from '../../hooks/useClassKids';
+import { useKids } from '../../contexts/KidsContext';
 import GuardianCard from '../guardians/GuardianCard';
 import AddressDisplay from '../common/AddressDisplay';
 import { formatDateDisplay } from '../../utils/dateUtils';
@@ -14,7 +15,9 @@ const KidDetailsView: React.FC = () => {
   const { kidId } = useParams<{ kidId: string }>();
   const navigate = useNavigate();
   const [kid, setKid] = useState<Kid | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { t } = useTranslation(['common', 'kids', 'guardians', 'navigation']);
+  const { refreshKids } = useKids();
   const classKids = useClassKids();
 
   useEffect(() => {
@@ -64,6 +67,28 @@ const KidDetailsView: React.FC = () => {
     if (kidId) {
       navigate(`/kids/${kidId}/edit`);
     }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (kid) {
+      try {
+        await db.deleteKid(kid.kid_id);
+        await refreshKids(); // Refresh the list using context
+        setShowDeleteModal(false);
+        // Navigate to default view since the current kid is deleted
+        navigate('/kids');
+      } catch (error) {
+        console.error('Error deleting kid:', error);
+      }
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
   };
 
   // Keyboard navigation
@@ -180,6 +205,19 @@ const KidDetailsView: React.FC = () => {
                 onClick={handleEditClick}
               />
             </OverlayTrigger>
+
+            {/* Delete Button */}
+            <OverlayTrigger
+              placement="bottom"
+              overlay={<Tooltip>{t('common:actions.delete')}</Tooltip>}
+            >
+              <XLg 
+                size={24} 
+                className="text-danger" 
+                style={{ cursor: 'pointer' }}
+                onClick={handleDeleteClick}
+              />
+            </OverlayTrigger>
           </div>
         </Card.Header>
         <Card.Body>
@@ -230,6 +268,29 @@ const KidDetailsView: React.FC = () => {
           )}
         </Card.Body>
       </Card>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={cancelDelete}>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('common:dialogs.confirmDelete')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {t('kids:dialogs.confirmDeleteKid', { 
+            firstName: kid?.first_name, 
+            lastName: kid?.last_name 
+          })}
+          <br />
+          {t('common:dialogs.actionCannotBeUndone')}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={cancelDelete}>
+            {t('common:buttons.cancel')}
+          </Button>
+          <Button variant="danger" onClick={confirmDelete}>
+            {t('common:buttons.delete')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

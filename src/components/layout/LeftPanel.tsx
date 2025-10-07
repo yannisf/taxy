@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { ListGroup, Button, Modal, Badge, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { PencilSquare, XLg, PersonFill, Plus, Download, Upload, FilePdf, Envelope, BoxArrowLeft } from 'react-bootstrap-icons';
+import { PencilSquare, PersonFill, Plus, Download, Upload, FilePdf, Envelope, BoxArrowLeft } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
@@ -29,9 +28,6 @@ const LeftPanel: React.FC = () => {
     navigate('/kids');
   };
   const classKids = useClassKids();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [kidToDelete, setKidToDelete] = useState<Kid | null>(null);
-  const [hoveredKidId, setHoveredKidId] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [isGeneratingCatalog, setIsGeneratingCatalog] = useState(false);
@@ -47,36 +43,6 @@ const LeftPanel: React.FC = () => {
     navigate(`/kids/${kid.kid_id}`);
   };
 
-  const handleEdit = (kid: Kid, event: React.MouseEvent) => {
-    event.stopPropagation();
-    navigate(`/kids/${kid.kid_id}/edit`);
-  };
-
-  const handleDeleteClick = (kid: Kid, event: React.MouseEvent) => {
-    event.stopPropagation();
-    setKidToDelete(kid);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDelete = async () => {
-    if (kidToDelete) {
-      try {
-        await db.deleteKid(kidToDelete.kid_id);
-        await refreshKids(); // Refresh the list using context
-        setShowDeleteModal(false);
-        setKidToDelete(null);
-        // Navigate to default view if the deleted kid was currently selected
-        navigate('/kids');
-      } catch (error) {
-        console.error('Error deleting kid:', error);
-      }
-    }
-  };
-
-  const cancelDelete = () => {
-    setShowDeleteModal(false);
-    setKidToDelete(null);
-  };
 
   const handleExport = async () => {
     if (!selectedClass) {
@@ -330,11 +296,15 @@ const LeftPanel: React.FC = () => {
               className="kid-list-item d-flex justify-content-between align-items-center py-2 px-0 border-0"
               style={{ 
                 cursor: 'pointer',
-                backgroundColor: hoveredKidId === kid.kid_id ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+                backgroundColor: 'transparent',
                 transition: 'background-color 0.2s ease'
               }}
-              onMouseEnter={() => setHoveredKidId(kid.kid_id)}
-              onMouseLeave={() => setHoveredKidId(null)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
               onClick={() => handleKidClick(kid)}
             >
               <div className="kid-name-area flex-grow-1 d-flex align-items-center gap-2">
@@ -345,26 +315,6 @@ const LeftPanel: React.FC = () => {
                   <PersonFill size={12} />
                   {kid.guardians.length}
                 </Badge>
-              </div>
-              <div className="action-icons d-flex gap-1">
-                <Button 
-                  variant="link" 
-                  size="sm"
-                  className={`p-1 text-decoration-none icon-button edit-icon ${hoveredKidId === kid.kid_id ? 'visible' : 'invisible'}`}
-                  onClick={(e) => handleEdit(kid, e)}
-                  title={t('common:actions.edit')}
-                >
-                  <PencilSquare size={16} />
-                </Button>
-                <Button 
-                  variant="link" 
-                  size="sm"
-                  className={`p-1 text-decoration-none icon-button delete-icon ${hoveredKidId === kid.kid_id ? 'visible' : 'invisible'}`}
-                  onClick={(e) => handleDeleteClick(kid, e)}
-                  title={t('common:actions.delete')}
-                >
-                  <XLg size={16} />
-                </Button>
               </div>
             </ListGroup.Item>
           ))}
@@ -391,28 +341,6 @@ const LeftPanel: React.FC = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={cancelDelete}>
-        <Modal.Header closeButton>
-          <Modal.Title>{t('common:dialogs.confirmDelete')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {t('kids:dialogs.confirmDeleteKid', { 
-            firstName: kidToDelete?.first_name, 
-            lastName: kidToDelete?.last_name 
-          })}
-          <br />
-          {t('common:dialogs.actionCannotBeUndone')}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={cancelDelete}>
-            {t('common:buttons.cancel')}
-          </Button>
-          <Button variant="danger" onClick={confirmDelete}>
-            {t('common:buttons.delete')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
       {/* Import Confirmation Modal */}
       <Modal show={showImportConfirmModal} onHide={handleCancelImport} size="lg">

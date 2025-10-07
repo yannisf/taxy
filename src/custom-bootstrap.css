@@ -191,12 +191,13 @@
 
 /* Custom card styling */
 .card {
-  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-  transition: box-shadow 0.15s ease-in-out;
+  /* Completely remove all shadows and hover effects for clean design */
+  box-shadow: none !important;
 }
 
 .card:hover {
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+  /* Remove all hover effects to keep cards flat */
+  box-shadow: none !important;
 }
 
 /* Text color utilities */

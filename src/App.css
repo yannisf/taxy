@@ -97,14 +97,14 @@
 
 .icon-action-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Removed box-shadow for clean design */
 }
 
 .icon-action-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  box-shadow: none;
+  /* No shadow needed */
 }
 
 /* Ensure smooth transitions */
