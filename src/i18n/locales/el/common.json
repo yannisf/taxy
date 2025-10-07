@@ -46,6 +46,11 @@
     "other": "Άλλο",
     "selectGender": "Επιλέξτε φύλο"
   },
+  "genderDisplay": {
+    "male": "Αγόρι",
+    "female": "Κορίτσι",
+    "other": "Άλλο"
+  },
   "placeholders": {
     "firstName": "Εισάγετε όνομα",
     "lastName": "Εισάγετε επώνυμο",

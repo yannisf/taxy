@@ -23,6 +23,11 @@
     "kindergarten": "Νηπιαγωγείο",
     "kindergartenRepeating": "Νηπιαγωγείο (Επανάληψη)"
   },
+  "levelDisplay": {
+    "pre-kindergartner": "Προνηπιαγωγείο",
+    "kindergartner": "Νηπιαγωγείο",
+    "kindergartner-repeating": "Νηπιαγωγείο (Επανάληψη)"
+  },
   "actions": {
     "addKid": "Προσθήκη Παιδιού",
     "updateKid": "Ενημέρωση Παιδιού",

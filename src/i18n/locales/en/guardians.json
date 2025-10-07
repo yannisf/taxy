@@ -28,6 +28,14 @@
     "extendedFamily": "Extended Family",
     "friend": "Friend"
   },
+  "relationDisplay": {
+    "father": "Father",
+    "mother": "Mother",
+    "sibling": "Sibling",
+    "grandparent": "Grandparent",
+    "extended family": "Extended Family",
+    "friend": "Friend"
+  },
   "telephone": {
     "title": "Telephone Numbers",
     "addTelephone": "Add Telephone",

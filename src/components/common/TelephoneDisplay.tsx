@@ -1,5 +1,6 @@
 import React from 'react';
 import { Badge } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import type { Telephone } from '../../types/models';
 import { getTelephoneTypeIcon } from '../../utils/telephoneUtils';
 
@@ -14,12 +15,14 @@ const TelephoneDisplay: React.FC<TelephoneDisplayProps> = ({
   className = '',
   compact = false 
 }) => {
+  const { t } = useTranslation(['forms']);
+
   if (!telephone.country_code || !telephone.number) {
     return null;
   }
 
   const typeIcon = getTelephoneTypeIcon(telephone.telephone_type);
-  const typeLabel = telephone.telephone_type.charAt(0).toUpperCase() + telephone.telephone_type.slice(1);
+  const typeLabel = t(`forms:telephone.typeDisplay.${telephone.telephone_type}`);
 
   if (compact) {
     return (

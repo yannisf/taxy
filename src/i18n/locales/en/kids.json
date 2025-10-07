@@ -23,6 +23,11 @@
     "kindergarten": "Kindergartner",
     "kindergartenRepeating": "Kindergartner (Repeating)"
   },
+  "levelDisplay": {
+    "pre-kindergartner": "Pre-Kindergartner",
+    "kindergartner": "Kindergartner",
+    "kindergartner-repeating": "Kindergartner (Repeating)"
+  },
   "actions": {
     "addKid": "Add Kid",
     "updateKid": "Update Kid",

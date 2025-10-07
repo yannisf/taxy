@@ -28,6 +28,14 @@
     "extendedFamily": "Ευρύτερη Οικογένεια",
     "friend": "Φίλος/η"
   },
+  "relationDisplay": {
+    "father": "Πατέρας",
+    "mother": "Μητέρα",
+    "sibling": "Αδερφός/ή",
+    "grandparent": "Παππούς/Γιαγιά",
+    "extended family": "Ευρύτερη Οικογένεια",
+    "friend": "Φίλος/η"
+  },
   "telephone": {
     "title": "Αριθμοί Τηλεφώνου",
     "addTelephone": "Προσθήκη Τηλεφώνου",

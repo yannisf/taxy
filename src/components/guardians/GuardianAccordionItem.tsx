@@ -84,7 +84,14 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
   const headerTitle = useMemo(() => {
     if (isNew) return t('guardians:messages.newGuardian');
     if (guardian) {
-      return `${guardian.first_name || 'Unnamed'} ${guardian.last_name || ''} - ${guardian.relation_with_kid}`;
+      return (
+        <>
+          {guardian.first_name || 'Unnamed'} {guardian.last_name || ''} {' '}
+          <span className="badge text-bg-secondary">
+            {t(`guardians:relationDisplay.${guardian.relation_with_kid}`)}
+          </span>
+        </>
+      );
     }
     return t('guardians:messages.guardian');
   }, [isNew, guardian?.first_name, guardian?.last_name, guardian?.relation_with_kid, t]);
@@ -308,7 +315,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             <Card className="mb-4">
               <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0">📞 {t('guardians:telephone.title')} ({telephoneFields.length})</h6>
+                  <h6 className="mb-0">📞 {t('guardians:telephone.title')} <span className="badge text-bg-secondary">{telephoneFields.length}</span></h6>
                   <Button
                     variant="outline-primary"
                     size="sm"

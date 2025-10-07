@@ -24,6 +24,12 @@
     "home": "Home",
     "work": "Work",
     "other": "Other",
+    "typeDisplay": {
+      "mobile": "Mobile",
+      "home": "Home",
+      "work": "Work",
+      "other": "Other"
+    },
     "placeholders": {
       "countryCode": "+30",
       "number": "1234567890"

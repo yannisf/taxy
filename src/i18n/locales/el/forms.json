@@ -24,6 +24,12 @@
     "home": "Σπίτι",
     "work": "Εργασία",
     "other": "Άλλο",
+    "typeDisplay": {
+      "mobile": "Κινητό",
+      "home": "Σπίτι",
+      "work": "Εργασία",
+      "other": "Άλλο"
+    },
     "placeholders": {
       "countryCode": "+30",
       "number": "1234567890"

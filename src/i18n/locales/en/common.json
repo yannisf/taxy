@@ -46,6 +46,11 @@
     "other": "Other",
     "selectGender": "Select gender"
   },
+  "genderDisplay": {
+    "male": "Boy",
+    "female": "Girl",
+    "other": "Other"
+  },
   "placeholders": {
     "firstName": "Enter first name",
     "lastName": "Enter last name",

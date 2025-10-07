@@ -363,7 +363,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
         <Card className="mb-4">
           <Card.Header>
             <div className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">{t('guardians:title.guardians')} ({guardianCount})</h5>
+              <h5 className="mb-0">{t('guardians:title.guardians')} <span className="badge text-bg-secondary">{guardianCount}</span> </h5>
               <Button 
                 variant="outline-primary" 
                 size="sm"

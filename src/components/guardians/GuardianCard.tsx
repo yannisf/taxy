@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Badge } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../types/models';
 import AddressDisplay from '../common/AddressDisplay';
 import TelephoneDisplay from '../common/TelephoneDisplay';
@@ -9,6 +10,8 @@ interface GuardianCardProps {
 }
 
 const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
+  const { t } = useTranslation(['guardians']);
+
   return (
     <Card className="h-100">
       <Card.Body>
@@ -16,7 +19,7 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
           {guardian.first_name} {guardian.last_name}
         </Card.Title>
         <Card.Subtitle className="mb-2 text-muted">
-          {guardian.relation_with_kid.charAt(0).toUpperCase() + guardian.relation_with_kid.slice(1)}
+          {t(`guardians:relationDisplay.${guardian.relation_with_kid}`)}
         </Card.Subtitle>
         
         <div className="mb-2">
