@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Card, Button, Alert } from 'react-bootstrap';
+import { Container, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../contexts/ClassContext';

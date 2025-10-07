@@ -6,7 +6,7 @@ import type { Control, FieldErrors } from 'react-hook-form';
 import type { Address } from '../../types/models';
 
 interface AddressFormProps {
-  control: Control<Record<string, any>>;
+  control: Control<any>;
   errors?: FieldErrors<Address>;
   fieldPrefix?: string;
   disabled?: boolean;
