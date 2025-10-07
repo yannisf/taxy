@@ -8,7 +8,7 @@ import { formatClassDisplay } from '../../utils/classUtils';
 
 const KidListView: React.FC = () => {
   const { t } = useTranslation(['common', 'kids']);
-  const { selectedClass } = useClass();
+  const { classes, selectedClass } = useClass();
   const classKids = useClassKids();
   const navigate = useNavigate();
 
@@ -18,6 +18,9 @@ const KidListView: React.FC = () => {
     navigate('/kids/add');
   };
 
+  // Determine the current state
+  const hasNoClasses = classes.length === 0;
+  const hasClassesButNoneSelected = classes.length > 0 && !selectedClass;
 
   return (
     <Container className="mt-3">
@@ -28,11 +31,19 @@ const KidListView: React.FC = () => {
               <h2 className="text-muted">{t('common:appName')}</h2>
             </div>
             
-            {!selectedClass ? (
+            {hasNoClasses ? (
               <>
                 <div className="mb-4">
                   <p className="text-muted">
                     {t('common:messages.noClassesAvailable')}
+                  </p>
+                </div>
+              </>
+            ) : hasClassesButNoneSelected ? (
+              <>
+                <div className="mb-4">
+                  <p className="text-muted">
+                    {t('common:messages.selectClass')}
                   </p>
                 </div>
               </>

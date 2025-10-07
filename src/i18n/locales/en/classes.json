@@ -33,7 +33,7 @@
     "newClass": "New Class"
   },
   "messages": {
-    "noClassesAvailable": "No classes available. Create or select a class to get started.",
+    "noClassesAvailable": "No classes available. Create a class to get started.",
     "needSelectOrCreate": "You need to select or create a class before you can manage kids.",
     "currentClass": "Current Class:",
     "classCreatedSuccess": "Class created successfully!"
