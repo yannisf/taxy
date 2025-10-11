@@ -1,5 +1,6 @@
-- handle enumerated types more stylishly (relation_type, level, gender).
-- when editing the number of guardians on the card header should be a badge
-- introduce a new kid property "extended_day_care" (boolean).
-- support a dark style option for the app.
+- When adding a kid allow a cancel action.
+- top bar should always be visible (fixed position).
+- The kid list in the left panel should be scrollable. Just the list, not the whole left panel with the controls.
+- while viewing a kid's details, typing "d" should delete the kid after a confirmation prompt.
 - maintain an index of distinct firstNames, another for lastNames.
+- ensure the printed report is in a4 format (landscape).

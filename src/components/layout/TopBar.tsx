@@ -60,14 +60,14 @@ const TopBar: React.FC = () => {
 
   return (
     <>
-      <Navbar bg={theme === 'light' ? 'light' : 'dark'} variant={theme === 'light' ? 'light' : 'dark'} expand="lg">
+      <Navbar fixed='top' bg={theme === 'light' ? 'light' : 'dark'} variant={theme === 'light' ? 'light' : 'dark'} expand="lg">
         <Container fluid>
-          <Navbar.Brand>
-            <img src="/logo.png" alt="Taxy Logo"   style={{ maxWidth: '10%', height: 'auto', paddingRight: '1em' }} />
-            {t('common:appName')}
-            </Navbar.Brand>
+          <Navbar.Brand className="d-flex align-items-center">
+            <img src="/logo.png" alt="Taxy Logo" style={{ maxWidth: '10%', height: 'auto', paddingRight: '1em' }}/>{' '}
+            <span className='fs-2'>{t('common:appName')}</span>
+          </Navbar.Brand>
           
-          <div className="d-flex align-items-center gap-3 ms-auto">
+          <div className="d-flex align-items-center gap-2 ms-auto">
             {!selectedClass && classes.length === 0 && (
               <Alert variant="warning" className="mb-0 py-1 px-2 small">
                 {t('classes:messages.noClassesAvailable')}
@@ -75,12 +75,7 @@ const TopBar: React.FC = () => {
             )}
             
             {classes.length > 0 && (
-              <Form.Select
-                value={selectedClass?.class_id || ''}
-                onChange={handleClassSelect}
-                style={{ width: '300px' }}
-                className="me-2"
-              >
+              <Form.Select value={selectedClass?.class_id || ''} onChange={handleClassSelect} style={{ width: '300px' }} className="me-2" >
                 <option value="">{t('classes:title.selectClass')}</option>
                 {classes.map(classObj => (
                   <option key={classObj.class_id} value={classObj.class_id}>
@@ -90,24 +85,13 @@ const TopBar: React.FC = () => {
               </Form.Select>
             )}
 
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => setShowCreateModal(true)}
-              className="d-flex align-items-center gap-2"
-            >
-              <PlusCircle size={16} />
-              {t('classes:actions.newClass')}
+            <Button variant="primary" size="sm" onClick={() => setShowCreateModal(true)} className="d-flex align-items-center flex-nowrap gap-2" >
+                <PlusCircle/>
+                <span className="text-nowrap">{t('classes:actions.newClass')}</span>
             </Button>
             
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={toggleTheme}
-              className="d-flex align-items-center"
-              title={theme === 'light' ? t('common:darkMode') : t('common:lightMode')}
-            >
-              {theme === 'light' ? <MoonStars size={16} /> : <Sun size={16} />}
+            <Button variant="outline-secondary" size="sm" onClick={toggleTheme} title={theme === 'light' ? t('common:darkMode') : t('common:lightMode')}>
+              {theme === 'light' ? <MoonStars/> : <Sun/>}
             </Button>
             
             <LanguageSelector />
@@ -115,12 +99,7 @@ const TopBar: React.FC = () => {
         </Container>
       </Navbar>
 
-      <ClassModal
-        show={showCreateModal}
-        onHide={() => setShowCreateModal(false)}
-        onSubmit={handleCreateClass}
-        loading={isCreating}
-      />
+      <ClassModal show={showCreateModal} onHide={() => setShowCreateModal(false)} onSubmit={handleCreateClass} loading={isCreating}/>
     </>
   );
 };

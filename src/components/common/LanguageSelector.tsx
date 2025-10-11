@@ -11,16 +11,11 @@ const LanguageSelector: React.FC = () => {
   };
 
   const getCurrentLanguageLabel = () => {
-    return i18n.language === 'en' ? 'EN' : 'GR';
+    return i18n.language === 'en' ? 'EN' : 'EL';
   };
 
   return (
-    <Button
-      variant="outline-secondary"
-      size="sm"
-      onClick={toggleLanguage}
-      title={`Switch to ${i18n.language === 'en' ? 'Greek' : 'English'}`}
-    >
+    <Button variant="outline-secondary" size="sm" onClick={toggleLanguage} title={`Switch to ${i18n.language === 'en' ? 'Greek' : 'English'}`}>
       {getCurrentLanguageLabel()}
     </Button>
   );

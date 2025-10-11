@@ -23,6 +23,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // Import React Toastify CSS
 import 'react-toastify/dist/ReactToastify.css';
 
+import './App.css';
+
 const App: React.FC = () => {
   return (
     <ThemeProvider>
@@ -31,7 +33,7 @@ const App: React.FC = () => {
           <Router>
           <div className="App d-flex flex-column min-vh-100">
             <TopBar />
-            <Container fluid className="flex-grow-1">
+            <Container fluid className="flex-grow-1 content-container">
               <Row className="h-100">
                 <Col xs={3} className="left-panel-col border-end">
                   <LeftPanel />

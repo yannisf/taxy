@@ -19,14 +19,14 @@
   },
   "levels": {
     "selectLevel": "Επιλέξτε επίπεδο",
-    "preKindergarten": "Προνηπιαγωγείο",
-    "kindergarten": "Νηπιαγωγείο",
-    "kindergartenRepeating": "Νηπιαγωγείο (Επανάληψη)"
+    "preKindergarten": "Προνήπιο",
+    "kindergarten": "Νήπιο",
+    "kindergartenRepeating": "Επαναφοίτηση"
   },
   "levelDisplay": {
-    "pre-kindergartner": "Προνηπιαγωγείο",
-    "kindergartner": "Νηπιαγωγείο",
-    "kindergartner-repeating": "Νηπιαγωγείο (Επανάληψη)"
+    "pre-kindergartner": "Προνήπιο",
+    "kindergartner": "Νήπιο",
+    "kindergartner-repeating": "Επαναφοίτηση"
   },
   "actions": {
     "addKid": "Προσθήκη Παιδιού",
