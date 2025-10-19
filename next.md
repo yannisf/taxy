@@ -1,5 +1,4 @@
 - When adding a kid allow a cancel action.
-- top bar should always be visible (fixed position).
 - The kid list in the left panel should be scrollable. Just the list, not the whole left panel with the controls.
 - while viewing a kid's details, typing "d" should delete the kid after a confirmation prompt.
 - maintain an index of distinct firstNames, another for lastNames.

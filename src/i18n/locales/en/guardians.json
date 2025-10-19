@@ -62,7 +62,7 @@
   },
   "messages": {
     "noGuardians": "No guardians added yet. Click \"Add Guardian\" to get started.",
-    "noTelephones": "📞 No telephone numbers added yet. Click \"Add Telephone\" to get started.",
+    "noTelephones": "No telephone numbers added yet. Click \"Add Telephone\" to get started.",
     "sameAddress": "📍 This guardian uses the same address as the kid",
     "pickupAuthorized": "✓ Pickup Authorized",
     "sameAddressBadge": "📍 Same Address",

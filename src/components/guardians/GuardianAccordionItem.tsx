@@ -115,19 +115,13 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
           <div className="d-flex justify-content-between align-items-center w-100">
             <span>{headerTitle}</span>
             {!isNew && guardian && (
-              <Button
-                variant="link"
-                size="sm"
+              <Button variant="outline-danger" size="sm" className="p-2 me-3" title={t('guardians:actions.deleteGuardian')}
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowDeleteModal(true);
-                }}
-                className="p-1 text-danger"
-                title={t('guardians:actions.deleteGuardian')}
-                style={{ marginLeft: 'auto' }}
-              >
-                <X size={16} />
-              </Button>
+                }}>
+                  <X size={20} />
+            </Button>
             )}
           </div>
         </Accordion.Header>
