@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { Form, Button, Container, Alert, Card, Accordion } from 'react-bootstrap';
+import { Form, Button, Container, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createKid } from '../../types/models';
@@ -9,10 +9,10 @@ import { validationService } from '../../services/validation';
 import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
-import GuardianAccordionItem from '../guardians/GuardianAccordionItem';
 import BasicInfoSection from './sections/BasicInfoSection';
 import AdditionalInfoSection from './sections/AdditionalInfoSection';
 import AddressSection from './sections/AddressSection';
+import GuardiansSection from './sections/GuardiansSection';
 
 type KidFormProps = {
   initialData?: Kid;
@@ -22,19 +22,17 @@ type KidFormProps = {
 export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [guardians, setGuardians] = useState<Guardian[]>(initialData?.guardians || []);
-  const [showNewGuardian, setShowNewGuardian] = useState(false);
-  const [activeKey, setActiveKey] = useState<string | null>(null);
   const navigate = useNavigate();
   const { kidId } = useParams<{ kidId: string }>();
   const { refreshKids } = useKids();
   const { selectedClass } = useClass();
   const { t } = useTranslation();
-  const { 
-    control, 
-    handleSubmit, 
-    formState: { errors }, 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
     register,
-    reset 
+    reset
   } = useForm<Kid>({
       defaultValues: initialData || {
       first_name: '',
@@ -49,37 +47,9 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
     }
   });
 
-  // Guardian management functions
-  const handleSaveGuardian = (index: number, updatedGuardian: Guardian) => {
-    const newGuardians = [...guardians];
-    newGuardians[index] = updatedGuardian;
-    setGuardians(newGuardians);
-    setActiveKey(null);
-  };
-
-  const handleDeleteGuardian = (guardian: Guardian) => {
-    setGuardians(prev => prev.filter(g => g !== guardian));
-    setActiveKey(null);
-  };
-
-  const handleSaveNewGuardian = (newGuardian: Guardian) => {
-    setGuardians(prev => [...prev, newGuardian]);
-    setShowNewGuardian(false);
-    setActiveKey(null);
-  };
-
-  const handleCancelNewGuardian = () => {
-    setShowNewGuardian(false);
-    setActiveKey(null);
-  };
-
-  const handleAddGuardianClick = () => {
-    setShowNewGuardian(true);
-    setActiveKey('new-guardian');
-  };
-
-  // Simple values - no need for memoization
-  const guardianCount = guardians.length;
+  const handleGuardiansChange = useCallback((updatedGuardians: Guardian[]) => {
+    setGuardians(updatedGuardians);
+  }, []);
 
   const handleCancel = () => {
     if (kidId) {
@@ -175,51 +145,10 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
 
         <AddressSection control={control} errors={errors} initialAddress={initialData?.address} />
 
-        {/* Guardians Section */}
-        <Card className="mb-4">
-          <Card.Header>
-            <div className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">{t('guardians')} <span className="badge text-bg-secondary">{guardianCount}</span> </h5>
-              <Button 
-                variant="outline-primary" 
-                size="sm"
-                onClick={handleAddGuardianClick}
-                disabled={showNewGuardian}
-              >
-                + {t('addGuardian')}
-              </Button>
-            </div>
-          </Card.Header>
-          <Card.Body>
-            {guardians.length === 0 && !showNewGuardian ? (
-              <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
-                {t('noGuardiansYet')}
-              </div>
-            ) : (
-              <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key as string | null)}>
-                {guardians.map((guardian, index) => (
-                  <GuardianAccordionItem
-                    key={index}
-                    guardian={guardian}
-                    eventKey={`guardian-${index}`}
-                    onSave={(updatedGuardian) => handleSaveGuardian(index, updatedGuardian)}
-                    onDelete={handleDeleteGuardian}
-                  />
-                ))}
-                
-                {showNewGuardian && (
-                  <GuardianAccordionItem
-                    isNew
-                    eventKey="new-guardian"
-                    onSave={handleSaveNewGuardian}
-                    onDelete={() => {}}
-                    onCancel={handleCancelNewGuardian}
-                  />
-                )}
-              </Accordion>
-            )}
-          </Card.Body>
-        </Card>
+        <GuardiansSection
+          initialGuardians={initialData?.guardians}
+          onChange={handleGuardiansChange}
+        />
 
         <div className="d-flex gap-2">
           <Button variant="primary" type="submit">
