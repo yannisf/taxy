@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { Control, FieldErrors } from 'react-hook-form';
 import type { Kid } from '../../../types/models';
+import { useKids } from '../../../contexts/KidsContext';
+import { extractUniqueFirstNames, filterNamesByQuery } from '../../../utils/nameUtils';
+import AutocompleteInput from '../../common/AutocompleteInput';
 
 interface BasicInfoSectionProps {
   control: Control<Kid>;
@@ -12,6 +15,10 @@ interface BasicInfoSectionProps {
 
 const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) => {
   const { t } = useTranslation();
+  const { kids } = useKids();
+
+  // Extract unique first names from all kids
+  const allFirstNames = useMemo(() => extractUniqueFirstNames(kids), [kids]);
 
   return (
     <>
@@ -23,17 +30,22 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) 
               name="first_name"
               control={control}
               rules={{ required: t('fieldRequiredTemplate', { field: t('firstName') }) }}
-              render={({ field }) => (
-                <Form.Control
-                  {...field}
-                  type="text"
-                  placeholder={t('enterFirstName')}
-                  isInvalid={!!errors.first_name}
-                />
-              )}
+              render={({ field }) => {
+                const filteredSuggestions = filterNamesByQuery(allFirstNames, field.value || '');
+                return (
+                  <AutocompleteInput
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    suggestions={filteredSuggestions}
+                    placeholder={t('enterFirstName')}
+                    isInvalid={!!errors.first_name}
+                  />
+                );
+              }}
             />
             {errors.first_name && (
-              <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid" className="d-block">
                 {errors.first_name.message}
               </Form.Control.Feedback>
             )}

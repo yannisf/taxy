@@ -217,6 +217,79 @@ Forms use React Hook Form for validation and state management. See `src/componen
 ### Drag & Drop
 Telephone ordering uses @dnd-kit library. See `src/components/common/SortableTelephoneForm.tsx`.
 
+## Autocomplete Features
+
+The application provides autocomplete functionality for form fields to improve data entry consistency and speed.
+
+### First Name Autocomplete
+
+Provides autocomplete for the first name field when adding or editing students.
+
+**Features:**
+- Appears after typing 2 or more characters
+- Sources names from existing students' first_name and preferred_name fields
+- Case-insensitive and accent-insensitive matching
+- Supports keyboard navigation (Arrow Up/Down, Enter, Escape)
+- Click or tap to select suggestions
+
+**Integration:** `src/components/kids/sections/BasicInfoSection.tsx`
+
+### Address Field Autocomplete
+
+Provides autocomplete for all address fields (street name, neighborhood, postal code, city, country) when entering kid or guardian addresses.
+
+**Features:**
+- Appears after typing 2 or more characters
+- Sources data from both kid addresses and guardian addresses
+- Skips guardian addresses when `same_address_as_kid` is true
+- Each field suggests values from the same field type only
+- Case-insensitive and accent-insensitive matching
+- Supports keyboard navigation (Arrow Up/Down, Enter, Escape)
+- Click or tap to select suggestions
+- Respects disabled state (no autocomplete when field is disabled)
+
+**Supported Fields:**
+- Street Name: `extractUniqueStreetNames()`
+- Neighborhood: `extractUniqueNeighborhoods()`
+- Postal Code: `extractUniquePostalCodes()`
+- City: `extractUniqueCities()`
+- Country: `extractUniqueCountries()`
+
+**Integration:** `src/components/common/AddressForm.tsx`
+
+### Technical Implementation
+
+**Reusable Component:** `src/components/common/AutocompleteInput.tsx`
+- Generic autocomplete input that receives suggestions as props
+- Handles keyboard navigation and mouse interaction
+- Manages dropdown visibility and focus states
+
+**Utility Functions:** `src/utils/nameUtils.ts`
+- `normalizeString()`: Removes accents and converts to lowercase for matching
+- `extractUniqueFirstNames()`: Extracts unique first/preferred names from kids
+- `extractUniqueStreetNames()`: Extracts unique street names from all addresses
+- `extractUniqueNeighborhoods()`: Extracts unique neighborhoods from all addresses
+- `extractUniquePostalCodes()`: Extracts unique postal codes from all addresses
+- `extractUniqueCities()`: Extracts unique cities from all addresses
+- `extractUniqueCountries()`: Extracts unique countries from all addresses
+- `filterNamesByQuery()`: Filters any list based on user input (min 2 chars)
+
+**How It Works:**
+1. KidsProvider loads all kids from IndexedDB on app mount
+2. Components extract unique values using appropriate extraction functions
+3. Values are cached using `useMemo` for performance
+4. `filterNamesByQuery()` filters the list in real-time as user types
+5. AutocompleteInput component displays filtered suggestions
+
+**Technical Details:**
+- Uses Unicode normalization (NFD) to remove diacritical marks for accent-insensitive matching
+- Supports Greek characters with accents (Γιώργος matches "γιωργος")
+- No database changes - operates entirely in-memory
+- Lists update automatically when kids data changes in KidsContext
+- Address extraction skips guardians with `same_address_as_kid: true`
+
+**Tests:** `src/test/nameUtils.test.ts` (22 tests covering all extraction and filtering functions)
+
 ## Testing
 
 Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment uses:
@@ -243,3 +316,5 @@ Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment
 - Export utilities: `src/utils/exportUtils.ts`
 - Import utilities: `src/utils/importUtils.ts`
 - Reports menu: `src/components/layout/TopBarReportsMenu.tsx`
+- Name utilities: `src/utils/nameUtils.ts`
+- Autocomplete input: `src/components/common/AutocompleteInput.tsx`

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { db } from '../services/database';
 import type { Kid } from '../types/models';
@@ -30,6 +30,11 @@ export const KidsProvider: React.FC<KidsProviderProps> = ({ children }) => {
       setLoading(false);
     }
   }, []);
+
+  // Load kids on mount
+  useEffect(() => {
+    refreshKids();
+  }, [refreshKids]);
 
   const value = {
     kids,
