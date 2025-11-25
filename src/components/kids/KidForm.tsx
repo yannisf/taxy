@@ -24,9 +24,10 @@ import GuardiansSection from './sections/GuardiansSection';
 type KidFormProps = {
   initialData?: Kid;
   onSubmitSuccess: () => void;
+  onCancel?: () => void;
 };
 
-export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }) => {
+export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, onCancel }) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [guardians, setGuardians] = useState<Guardian[]>(initialData?.guardians || []);
   const navigate = useNavigate();
@@ -44,8 +45,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
       defaultValues: initialData || {
       first_name: '',
       last_name: '',
-      gender: 'male' as const,
-      level: 'pre-kindergartner' as const,
+      gender: undefined as unknown as Kid['gender'],
+      level: undefined as unknown as Kid['level'],
       extended_day_care: false,
       special_education: false,
       guardians: [],
@@ -59,8 +60,12 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
   }, []);
 
   const handleCancel = () => {
-    if (kidId) {
+    if (onCancel) {
+      onCancel();
+    } else if (kidId) {
       navigate(`/kids/${kidId}`);
+    } else {
+      navigate('/kids');
     }
   };
 
@@ -161,11 +166,9 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           <Button variant="primary" type="submit">
             {initialData ? t('updateKid') : t('addKid')}
           </Button>
-          {initialData && (
-            <Button variant="secondary" type="button" onClick={handleCancel}>
-              {t('cancel')}
-            </Button>
-          )}
+          <Button variant="secondary" type="button" onClick={handleCancel}>
+            {t('cancel')}
+          </Button>
         </div>
       </Form>
     </Container>

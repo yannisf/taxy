@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Card, Accordion, Button } from 'react-bootstrap';
+import { Accordion } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../../types/models';
 import GuardianAccordionItem from '../../guardians/GuardianAccordionItem';
+import GuardiansSectionHeader from './GuardiansSectionHeader';
 
 interface GuardiansSectionProps {
   initialGuardians?: Guardian[];
@@ -51,50 +52,40 @@ const GuardiansSection: React.FC<GuardiansSectionProps> = ({ initialGuardians, o
   };
 
   return (
-    <Card className="mb-4">
-      <Card.Header>
-        <div className="d-flex justify-content-between align-items-center">
-          <h5 className="mb-0">{t('guardians')} <span className="badge text-bg-secondary">{guardianCount}</span> </h5>
-          <Button
-            variant="outline-primary"
-            size="sm"
-            onClick={handleAddGuardianClick}
-            disabled={showNewGuardian}
-          >
-            + {t('addGuardian')}
-          </Button>
+    <div className="mb-4">
+      <GuardiansSectionHeader
+        guardianCount={guardianCount}
+        onAddGuardian={handleAddGuardianClick}
+        isAddingGuardian={showNewGuardian}
+      />
+      {guardians.length === 0 && !showNewGuardian ? (
+        <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
+          {t('noGuardiansYet')}
         </div>
-      </Card.Header>
-      <Card.Body>
-        {guardians.length === 0 && !showNewGuardian ? (
-          <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
-            {t('noGuardiansYet')}
-          </div>
-        ) : (
-          <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key as string | null)}>
-            {guardians.map((guardian, index) => (
-              <GuardianAccordionItem
-                key={index}
-                guardian={guardian}
-                eventKey={`guardian-${index}`}
-                onSave={(updatedGuardian) => handleSaveGuardian(index, updatedGuardian)}
-                onDelete={handleDeleteGuardian}
-              />
-            ))}
+      ) : (
+        <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key as string | null)}>
+          {guardians.map((guardian, index) => (
+            <GuardianAccordionItem
+              key={index}
+              guardian={guardian}
+              eventKey={`guardian-${index}`}
+              onSave={(updatedGuardian) => handleSaveGuardian(index, updatedGuardian)}
+              onDelete={handleDeleteGuardian}
+            />
+          ))}
 
-            {showNewGuardian && (
-              <GuardianAccordionItem
-                isNew
-                eventKey="new-guardian"
-                onSave={handleSaveNewGuardian}
-                onDelete={() => {}}
-                onCancel={handleCancelNewGuardian}
-              />
-            )}
-          </Accordion>
-        )}
-      </Card.Body>
-    </Card>
+          {showNewGuardian && (
+            <GuardianAccordionItem
+              isNew
+              eventKey="new-guardian"
+              onSave={handleSaveNewGuardian}
+              onDelete={() => {}}
+              onCancel={handleCancelNewGuardian}
+            />
+          )}
+        </Accordion>
+      )}
+    </div>
   );
 };
 

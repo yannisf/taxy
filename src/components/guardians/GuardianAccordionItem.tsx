@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Accordion, Button, Modal, Form, Row, Col, Card } from 'react-bootstrap';
+import { Accordion, Button, Modal, Form, Row, Col } from 'react-bootstrap';
 import { X } from 'react-bootstrap-icons';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import type { Guardian } from '../../types/models';
 import { validationService } from '../../services/validation';
 import AddressForm from '../common/AddressForm';
 import TelephoneForm from '../common/TelephoneForm';
+import TelephonesSectionHeader from './TelephonesSectionHeader';
 import { formatAddressString } from '../../utils/addressUtils';
 
 interface GuardianAccordionItemProps {
@@ -30,12 +31,12 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  const { 
-    control, 
-    handleSubmit, 
-    formState: { errors }, 
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isDirty },
     reset,
-    watch 
+    watch
   } = useForm<Guardian>({
     defaultValues: guardian || {
       first_name: '',
@@ -319,49 +320,41 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             )}
 
             {/* Telephone Section */}
-            <Card className="mb-4">
-              <Card.Header>
-                <div className="d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0">📞 {t('telephoneNumbers')} <span className="badge text-bg-secondary">{telephoneFields.length}</span></h6>
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    onClick={() => appendTelephone({ 
-                      country_code: '+30', 
-                      number: '', 
-                      telephone_type: 'mobile' as const 
-                    })}
-                  >
-                    + {t('addTelephone')}
-                  </Button>
+            <div className="mb-4">
+              <TelephonesSectionHeader
+                telephoneCount={telephoneFields.length}
+                onAddTelephone={() => appendTelephone({
+                  country_code: '+30',
+                  number: '',
+                  telephone_type: 'mobile' as const
+                })}
+              />
+              {telephoneFields.length === 0 ? (
+                <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
+                  {t('noTelephonesYet')}
                 </div>
-              </Card.Header>
-              <Card.Body>
-                {telephoneFields.length === 0 ? (
-                  <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
-                    {t('noTelephonesYet')}
-                  </div>
-                ) : (
-                  <>
-                    {telephoneFields.map((field, index) => (
-                      <TelephoneForm
-                        key={field.id}
-                        control={control as any}
-                        errors={errors.telephones?.[index]}
-                        fieldPrefix={`telephones.${index}`}
-                        onRemove={() => removeTelephone(index)}
-                        showRemoveButton={true}
-                      />
-                    ))}
-                  </>
-                )}
-              </Card.Body>
-            </Card>
+              ) : (
+                <>
+                  {telephoneFields.map((field, index) => (
+                    <TelephoneForm
+                      key={field.id}
+                      control={control as any}
+                      errors={errors.telephones?.[index]}
+                      fieldPrefix={`telephones.${index}`}
+                      onRemove={() => removeTelephone(index)}
+                      showRemoveButton={true}
+                    />
+                  ))}
+                </>
+              )}
+            </div>
 
             <div className="d-flex gap-2">
-              <Button variant="primary" onClick={handleSubmit(onSubmit)}>
-                {isNew ? t('addGuardian') : t('updateGuardian')}
-              </Button>
+              {(isNew || isDirty) && (
+                <Button variant="primary" onClick={handleSubmit(onSubmit)}>
+                  {isNew ? t('addGuardian') : t('updateGuardian')}
+                </Button>
+              )}
               {isNew && onCancel && (
                 <Button variant="secondary" onClick={onCancel}>
                   {t('cancel')}

@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Collapse } from 'react-bootstrap';
-import { 
-  People, 
-  GenderMale, 
-  GenderFemale, 
-  Mortarboard, 
+import {
+  People,
+  GenderMale,
+  GenderFemale,
+  Mortarboard,
   Stars,
   PersonHearts,
+  Clock,
   ChevronUp,
   ChevronDown
 } from 'react-bootstrap-icons';
@@ -25,13 +26,14 @@ const ClassStatistics: React.FC<ClassStatisticsProps> = ({ kids }) => {
     const totalKids = kids.length;
     const boys = kids.filter(kid => kid.gender === 'male').length;
     const girls = kids.filter(kid => kid.gender === 'female').length;
-    
+
     const preKindergartners = kids.filter(kid => kid.level === 'pre-kindergartner').length;
     const kindergartners = kids.filter(kid => kid.level === 'kindergartner').length;
     const kindergartnersRepeating = kids.filter(kid => kid.level === 'kindergartner-repeating').length;
-    
+
     const specialEducationKids = kids.filter(kid => kid.special_education).length;
-    
+    const extendedDayCareKids = kids.filter(kid => kid.extended_day_care).length;
+
     const totalGuardians = kids.reduce((sum, kid) => sum + kid.guardians.length, 0);
 
     return {
@@ -42,6 +44,7 @@ const ClassStatistics: React.FC<ClassStatisticsProps> = ({ kids }) => {
       kindergartners,
       kindergartnersRepeating,
       specialEducationKids,
+      extendedDayCareKids,
       totalGuardians
     };
   }, [kids]);
@@ -129,7 +132,7 @@ const ClassStatistics: React.FC<ClassStatisticsProps> = ({ kids }) => {
         </div>
         
         {/* Special Education */}
-        <div className="d-flex justify-content-between align-items-center mb-2 p-2 rounded" 
+        <div className="d-flex justify-content-between align-items-center mb-2 p-2 rounded"
              style={{ backgroundColor: 'rgba(255, 193, 7, 0.1)' }}>
           <span className="d-flex align-items-center gap-2">
             <Stars size={14} className="text-warning" />
@@ -137,9 +140,19 @@ const ClassStatistics: React.FC<ClassStatisticsProps> = ({ kids }) => {
           </span>
           <span className="text-warning fw-semibold">{statistics.specialEducationKids}</span>
         </div>
-        
+
+        {/* Extended Day Care */}
+        <div className="d-flex justify-content-between align-items-center mb-2 p-2 rounded"
+             style={{ backgroundColor: 'rgba(111, 66, 193, 0.1)' }}>
+          <span className="d-flex align-items-center gap-2">
+            <Clock size={14} style={{ color: '#6f42c1' }} />
+            <span>{t('extendedDayCareKids')}:</span>
+          </span>
+          <span className="fw-semibold" style={{ color: '#6f42c1' }}>{statistics.extendedDayCareKids}</span>
+        </div>
+
         {/* Total Guardians */}
-        <div className="d-flex justify-content-between align-items-center p-2 rounded" 
+        <div className="d-flex justify-content-between align-items-center p-2 rounded"
              style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}>
           <span className="d-flex align-items-center gap-2">
             <PersonHearts size={16} className="text-danger" />

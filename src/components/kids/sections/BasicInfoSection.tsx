@@ -73,7 +73,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) 
               control={control}
               rules={{ required: t('fieldRequiredTemplate', { field: t('gender') }) }}
               render={({ field }) => (
-                <Form.Select {...field} isInvalid={!!errors.gender}>
+                <Form.Select {...field} value={field.value || ''} isInvalid={!!errors.gender}>
                   <option value="" disabled>{t('selectGender')}</option>
                   <option value="male">{t('male')}</option>
                   <option value="female">{t('female')}</option>
@@ -96,7 +96,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) 
               control={control}
               rules={{ required: t('fieldRequiredTemplate', { field: t('level') }) }}
               render={({ field }) => (
-                <Form.Select {...field} isInvalid={!!errors.level}>
+                <Form.Select {...field} value={field.value || ''} isInvalid={!!errors.level}>
                   <option value="" disabled>{t('selectLevel')}</option>
                   <option value="pre-kindergartner">{t('levelPreKindergarten')}</option>
                   <option value="kindergartner">{t('levelKindergarten')}</option>

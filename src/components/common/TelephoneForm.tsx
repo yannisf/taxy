@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Row, Col, Button, Modal } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
-import { X, GripVertical } from 'react-bootstrap-icons';
+import { X } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import type { Control, FieldErrors } from 'react-hook-form';
-import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import type { Telephone } from '../../types/models';
 import { validateTelephoneNumber, validateCountryCode, getTelephoneTypeIcon } from '../../utils/telephoneUtils';
 
@@ -15,19 +14,15 @@ interface TelephoneFormProps {
   onRemove: () => void;
   disabled?: boolean;
   showRemoveButton?: boolean;
-  showDragHandle?: boolean;
-  dragListeners?: SyntheticListenerMap;
 }
 
-const TelephoneForm: React.FC<TelephoneFormProps> = ({ 
-  control, 
-  errors, 
+const TelephoneForm: React.FC<TelephoneFormProps> = ({
+  control,
+  errors,
   fieldPrefix,
   onRemove,
   disabled = false,
-  showRemoveButton = true,
-  showDragHandle = false,
-  dragListeners
+  showRemoveButton = true
 }) => {
   const { t } = useTranslation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -39,12 +34,6 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
 
   return (
     <div className="d-flex align-items-start gap-2 mb-3">
-      {showDragHandle && (
-        <div className="pt-2" style={{ cursor: 'grab' }} {...dragListeners}>
-          <GripVertical size={16} className="text-muted" />
-        </div>
-      )}
-      
       <div className="flex-grow-1">
         <Row>
           <Col md={3}>
@@ -139,10 +128,10 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
       {showRemoveButton && (
         <div className="d-flex align-items-center" style={{ paddingTop: '2rem' }}>
           <Button
-            variant="outline-danger"
+            variant="link"
             size="sm"
             onClick={() => setShowDeleteModal(true)}
-            className="p-2"
+            className="p-2 text-danger"
             title={t('removeTelephone')}
             disabled={disabled}
           >
