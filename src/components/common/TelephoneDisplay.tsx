@@ -21,8 +21,19 @@ const TelephoneDisplay: React.FC<TelephoneDisplayProps> = ({
     return null;
   }
 
+  // Helper function to get the telephone type translation key
+  const getTelephoneTypeKey = (type: string) => {
+    const typeMap: Record<string, string> = {
+      'mobile': 'telephoneMobile',
+      'home': 'telephoneHome',
+      'work': 'telephoneWork',
+      'other': 'telephoneOther'
+    };
+    return typeMap[type] || type;
+  };
+
   const typeIcon = getTelephoneTypeIcon(telephone.telephone_type);
-  const typeLabel = t(`telephonetelephone.telephone_type`);
+  const typeLabel = t(getTelephoneTypeKey(telephone.telephone_type));
 
   if (compact) {
     return (

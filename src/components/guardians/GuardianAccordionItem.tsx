@@ -81,14 +81,27 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     setShowDeleteModal(false);
   }, [guardian, onDelete]);
 
+  // Helper function to get the relation translation key
+  const getRelationKey = (relation: string) => {
+    const relationMap: Record<string, string> = {
+      'father': 'relationFather',
+      'mother': 'relationMother',
+      'sibling': 'relationSibling',
+      'grandparent': 'relationGrandparent',
+      'extended family': 'relationExtendedFamily',
+      'friend': 'relationFriend'
+    };
+    return relationMap[relation] || relation;
+  };
+
   const headerTitle = useMemo(() => {
     if (isNew) return t('newGuardian');
     if (guardian) {
       return (
         <>
-          {guardian.first_name || 'Unnamed'} {guardian.last_name || ''} {' '}
+          {guardian.first_name || t('unnamedGuardian')} {guardian.last_name || ''} {' '}
           <span className="badge text-bg-secondary">
-            {t(`relationguardian.relation_with_kid`)}
+            {t(getRelationKey(guardian.relation_with_kid))}
           </span>
         </>
       );

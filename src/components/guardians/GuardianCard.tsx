@@ -12,25 +12,38 @@ interface GuardianCardProps {
 const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
   const { t } = useTranslation();
 
+  // Helper function to get the relation translation key
+  const getRelationKey = (relation: string) => {
+    const relationMap: Record<string, string> = {
+      'father': 'relationFather',
+      'mother': 'relationMother',
+      'sibling': 'relationSibling',
+      'grandparent': 'relationGrandparent',
+      'extended family': 'relationExtendedFamily',
+      'friend': 'relationFriend'
+    };
+    return relationMap[relation] || relation;
+  };
+
   return (
     <Card className="h-100">
       <Card.Body>
         <Card.Title className="h6">
-          {guardian.first_name} {guardian.last_name}
+          {guardian.first_name || t('unnamedGuardian')} {guardian.last_name}
         </Card.Title>
         <Card.Subtitle className="mb-2 text-muted">
-          {t(`relationguardian.relation_with_kid`)}
+          {t(getRelationKey(guardian.relation_with_kid))}
         </Card.Subtitle>
         
         <div className="mb-2">
           {guardian.authorized_for_pickup && (
             <Badge bg="success" className="me-1">
-              ✓ Pickup Authorized
+              {t('pickupAuthorizedBadge')}
             </Badge>
           )}
           {guardian.same_address_as_kid && (
             <Badge bg="info" className="me-1">
-              📍 Same Address
+              {t('sameAddressBadge')}
             </Badge>
           )}
         </div>
