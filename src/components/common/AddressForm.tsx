@@ -24,7 +24,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
       <Row>
         <Col md={8}>
           <Form.Group className="mb-3">
-            <Form.Label>{t('forms:address.streetName')}</Form.Label>
+            <Form.Label>{t('streetName')}</Form.Label>
             <Controller
               name={`${fieldPrefix}.street_name`}
               control={control}
@@ -33,7 +33,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                   {...field}
                   value={field.value ?? ''}
                   type="text"
-                  placeholder={t('forms:address.placeholders.streetName')}
+                  placeholder={t('enterStreetName')}
                   disabled={disabled}
                   isInvalid={!!errors?.street_name}
                 />
@@ -48,7 +48,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         </Col>
         <Col md={4}>
           <Form.Group className="mb-3">
-            <Form.Label>{t('forms:address.streetNumber')}</Form.Label>
+            <Form.Label>{t('streetNumber')}</Form.Label>
             <Controller
               name={`${fieldPrefix}.street_number`}
               control={control}
@@ -57,7 +57,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                   {...field}
                   value={field.value ?? ''}
                   type="text"
-                  placeholder={t('forms:address.placeholders.streetNumber')}
+                  placeholder={t('enterStreetNumber')}
                   disabled={disabled}
                   isInvalid={!!errors?.street_number}
                 />
@@ -75,7 +75,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
       <Row>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label>{t('forms:address.neighborhood')}</Form.Label>
+            <Form.Label>{t('neighborhood')}</Form.Label>
             <Controller
               name={`${fieldPrefix}.neighborhood`}
               control={control}
@@ -84,7 +84,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                   {...field}
                   value={field.value ?? ''}
                   type="text"
-                  placeholder={t('forms:address.placeholders.neighborhood')}
+                  placeholder={t('enterNeighborhood')}
                   disabled={disabled}
                   isInvalid={!!errors?.neighborhood}
                 />
@@ -99,7 +99,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label>{t('forms:address.postalCode')}</Form.Label>
+            <Form.Label>{t('postalCode')}</Form.Label>
             <Controller
               name={`${fieldPrefix}.postal_code`}
               control={control}
@@ -108,7 +108,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                   {...field}
                   value={field.value ?? ''}
                   type="text"
-                  placeholder={t('forms:address.placeholders.postalCode')}
+                  placeholder={t('enterPostalCode')}
                   disabled={disabled}
                   isInvalid={!!errors?.postal_code}
                 />
@@ -126,7 +126,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
       <Row>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label>{t('forms:address.city')}</Form.Label>
+            <Form.Label>{t('city')}</Form.Label>
             <Controller
               name={`${fieldPrefix}.city`}
               control={control}
@@ -135,7 +135,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                   {...field}
                   value={field.value ?? ''}
                   type="text"
-                  placeholder={t('forms:address.placeholders.city')}
+                  placeholder={t('enterCity')}
                   disabled={disabled}
                   isInvalid={!!errors?.city}
                 />
@@ -150,7 +150,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">
-            <Form.Label>{t('forms:address.country')}</Form.Label>
+            <Form.Label>{t('country')}</Form.Label>
             <Controller
               name={`${fieldPrefix}.country`}
               control={control}
@@ -159,7 +159,7 @@ const AddressForm: React.FC<AddressFormProps> = ({
                   {...field}
                   value={field.value ?? ''}
                   type="text"
-                  placeholder={t('forms:address.placeholders.country')}
+                  placeholder={t('enterCountry')}
                   disabled={disabled}
                   isInvalid={!!errors?.country}
                 />

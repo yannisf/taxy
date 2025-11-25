@@ -6,7 +6,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import LanguageSelector from '../common/LanguageSelector';
 
 const TopBarSettings: React.FC = () => {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -15,7 +15,7 @@ const TopBarSettings: React.FC = () => {
         variant="outline-secondary" 
         size="sm" 
         onClick={toggleTheme} 
-        title={theme === 'light' ? t('common:darkMode') : t('common:lightMode')}
+        title={theme === 'light' ? t('darkMode') : t('lightMode')}
       >
         {theme === 'light' ? <MoonStars/> : <Sun/>}
       </Button>

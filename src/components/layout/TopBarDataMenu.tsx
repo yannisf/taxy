@@ -14,7 +14,7 @@ interface TopBarDataMenuProps {
 }
 
 const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
-  const { t } = useTranslation(['common', 'messages', 'navigation']);
+  const { t } = useTranslation();
   const { selectedClass } = useClass();
   const classKids = useClassKids();
   const { refreshKids } = useKids();
@@ -27,17 +27,17 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
 
   const handleExport = async () => {
     if (!selectedClass) {
-      toast.error(t('messages:error.selectClassToExport'));
+      toast.error(t('selectClassToExport'));
       return;
     }
 
     setIsExporting(true);
     try {
       await exportClassData(selectedClass.class_id);
-      toast.success(t('messages:success.classDataExported'));
+      toast.success(t('classDataExported'));
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error(t('messages:error.failedToExportClassData'));
+      toast.error(t('failedToExportClassData'));
     } finally {
       setIsExporting(false);
     }
@@ -60,7 +60,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
     }
 
     if (!selectedClass) {
-      toast.error(t('messages:error.selectClassToImport'));
+      toast.error(t('selectClassToExport'));
       return;
     }
 
@@ -124,15 +124,15 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
           tabIndex={0}
           style={{ cursor: 'pointer' }}
         >
-          <span>{t('navigation:importExport')}</span>
+          <span>{t('importExport')}</span>
           <ChevronDown size={14} />
         </Dropdown.Toggle>
         <Dropdown.Menu align="start" className={`topbar-dropdown-menu medium ${theme === 'light' ? 'light' : 'dark'}`}>
           <Dropdown.Item onClick={() => { handleImportClick(); setImportExportDropdownOpen(false); }} disabled={!selectedClass || isImporting}>
-            <span className="d-flex align-items-center gap-2"><Upload /> {t('navigation:importClass')}</span>
+            <span className="d-flex align-items-center gap-2"><Upload /> {t('importClass')}</span>
           </Dropdown.Item>
           <Dropdown.Item onClick={() => { handleExport(); setImportExportDropdownOpen(false); }} disabled={!selectedClass || isExporting || classKids.length === 0}>
-            <span className="d-flex align-items-center gap-2"><Download /> {t('navigation:exportClass')}</span>
+            <span className="d-flex align-items-center gap-2"><Download /> {t('exportClass')}</span>
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
@@ -143,17 +143,17 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       {/* Import Confirmation Modal */}
       <Modal show={showImportConfirmModal} onHide={handleCancelImport} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>{t('navigation:dialogs.confirmImport')}</Modal.Title>
+          <Modal.Title>{t('confirmImportDialog')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {importValidationResult?.statistics && (
             <>
               <Alert variant="info">
-                <h6>{t('navigation:dialogs.importSummary')}:</h6>
+                <h6>{t('importSummaryDialog')}:</h6>
                 <ul className="mb-0">
-                  <li><strong>{importValidationResult.statistics.newKids}</strong> {t('navigation:dialogs.newKidsWillBeAdded')}</li>
-                  <li><strong>{importValidationResult.statistics.updatedKids}</strong> {t('navigation:dialogs.existingKidsWillBeUpdated')}</li>
-                  <li><strong>{importValidationResult.statistics.unchangedKids}</strong> {t('navigation:dialogs.kidsWillRemainUnchanged')}</li>
+                  <li><strong>{importValidationResult.statistics.newKids}</strong> {t('newKidsWillBeAddedDialog')}</li>
+                  <li><strong>{importValidationResult.statistics.updatedKids}</strong> {t('existingKidsWillBeUpdated')}</li>
+                  <li><strong>{importValidationResult.statistics.unchangedKids}</strong> {t('kidsWillRemainUnchanged')}</li>
                   {importValidationResult.statistics.conflictingKids > 0 && (
                     <li><strong>{importValidationResult.statistics.conflictingKids}</strong> kids have IDs that exist in other classes (will be imported with new IDs)</li>
                   )}
@@ -168,7 +168,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
                 </Alert>
               )}
               <p className="mb-0">
-                {t('navigation:dialogs.importFileStats', {
+                {t('importFileStats', {
                   totalInFile: importValidationResult.statistics.totalInFile,
                   totalInDatabase: importValidationResult.statistics.totalInDatabase
                 })}
@@ -178,10 +178,10 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelImport} disabled={isImporting}>
-            {t('common:buttons.cancel')}
+            {t('cancel')}
           </Button>
           <Button variant="success" onClick={handleConfirmImport} disabled={isImporting}>
-            {isImporting ? t('common:buttons.importing') : t('navigation:actions.confirmImport')}
+            {isImporting ? t('importing') : t('confirmImport')}
           </Button>
         </Modal.Footer>
       </Modal>

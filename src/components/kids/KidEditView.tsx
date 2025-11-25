@@ -23,11 +23,11 @@ const KidEditView: React.FC = () => {
           if (fetchedKid) {
             setKid(fetchedKid);
           } else {
-            setError(t('kids:messages.kidNotFound'));
+            setError(t('kidNotFound'));
           }
         } catch (err) {
           console.error('Error fetching kid:', err);
-          setError(t('common:status.error'));
+          setError(t('error'));
         } finally {
           setLoading(false);
         }
@@ -69,8 +69,8 @@ const KidEditView: React.FC = () => {
   if (loading) {
     return (
       <Container className="mt-3">
-        <h2>{t('kids:title.editKid')}</h2>
-        <p>{t('kids:messages.loadingDetails')}</p>
+        <h2>{t('editKid')}</h2>
+        <p>{t('loadingDetails')}</p>
       </Container>
     );
   }
@@ -78,7 +78,7 @@ const KidEditView: React.FC = () => {
   if (error) {
     return (
       <Container className="mt-3">
-        <h2>{t('kids:title.editKid')}</h2>
+        <h2>{t('editKid')}</h2>
         <Alert variant="danger">
           {error}
         </Alert>
@@ -89,9 +89,9 @@ const KidEditView: React.FC = () => {
   if (!kid) {
     return (
       <Container className="mt-3">
-        <h2>{t('kids:title.editKid')}</h2>
+        <h2>{t('editKid')}</h2>
         <Alert variant="warning">
-          {t('kids:messages.kidNotFound')}
+          {t('kidNotFound')}
         </Alert>
       </Container>
     );
@@ -99,7 +99,7 @@ const KidEditView: React.FC = () => {
 
   return (
     <Container className="mt-3">
-      <h2>{t('kids:title.editKid')}: {kid.first_name} {kid.last_name}</h2>
+      <h2>{t('editKid')}: {kid.first_name} {kid.last_name}</h2>
       <KidForm 
         initialData={kid}
         onSubmitSuccess={handleSubmitSuccess} 

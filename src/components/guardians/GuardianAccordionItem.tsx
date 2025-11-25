@@ -82,24 +82,24 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
   }, [guardian, onDelete]);
 
   const headerTitle = useMemo(() => {
-    if (isNew) return t('guardians:messages.newGuardian');
+    if (isNew) return t('newGuardian');
     if (guardian) {
       return (
         <>
           {guardian.first_name || 'Unnamed'} {guardian.last_name || ''} {' '}
           <span className="badge text-bg-secondary">
-            {t(`guardians:relationDisplay.${guardian.relation_with_kid}`)}
+            {t(`relationguardian.relation_with_kid`)}
           </span>
         </>
       );
     }
-    return t('guardians:messages.guardian');
+    return t('guardian');
   }, [isNew, guardian?.first_name, guardian?.last_name, guardian?.relation_with_kid, t]);
 
   // Memoized address title for guardian
   const guardianAddressTitle = useMemo(() => {
     const addressString = formatAddressString(guardian?.address);
-    return addressString ? `${t('guardians:messages.addressTitle')}: ${addressString}` : t('guardians:messages.addressTitle');
+    return addressString ? `${t('guardianAddress')}: ${addressString}` : t('guardianAddress');
   }, [guardian?.address, t]);
 
   // Address accordion expanded state for guardian
@@ -115,7 +115,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
           <div className="d-flex justify-content-between align-items-center w-100">
             <span>{headerTitle}</span>
             {!isNew && guardian && (
-              <Button variant="outline-danger" size="sm" className="p-2 me-3" title={t('guardians:actions.deleteGuardian')}
+              <Button variant="outline-danger" size="sm" className="p-2 me-3" title={t('deleteGuardian')}
                 onClick={(e) => {
                   e.stopPropagation();
                   setShowDeleteModal(true);
@@ -134,17 +134,17 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             <Row>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label>{t('guardians:form.firstName')}</Form.Label>
+                  <Form.Label>{t('firstName')}</Form.Label>
                   <Controller
                     name="first_name"
                     control={control}
-                    rules={{ required: t('guardians:validation.firstNameRequired') }}
+                    rules={{ required: t('firstNameRequired') }}
                     render={({ field }) => (
                       <Form.Control
                         {...field}
                         value={field.value ?? ''}
                         type="text"
-                        placeholder={t('guardians:form.placeholders.firstName')}
+                        placeholder={t('enterGuardianFirstName')}
                         isInvalid={!!errors.first_name}
                       />
                     )}
@@ -158,17 +158,17 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
               </Col>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label>{t('guardians:form.lastName')}</Form.Label>
+                  <Form.Label>{t('lastName')}</Form.Label>
                   <Controller
                     name="last_name"
                     control={control}
-                    rules={{ required: t('guardians:validation.lastNameRequired') }}
+                    rules={{ required: t('lastNameRequired') }}
                     render={({ field }) => (
                       <Form.Control
                         {...field}
                         value={field.value ?? ''}
                         type="text"
-                        placeholder={t('guardians:form.placeholders.lastName')}
+                        placeholder={t('enterGuardianLastName')}
                         isInvalid={!!errors.last_name}
                       />
                     )}
@@ -185,18 +185,18 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             <Row>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label>{t('guardians:form.relationWithKid')}</Form.Label>
+                  <Form.Label>{t('relationWithKid')}</Form.Label>
                   <Controller
                     name="relation_with_kid"
                     control={control}
                     render={({ field }) => (
                       <Form.Select {...field}>
-                        <option value="father">{t('guardians:relations.father')}</option>
-                        <option value="mother">{t('guardians:relations.mother')}</option>
-                        <option value="sibling">{t('guardians:relations.sibling')}</option>
-                        <option value="grandparent">{t('guardians:relations.grandparent')}</option>
-                        <option value="extended family">{t('guardians:relations.extendedFamily')}</option>
-                        <option value="friend">{t('guardians:relations.friend')}</option>
+                        <option value="father">{t('relationFather')}</option>
+                        <option value="mother">{t('relationMother')}</option>
+                        <option value="sibling">{t('relationSibling')}</option>
+                        <option value="grandparent">{t('relationGrandparent')}</option>
+                        <option value="extended family">{t('relationExtendedFamily')}</option>
+                        <option value="friend">{t('relationFriend')}</option>
                       </Form.Select>
                     )}
                   />
@@ -210,7 +210,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
                     render={({ field }) => (
                       <Form.Check
                         type="checkbox"
-                        label={t('guardians:form.authorizedForPickup')}
+                        label={t('authorizedForPickup')}
                         checked={field.value}
                         onChange={field.onChange}
                       />
@@ -222,7 +222,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
                     render={({ field }) => (
                       <Form.Check
                         type="checkbox"
-                        label={t('guardians:form.sameAddressAsKid')}
+                        label={t('sameAddressAsKid')}
                         checked={field.value}
                         onChange={field.onChange}
                       />
@@ -235,7 +235,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             <Row>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label>{t('guardians:form.email')}</Form.Label>
+                  <Form.Label>{t('email')}</Form.Label>
                   <Controller
                     name="email"
                     control={control}
@@ -244,7 +244,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
                         {...field}
                         value={field.value ?? ''}
                         type="email"
-                        placeholder={t('guardians:form.placeholders.email')}
+                        placeholder={t('enterEmail')}
                         isInvalid={!!errors.email}
                       />
                     )}
@@ -258,7 +258,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
               </Col>
               <Col>
                 <Form.Group className="mb-3">
-                  <Form.Label>{t('guardians:form.profession')}</Form.Label>
+                  <Form.Label>{t('profession')}</Form.Label>
                   <Controller
                     name="profession"
                     control={control}
@@ -267,7 +267,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
                         {...field}
                         value={field.value ?? ''}
                         type="text"
-                        placeholder={t('guardians:form.placeholders.profession')}
+                        placeholder={t('enterProfession')}
                         isInvalid={!!errors.profession}
                       />
                     )}
@@ -300,7 +300,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             {watch('same_address_as_kid') && (
               <div className="mb-3 p-3 bg-body-secondary rounded">
                 <small className="text-muted">
-                  {t('guardians:messages.sameAddress')}
+                  {t('sameAddressMessage')}
                 </small>
               </div>
             )}
@@ -309,7 +309,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             <Card className="mb-4">
               <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
-                  <h6 className="mb-0">📞 {t('guardians:telephone.title')} <span className="badge text-bg-secondary">{telephoneFields.length}</span></h6>
+                  <h6 className="mb-0">📞 {t('telephoneNumbers')} <span className="badge text-bg-secondary">{telephoneFields.length}</span></h6>
                   <Button
                     variant="outline-primary"
                     size="sm"
@@ -319,14 +319,14 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
                       telephone_type: 'mobile' as const 
                     })}
                   >
-                    + {t('guardians:telephone.addTelephone')}
+                    + {t('addTelephone')}
                   </Button>
                 </div>
               </Card.Header>
               <Card.Body>
                 {telephoneFields.length === 0 ? (
                   <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
-                    {t('guardians:messages.noTelephones')}
+                    {t('noTelephonesYet')}
                   </div>
                 ) : (
                   <>
@@ -347,11 +347,11 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
 
             <div className="d-flex gap-2">
               <Button variant="primary" onClick={handleSubmit(onSubmit)}>
-                {isNew ? t('guardians:actions.addGuardian') : t('guardians:actions.updateGuardian')}
+                {isNew ? t('addGuardian') : t('updateGuardian')}
               </Button>
               {isNew && onCancel && (
                 <Button variant="secondary" onClick={onCancel}>
-                  {t('common:buttons.cancel')}
+                  {t('cancel')}
                 </Button>
               )}
             </div>
@@ -362,17 +362,17 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>{t('guardians:messages.confirmDelete')}</Modal.Title>
+          <Modal.Title>{t('confirmDelete')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {t('guardians:messages.deleteMessage', { name: `${guardian?.first_name} ${guardian?.last_name}` })}
+          {t('confirmDeleteGuardian', { name: `${guardian?.first_name} ${guardian?.last_name}` })}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            {t('common:buttons.cancel')}
+            {t('cancel')}
           </Button>
           <Button variant="danger" onClick={handleDelete}>
-            {t('common:buttons.delete')}
+            {t('delete')}
           </Button>
         </Modal.Footer>
       </Modal>

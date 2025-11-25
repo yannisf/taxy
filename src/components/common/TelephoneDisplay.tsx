@@ -15,14 +15,14 @@ const TelephoneDisplay: React.FC<TelephoneDisplayProps> = ({
   className = '',
   compact = false 
 }) => {
-  const { t } = useTranslation(['forms']);
+  const { t } = useTranslation();
 
   if (!telephone.country_code || !telephone.number) {
     return null;
   }
 
   const typeIcon = getTelephoneTypeIcon(telephone.telephone_type);
-  const typeLabel = t(`forms:telephone.typeDisplay.${telephone.telephone_type}`);
+  const typeLabel = t(`telephonetelephone.telephone_type`);
 
   if (compact) {
     return (

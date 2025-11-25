@@ -49,20 +49,20 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
         <Row>
           <Col md={3}>
             <Form.Group className="mb-3">
-              <Form.Label>{t('forms:telephone.countryCode')}</Form.Label>
+              <Form.Label>{t('telephoneCountryCode')}</Form.Label>
               <Controller
                 name={`${fieldPrefix}.country_code`}
                 control={control}
                 rules={{ 
-                  required: t('forms:telephone.validation.countryCodeRequired'),
-                  validate: (value) => validateCountryCode(value || '') || t('forms:telephone.validation.invalidCountryCode')
+                  required: t('countryCodeRequired'),
+                  validate: (value) => validateCountryCode(value || '') || t('invalidCountryCode')
                 }}
                 render={({ field }) => (
                   <Form.Control
                     {...field}
                     value={field.value ?? '+30'}
                     type="text"
-                    placeholder={t('forms:telephone.placeholders.countryCode')}
+                    placeholder={t('enterCountryCode')}
                     disabled={disabled}
                     isInvalid={!!errors?.country_code}
                   />
@@ -78,20 +78,20 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
           
           <Col md={5}>
             <Form.Group className="mb-3">
-              <Form.Label>{t('forms:telephone.number')}</Form.Label>
+              <Form.Label>{t('telephoneNumber')}</Form.Label>
               <Controller
                 name={`${fieldPrefix}.number`}
                 control={control}
                 rules={{ 
-                  required: t('forms:telephone.validation.numberRequired'),
-                  validate: (value) => validateTelephoneNumber(value || '') || t('forms:telephone.validation.invalidNumber')
+                  required: t('telephoneNumberRequired'),
+                  validate: (value) => validateTelephoneNumber(value || '') || t('invalidTelephoneNumber')
                 }}
                 render={({ field }) => (
                   <Form.Control
                     {...field}
                     value={field.value ?? ''}
                     type="text"
-                    placeholder={t('forms:telephone.placeholders.number')}
+                    placeholder={t('enterTelephoneNumber')}
                     disabled={disabled}
                     isInvalid={!!errors?.number}
                   />
@@ -107,11 +107,11 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
           
           <Col md={4}>
             <Form.Group className="mb-3">
-              <Form.Label>{t('forms:telephone.type')}</Form.Label>
+              <Form.Label>{t('telephoneType')}</Form.Label>
               <Controller
                 name={`${fieldPrefix}.telephone_type`}
                 control={control}
-                rules={{ required: t('forms:telephone.validation.typeRequired') }}
+                rules={{ required: t('telephoneTypeRequired') }}
                 render={({ field }) => (
                   <Form.Select 
                     {...field} 
@@ -119,10 +119,10 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
                     disabled={disabled}
                     isInvalid={!!errors?.telephone_type}
                   >
-                    <option value="mobile">{getTelephoneTypeIcon('mobile')} {t('forms:telephone.mobile')}</option>
-                    <option value="home">{getTelephoneTypeIcon('home')} {t('forms:telephone.home')}</option>
-                    <option value="work">{getTelephoneTypeIcon('work')} {t('forms:telephone.work')}</option>
-                    <option value="other">{getTelephoneTypeIcon('other')} {t('forms:telephone.other')}</option>
+                    <option value="mobile">{getTelephoneTypeIcon('mobile')} {t('telephoneMobile')}</option>
+                    <option value="home">{getTelephoneTypeIcon('home')} {t('telephoneHome')}</option>
+                    <option value="work">{getTelephoneTypeIcon('work')} {t('telephoneWork')}</option>
+                    <option value="other">{getTelephoneTypeIcon('other')} {t('telephoneOther')}</option>
                   </Form.Select>
                 )}
               />
@@ -143,7 +143,7 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
             size="sm"
             onClick={() => setShowDeleteModal(true)}
             className="p-2"
-            title={t('forms:telephone.actions.removeTelephone')}
+            title={t('removeTelephone')}
             disabled={disabled}
           >
             <X size={20} />
@@ -154,17 +154,17 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>{t('forms:telephone.actions.confirmDelete')}</Modal.Title>
+          <Modal.Title>{t('confirmDelete')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {t('forms:telephone.actions.deleteMessage')}
+          {t('confirmDeleteTelephone')}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            {t('common:buttons.cancel')}
+            {t('cancel')}
           </Button>
           <Button variant="danger" onClick={handleDeleteConfirm}>
-            {t('common:buttons.delete')}
+            {t('delete')}
           </Button>
         </Modal.Footer>
       </Modal>

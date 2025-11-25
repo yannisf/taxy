@@ -10,7 +10,7 @@ interface GuardianCardProps {
 }
 
 const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
-  const { t } = useTranslation(['guardians']);
+  const { t } = useTranslation();
 
   return (
     <Card className="h-100">
@@ -19,7 +19,7 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
           {guardian.first_name} {guardian.last_name}
         </Card.Title>
         <Card.Subtitle className="mb-2 text-muted">
-          {t(`guardians:relationDisplay.${guardian.relation_with_kid}`)}
+          {t(`relationguardian.relation_with_kid`)}
         </Card.Subtitle>
         
         <div className="mb-2">

@@ -27,7 +27,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
   mode = 'create',
   initialData 
 }) => {
-  const { t } = useTranslation(['classes', 'common', 'messages']);
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     school_name: initialData?.school_name || '',
     class_name: initialData?.class_name || '',
@@ -65,7 +65,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
     // Validate school year format
     const schoolYearPattern = /^[0-9]{4}-[0-9]{4}$/;
     if (!schoolYearPattern.test(formData.school_year)) {
-      setError(t('classes:form.validation.schoolYearFormat'));
+      setError(t('schoolYearFormat'));
       return;
     }
 
@@ -74,7 +74,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
       handleClose();
     } catch (error) {
       console.error('Error creating class:', error);
-      setError(error instanceof Error ? error.message : t('messages:error.failedToCreateClass'));
+      setError(error instanceof Error ? error.message : t('failedToCreateClass'));
     }
   };
 
@@ -127,7 +127,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          {mode === 'create' ? t('classes:title.createClass') : t('classes:title.editClass')}
+          {mode === 'create' ? t('createClass') : t('editClass')}
         </Modal.Title>
       </Modal.Header>
       
@@ -140,63 +140,63 @@ const ClassModal: React.FC<ClassModalProps> = ({
           )}
           
           <Form.Group className="mb-3">
-            <Form.Label>{t('classes:form.schoolName')} {t('common:labels.required')}</Form.Label>
+            <Form.Label>{t('schoolName')} {t('required')}</Form.Label>
             <Form.Control
               type="text"
               value={formData.school_name}
               onChange={(e) => handleInputChange('school_name', e.target.value)}
-              placeholder={t('classes:form.placeholders.schoolName')}
+              placeholder={t('enterSchoolName')}
               required
               disabled={loading}
             />
             <Form.Control.Feedback type="invalid">
-              {t('classes:form.validation.schoolNameRequired')}
+              {t('schoolNameRequired')}
             </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>{t('classes:form.className')} {t('common:labels.required')}</Form.Label>
+            <Form.Label>{t('className')} {t('required')}</Form.Label>
             <Form.Control
               type="text"
               value={formData.class_name}
               onChange={(e) => handleInputChange('class_name', e.target.value)}
-              placeholder={t('classes:form.placeholders.className')}
+              placeholder={t('enterClassName')}
               required
               disabled={loading}
             />
             <Form.Control.Feedback type="invalid">
-              {t('classes:form.validation.classNameRequired')}
+              {t('classNameRequired')}
             </Form.Control.Feedback>
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>{t('classes:form.schoolYear')} {t('common:labels.required')}</Form.Label>
+            <Form.Label>{t('schoolYear')} {t('required')}</Form.Label>
             <Form.Control
               type="text"
               value={formData.school_year}
               onChange={(e) => handleInputChange('school_year', e.target.value)}
-              placeholder={t('classes:form.placeholders.schoolYear')}
+              placeholder={t('enterSchoolYear')}
               pattern="[0-9]{4}-[0-9]{4}"
               required
               disabled={loading}
             />
             <Form.Control.Feedback type="invalid">
-              {t('classes:form.validation.schoolYearRequired')}
+              {t('schoolYearRequired')}
             </Form.Control.Feedback>
             <Form.Text className="text-muted">
-              {t('classes:form.help.schoolYearFormat')}
+              {t('schoolYearFormatHelp')}
             </Form.Text>
           </Form.Group>
         </Modal.Body>
         
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose} disabled={loading}>
-            {t('common:buttons.cancel')}
+            {t('cancel')}
           </Button>
           <Button variant="primary" type="submit" disabled={loading}>
             {loading 
-              ? (mode === 'create' ? t('common:buttons.creating') : t('common:buttons.updating'))
-              : (mode === 'create' ? t('classes:actions.createClass') : t('classes:actions.updateClass'))
+              ? (mode === 'create' ? t('creating') : t('updating'))
+              : (mode === 'create' ? t('createClassAction') : t('updateClass'))
             }
           </Button>
         </Modal.Footer>

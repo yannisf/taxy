@@ -34,7 +34,7 @@ function createGuardianTextArray(guardians: Guardian[], t: TFunction): Content[]
     });
     
     // Relation (xx-small bold, no space before)
-    const relationKey = `pdf:relations.${guardian.relation_with_kid}`;
+    const relationKey = `pdfRelation${guardian.relation_with_kid.charAt(0).toUpperCase() + guardian.relation_with_kid.slice(1).replace(/\s+/g, '')}`;
     const relationText = t(relationKey, { defaultValue: guardian.relation_with_kid.toUpperCase() });
     textArray.push({
       text: relationText,
@@ -70,9 +70,9 @@ function createTableData(kids: Kid[], t: TFunction): Content[][] {
   
   // Header row
   tableData.push([
-    { text: t('pdf:table.headers.number'), style: 'tableHeader' },
-    { text: t('pdf:table.headers.studentName'), style: 'tableHeader' },
-    { text: t('pdf:table.headers.guardianInformation'), style: 'tableHeader' }
+    { text: t('pdfNumber'), style: 'tableHeader' },
+    { text: t('pdfStudentName'), style: 'tableHeader' },
+    { text: t('pdfGuardianInformation'), style: 'tableHeader' }
   ]);
   
   kids.forEach((kid, index) => {
@@ -83,7 +83,7 @@ function createTableData(kids: Kid[], t: TFunction): Content[][] {
       tableData.push([
         { text: (index + 1).toString(), style: 'tableCell' },
         { text: kidName, style: 'tableCell' },
-        { text: t('pdf:messages.noGuardians'), style: 'tableCell', italics: true, color: '#666666' }
+        { text: t('pdfNoGuardians'), style: 'tableCell', italics: true, color: '#666666' }
       ]);
     } else {
       // Kid with guardians - each guardian on a separate line
@@ -142,7 +142,7 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
         },
         {
           width: 'auto',
-          text: `${t('pdf:title.generatedOn')} ${currentDate}`,
+          text: `${t('generatedOn')} ${currentDate}`,
           style: 'dateInfo',
           alignment: 'right'
         }

@@ -16,7 +16,7 @@ const KidDetailsView: React.FC = () => {
   const navigate = useNavigate();
   const [kid, setKid] = useState<Kid | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const { t } = useTranslation(['common', 'kids', 'guardians', 'navigation']);
+  const { t } = useTranslation();
   const { refreshKids } = useKids();
   const classKids = useClassKids();
 
@@ -126,7 +126,7 @@ const KidDetailsView: React.FC = () => {
   if (!kid) {
     return (
       <Container className="mt-3">
-        <p>{t('kids:messages.loadingDetails')}</p>
+        <p>{t('loadingDetails')}</p>
       </Container>
     );
   }
@@ -140,7 +140,7 @@ const KidDetailsView: React.FC = () => {
             {/* Previous Kid Button */}
             <OverlayTrigger
               placement="bottom"
-              overlay={<Tooltip>{t('navigation:kidNavigation.previousTooltip')}</Tooltip>}
+              overlay={<Tooltip>{t('previousKidTooltip')}</Tooltip>}
             >
               <Button
                 variant="link"
@@ -160,7 +160,7 @@ const KidDetailsView: React.FC = () => {
             {/* Next Kid Button */}
             <OverlayTrigger
               placement="bottom"
-              overlay={<Tooltip>{t('navigation:kidNavigation.nextTooltip')}</Tooltip>}
+              overlay={<Tooltip>{t('nextKidTooltip')}</Tooltip>}
             >
               <Button
                 variant="link"
@@ -182,8 +182,8 @@ const KidDetailsView: React.FC = () => {
               overlay={
                 <Tooltip>
                   <div>
-                    <strong>{t('common:labels.created')}:</strong> {formatDateDisplay(kid.created_at, true)}<br />
-                    <strong>{t('common:labels.lastUpdated')}:</strong> {formatDateDisplay(kid.updated_at, true)}
+                    <strong>{t('created')}:</strong> {formatDateDisplay(kid.created_at, true)}<br />
+                    <strong>{t('lastUpdated')}:</strong> {formatDateDisplay(kid.updated_at, true)}
                   </div>
                 </Tooltip>
               }
@@ -196,7 +196,7 @@ const KidDetailsView: React.FC = () => {
             </OverlayTrigger>
             <OverlayTrigger
               placement="bottom"
-              overlay={<Tooltip>{t('common:labels.editDetails')} ({t('navigation:keyboardShortcuts.editMode')})</Tooltip>}
+              overlay={<Tooltip>{t('editDetails')} ({t('editModeShortcut')})</Tooltip>}
             >
               <PencilSquare 
                 size={24} 
@@ -209,7 +209,7 @@ const KidDetailsView: React.FC = () => {
             {/* Delete Button */}
             <OverlayTrigger
               placement="bottom"
-              overlay={<Tooltip>{t('common:actions.delete')}</Tooltip>}
+              overlay={<Tooltip>{t('delete')}</Tooltip>}
             >
               <XLg 
                 size={24} 
@@ -221,27 +221,27 @@ const KidDetailsView: React.FC = () => {
           </div>
         </Card.Header>
         <Card.Body>
-          <p><strong>{t('common:labels.firstName')}:</strong> {kid.first_name}</p>
-          <p><strong>{t('common:labels.lastName')}:</strong> {kid.last_name}</p>
+          <p><strong>{t('firstName')}:</strong> {kid.first_name}</p>
+          <p><strong>{t('lastName')}:</strong> {kid.last_name}</p>
           {kid.preferred_name && (
-            <p><strong>{t('kids:form.preferredName')}:</strong> {kid.preferred_name}</p>
+            <p><strong>{t('preferredName')}:</strong> {kid.preferred_name}</p>
           )}
-          <p><strong>{t('common:labels.dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
-          <p><strong>{t('common:labels.gender')}:</strong> {t(`common:genderDisplay.${kid.gender}`)}</p>
-          <p><strong>{t('kids:form.level')}:</strong> {t(`kids:levelDisplay.${kid.level}`)}</p>
+          <p><strong>{t('dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
+          <p><strong>{t('gender')}:</strong> {t(`gender${kid.gender === 'male' ? 'Boy' : kid.gender === 'female' ? 'Girl' : 'Other'}`)}</p>
+          <p><strong>{t('level')}:</strong> {t(`level${kid.level === 'pre-kindergartner' ? 'PreKindergarten' : kid.level === 'kindergartner' ? 'Kindergarten' : 'KindergartenRepeating'}`)}</p>
           {kid.extended_day_care && (
-            <p><strong>{t('kids:form.extendedDayCare')}</strong> <CheckLg className="text-success" /></p>
+            <p><strong>{t('extendedDayCare')}</strong> <CheckLg className="text-success" /></p>
           )}
           {kid.special_education && (
-            <p><strong>{t('kids:status.specialEducation')}</strong> <CheckLg className="text-success" /></p>
+            <p><strong>{t('specialEducationStatus')}</strong> <CheckLg className="text-success" /></p>
           )}
           
           {/* Address within main card */}
-          <p><strong>{t('common:labels.address')}:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
+          <p><strong>{t('address')}:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
           
           {kid.notes && (
             <div className="mt-3">
-              <strong>{t('common:labels.notes')}:</strong>
+              <strong>{t('notes')}:</strong>
               <p>{kid.notes}</p>
             </div>
           )}
@@ -252,13 +252,13 @@ const KidDetailsView: React.FC = () => {
       {/* Guardians Section */}
       <Card className="mt-3">
         <Card.Header className="d-flex align-items-center gap-2">
-          <h4 className="mb-0">{t('guardians:title.guardians')}</h4>
+          <h4 className="mb-0">{t('guardians')}</h4>
           <Badge bg="secondary">{kid.guardians?.length || 0}</Badge>
         </Card.Header>
         <Card.Body>
           {!kid.guardians || kid.guardians.length === 0 ? (
             <Alert variant="secondary" className="mb-0">
-              {t('kids:messages.noGuardians')}
+              {t('noGuardiansForKid')}
             </Alert>
           ) : (
             <Row>
@@ -275,22 +275,22 @@ const KidDetailsView: React.FC = () => {
       {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={cancelDelete}>
         <Modal.Header closeButton>
-          <Modal.Title>{t('common:dialogs.confirmDelete')}</Modal.Title>
+          <Modal.Title>{t('confirmDelete')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {t('kids:dialogs.confirmDeleteKid', { 
+          {t('confirmDeleteKid', { 
             firstName: kid?.first_name, 
             lastName: kid?.last_name 
           })}
           <br />
-          {t('common:dialogs.actionCannotBeUndone')}
+          {t('actionCannotBeUndone')}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={cancelDelete}>
-            {t('common:buttons.cancel')}
+            {t('cancel')}
           </Button>
           <Button variant="danger" onClick={confirmDelete}>
-            {t('common:buttons.delete')}
+            {t('delete')}
           </Button>
         </Modal.Footer>
       </Modal>

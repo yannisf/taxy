@@ -13,7 +13,7 @@ interface TopBarReportsMenuProps {
 }
 
 const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
-  const { t } = useTranslation(['common', 'messages', 'navigation']);
+  const { t } = useTranslation();
   const { selectedClass } = useClass();
   const classKids = useClassKids();
   const [reportsDropdownOpen, setReportsDropdownOpen] = useState(false);
@@ -22,7 +22,7 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
 
   const handleGenerateCatalog = async () => {
     if (!selectedClass) {
-      toast.error(t('messages:error.selectClassToExport'));
+      toast.error(t('selectClassToExport'));
       return;
     }
 
@@ -30,10 +30,10 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
     try {
       const classRecord = { ...selectedClass, kids: classKids };
       await generateClassCatalogPDF(classRecord, classKids, t);
-      toast.success(t('messages:success.catalogGenerated'));
+      toast.success(t('catalogGenerated'));
     } catch (error) {
       console.error('Catalog generation failed:', error);
-      toast.error(t('messages:error.failedToGenerateCatalog'));
+      toast.error(t('failedToGenerateCatalog'));
     } finally {
       setIsGeneratingCatalog(false);
     }
@@ -41,20 +41,20 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
 
   const handleExportGuardianEmails = async () => {
     if (!selectedClass) {
-      toast.error(t('messages:error.selectClassToExport'));
+      toast.error(t('selectClassToExport'));
       return;
     }
 
     setIsExportingEmails(true);
     try {
       const result = await exportGuardianEmails(classKids, selectedClass.class_name, selectedClass.school_name);
-      toast.success(t('messages:success.guardianEmailsExported', { count: result.count }));
+      toast.success(t('guardianEmailsExported', { count: result.count }));
     } catch (error) {
       console.error('Guardian emails export failed:', error);
       if (error instanceof Error && error.message === 'No guardians with email addresses found') {
-        toast.error(t('messages:error.noGuardianEmailsFound'));
+        toast.error(t('noGuardianEmailsFound'));
       } else {
-        toast.error(t('messages:error.failedToExportGuardianEmails'));
+        toast.error(t('failedToExportGuardianEmails'));
       }
     } finally {
       setIsExportingEmails(false);
@@ -73,15 +73,15 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
         tabIndex={0}
         style={{ cursor: 'pointer' }}
       >
-        <span>{t('navigation:menu.reports')}</span>
+        <span>{t('menuReports')}</span>
         <ChevronDown size={14} />
       </Dropdown.Toggle>
       <Dropdown.Menu align="start" className={`topbar-dropdown-menu narrow ${theme === 'light' ? 'light' : 'dark'}`}>
         <Dropdown.Item onClick={() => { handleGenerateCatalog(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isGeneratingCatalog || classKids.length === 0}>
-          <span className="d-flex align-items-center gap-2"><FilePdf /> {t('navigation:generateCatalog')}</span>
+          <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateCatalog')}</span>
         </Dropdown.Item>
         <Dropdown.Item onClick={() => { handleExportGuardianEmails(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isExportingEmails || classKids.length === 0}>
-          <span className="d-flex align-items-center gap-2"><Envelope /> {t('navigation:exportGuardianEmails')}</span>
+          <span className="d-flex align-items-center gap-2"><Envelope /> {t('exportGuardianEmails')}</span>
         </Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

@@ -12,7 +12,7 @@ interface TopBarClassMenuProps {
 }
 
 const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
-  const { t } = useTranslation(['common', 'classes', 'messages', 'navigation']);
+  const { t } = useTranslation();
   const { classes, selectedClass, selectClass, createClass, updateClass, clearSelectedClass } = useClass();
   const navigate = useNavigate();
   const location = useLocation();
@@ -45,12 +45,12 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
     setIsCreating(true);
     try {
       const newClass = await createClass(classData);
-      toast.success(t('messages:success.classCreated'));
+      toast.success(t('classCreated'));
       // Automatically select the newly created class
       await selectClass(newClass.class_id);
     } catch (error) {
       console.error('Error creating class:', error);
-      toast.error(t('messages:error.failedToCreateClass'));
+      toast.error(t('failedToCreateClass'));
       throw error; // Re-throw to let the modal handle it
     } finally {
       setIsCreating(false);
@@ -59,7 +59,7 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
 
   const handleEditClick = () => {
     if (!selectedClass) {
-      toast.info(t('classes:messages.needSelectOrCreate'));
+      toast.info(t('needSelectOrCreate'));
       return;
     }
     setShowEditModal(true);
@@ -70,11 +70,11 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
     setIsUpdating(true);
     try {
       await updateClass(selectedClass.class_id, classData);
-      toast.success(t('messages:success.classUpdated'));
+      toast.success(t('classUpdated'));
       setShowEditModal(false);
     } catch (error) {
       console.error('Error updating class:', error);
-      toast.error(t('messages:error.unexpectedError'));
+      toast.error(t('unexpectedError'));
       throw error;
     } finally {
       setIsUpdating(false);
@@ -104,7 +104,7 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
           tabIndex={0}
           style={{ cursor: 'pointer' }}
         >
-          <span>{t('classes:title.classes')}</span>
+          <span>{t('classes')}</span>
           <ChevronDown size={14} />
         </Dropdown.Toggle>
         <Dropdown.Menu align="start" className={`topbar-dropdown-menu wide ${theme === 'light' ? 'light' : 'dark'}`}>
@@ -114,7 +114,7 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
               // close the dropdown after selection
               setClassDropdownOpen(false);
             }} size="sm" style={{ width: '100%' }}>
-              <option value="">{t('classes:title.selectClass')}</option>
+              <option value="">{t('selectClassPlaceholder')}</option>
               {classes.map(classObj => (
                 <option key={classObj.class_id} value={classObj.class_id}>
                   {formatClassDisplay(classObj)}
@@ -124,13 +124,13 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
           </Dropdown.ItemText>
           <Dropdown.Divider />
           <Dropdown.Item onClick={() => { setShowCreateModal(true); setClassDropdownOpen(false); }}>
-            <span className="d-flex align-items-center gap-2"><PlusCircle /> {t('classes:actions.newClass')}</span>
+            <span className="d-flex align-items-center gap-2"><PlusCircle /> {t('newClass')}</span>
           </Dropdown.Item>
           <Dropdown.Item onClick={() => { handleEditClick(); setClassDropdownOpen(false); }} disabled={!selectedClass}>
-            <span className="d-flex align-items-center gap-2"><PencilSquare /> {t('classes:actions.editClass')}</span>
+            <span className="d-flex align-items-center gap-2"><PencilSquare /> {t('editClass')}</span>
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => { handleCloseClass(); setClassDropdownOpen(false); }} disabled={!selectedClass} title={t('navigation:closeClassTooltip')}>
-            <span className="d-flex align-items-center gap-2"><BoxArrowLeft /> {t('common:buttons.close')}</span>
+          <Dropdown.Item onClick={() => { handleCloseClass(); setClassDropdownOpen(false); }} disabled={!selectedClass} title={t('closeClassTooltip')}>
+            <span className="d-flex align-items-center gap-2"><BoxArrowLeft /> {t('close')}</span>
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>

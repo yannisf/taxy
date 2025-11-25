@@ -7,7 +7,7 @@ import { useClassKids } from '../../hooks/useClassKids';
 import { formatClassDisplay } from '../../utils/classUtils';
 
 const KidListView: React.FC = () => {
-  const { t } = useTranslation(['common', 'kids']);
+  const { t } = useTranslation();
   const { classes, selectedClass } = useClass();
   const classKids = useClassKids();
   const navigate = useNavigate();
@@ -20,7 +20,6 @@ const KidListView: React.FC = () => {
 
   // Determine the current state
   const hasNoClasses = classes.length === 0;
-  const hasClassesButNoneSelected = classes.length > 0 && !selectedClass;
 
   return (
     <Container className="mt-3">
@@ -28,14 +27,14 @@ const KidListView: React.FC = () => {
         <Card className="text-center" style={{ maxWidth: '500px', width: '100%' }}>
           <Card.Body className="p-5">
             <div className="mb-4">
-              <h2 className="text-muted">{t('common:appName')}</h2>
+              <h2 className="text-muted">{t('appName')}</h2>
             </div>
             
             {hasNoClasses ? (
               <>
                 <div className="mb-4">
                   <p className="text-muted">
-                    {t('common:messages.noClassesAvailable')}
+                    {t('noClassesAvailable')}
                   </p>
                 </div>
               </>
@@ -44,10 +43,10 @@ const KidListView: React.FC = () => {
                 <div className="mb-4">
                   <h5 className="text-info mb-3">{formatClassDisplay(selectedClass)}</h5>
                   <p className="lead text-muted">
-                    {t('kids:messages.noKidsInClass')}
+                    {t('noKidsInClass')}
                   </p>
                   <p className="text-muted">
-                    {t('kids:messages.getStarted')}
+                    {t('getStarted')}
                   </p>
                 </div>
                 <Button 
@@ -55,23 +54,23 @@ const KidListView: React.FC = () => {
                   size="lg"
                   onClick={handleAddKid}
                 >
-                  {t('kids:title.addFirstKid')}
+                  {t('addFirstKid')}
                 </Button>
               </>
             ) : (
               <>
                 <div className="mb-4">
                   <h5 className="text-info mb-3">{formatClassDisplay(selectedClass)}</h5>
-                  <h4 className="text-primary">{t('kids:messages.kidsInClass', { count: kidCount })}</h4>
+                  <h4 className="text-primary">{t('kidsInClass', { count: kidCount })}</h4>
                   <p className="text-muted">
-                    {t('kids:messages.selectFromPanel')}
+                    {t('selectFromPanel')}
                   </p>
                 </div>
                 <Button 
                   variant="outline-primary"
                   onClick={handleAddKid}
                 >
-                  {t('kids:title.addAnotherKid')}
+                  {t('addAnotherKid')}
                 </Button>
               </>
             )}

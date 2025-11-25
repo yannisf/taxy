@@ -11,7 +11,7 @@ import type { Kid } from '../../types/models';
 // ClassModal moved to TopBar
 
 const LeftPanel: React.FC = () => {
-  const { t } = useTranslation(['navigation', 'kids', 'common', 'messages']);
+  const { t } = useTranslation();
   // refreshKids moved to TopBar's import flow
   const { selectedClass } = useClass();
   
@@ -52,18 +52,18 @@ const LeftPanel: React.FC = () => {
 
         {selectedClass && (
           <div className="d-flex align-items-center mb-3 gap-1">
-            <h5 className="mb-0">{t('navigation:kids')}</h5>
+            <h5 className="mb-0">{t('kids')}</h5>
             <OverlayTrigger
               placement="top"
-              overlay={<Tooltip id="add-kid-tooltip">{t('kids:actions.addKid')}</Tooltip>}
+              overlay={<Tooltip id="add-kid-tooltip">{t('addKid')}</Tooltip>}
             >
               <Button
                 variant="link"
                 size="sm"
                 className="p-0 add-kid-icon-button"
                 onClick={() => navigate('/kids/add')}
-                aria-label={t('kids:actions.addKid')}
-                title={t('kids:actions.addKid')}
+                aria-label={t('addKid')}
+                title={t('addKid')}
               >
                 <Plus size={18} />
               </Button>
@@ -103,7 +103,7 @@ const LeftPanel: React.FC = () => {
           ))}
           {sortedKids.length === 0 && selectedClass && (
             <ListGroup.Item variant="light" className="text-center border-0">
-              {t('kids:messages.noKidsInClass')}
+              {t('noKidsInClass')}
             </ListGroup.Item>
           )}
         </ListGroup>

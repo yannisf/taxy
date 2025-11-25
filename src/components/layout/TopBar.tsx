@@ -10,7 +10,7 @@ import TopBarReportsMenu from './TopBarReportsMenu';
 import TopBarSettings from './TopBarSettings';
 
 const TopBar: React.FC = () => {
-  const { t } = useTranslation(['classes']);
+  const { t } = useTranslation();
   const { classes, selectedClass } = useClass();
   const { theme } = useTheme();
 
@@ -29,7 +29,7 @@ const TopBar: React.FC = () => {
         <div className="d-flex align-items-center gap-2 ms-auto topbar-actions">
           {!selectedClass && classes.length === 0 && (
             <Alert variant="warning" className="mb-0 py-1 px-2 small">
-              {t('classes:messages.noClassesAvailable')}
+              {t('noClassesAvailable')}
             </Alert>
           )}
           
