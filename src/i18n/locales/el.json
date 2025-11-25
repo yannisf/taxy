@@ -131,6 +131,7 @@
   "enterText": "Εισάγετε κείμενο...",
   "chooseFile": "Επιλέξτε αρχείο...",
   "guardians": "Κηδεμόνες",
+  "guardianMissing": "Λείπει κηδεμόνας",
   "addGuardian": "Προσθήκη Κηδεμόνα",
   "editGuardian": "Επεξεργασία Κηδεμόνα",
   "guardianDetails": "Στοιχεία Κηδεμόνα",
@@ -298,5 +299,14 @@
   "pdfRelationSibling": "ΑΔΕΛΦΟΣ/Η",
   "pdfRelationGrandparent": "ΠΑΠΠΟΥΣ/Α",
   "pdfRelationExtendedFamily": "ΣΥΓΓΕΝΗΣ",
-  "pdfRelationFriend": "ΦΙΛΟΣ"
+  "pdfRelationFriend": "ΦΙΛΟΣ",
+  "classStatistics": "Στατιστικά Τάξης",
+  "totalKids": "Σύνολο Παιδιών",
+  "boys": "Αγόρια",
+  "girls": "Κορίτσια",
+  "preKindergartners": "Προνήπια",
+  "kindergartners": "Νήπια",
+  "kindergartnersRepeating": "Επαναφοίτηση",
+  "specialEducationKids": "Ειδική Αγωγή",
+  "totalGuardians": "Σύνολο Κηδεμόνων"
 }

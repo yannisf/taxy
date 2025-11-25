@@ -131,6 +131,7 @@
   "enterText": "Enter text...",
   "chooseFile": "Choose file...",
   "guardians": "Guardians",
+  "guardianMissing": "Guardian missing",
   "addGuardian": "Add Guardian",
   "editGuardian": "Edit Guardian",
   "guardianDetails": "Guardian Details",
@@ -298,5 +299,14 @@
   "pdfRelationSibling": "SIBLING",
   "pdfRelationGrandparent": "GRANDPARENT",
   "pdfRelationExtendedFamily": "EXTENDED FAMILY",
-  "pdfRelationFriend": "FRIEND"
+  "pdfRelationFriend": "FRIEND",
+  "classStatistics": "Class Statistics",
+  "totalKids": "Total Kids",
+  "boys": "Boys",
+  "girls": "Girls",
+  "preKindergartners": "Pre-Kindergartners",
+  "kindergartners": "Kindergartners",
+  "kindergartnersRepeating": "Kindergartners (Repeating)",
+  "specialEducationKids": "Special Education",
+  "totalGuardians": "Total Guardians"
 }

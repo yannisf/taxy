@@ -1,12 +1,13 @@
 import React from 'react';
-import { ListGroup, Button, Badge, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { ListGroup, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { PersonFill, Plus } from 'react-bootstrap-icons';
+import { Plus, ExclamationTriangle } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 // useKids not needed in LeftPanel anymore; import in TopBar
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
 import type { Kid } from '../../types/models';
+import ClassStatistics from './ClassStatistics';
 // Import/Export moved to TopBar
 // ClassModal moved to TopBar
 
@@ -94,10 +95,14 @@ const LeftPanel: React.FC = () => {
                 <span className="text-truncate">
                   {(kid.preferred_name || kid.first_name)} {kid.last_name}
                 </span>
-                <Badge bg="secondary" className="d-flex align-items-center gap-1">
-                  <PersonFill size={12} />
-                  {kid.guardians.length}
-                </Badge>
+                {kid.guardians.length === 0 && (
+                  <OverlayTrigger
+                    placement="right"
+                    overlay={<Tooltip id={`guardian-warning-${kid.kid_id}`}>{t('guardianMissing')}</Tooltip>}
+                  >
+                    <ExclamationTriangle size={16} className="text-warning" />
+                  </OverlayTrigger>
+                )}
               </div>
             </ListGroup.Item>
           ))}
@@ -108,6 +113,10 @@ const LeftPanel: React.FC = () => {
           )}
         </ListGroup>
         </div>
+        
+        {selectedClass && sortedKids.length > 0 && (
+          <ClassStatistics kids={sortedKids} />
+        )}
         
         {selectedClass && (
           /* File input handled in TopBar */

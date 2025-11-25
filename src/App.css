@@ -63,7 +63,7 @@
   padding-bottom: 0.35rem;
 }
 
-/* Topbar navigation group - equal-sized items */
+/* Topbar navigation group - equal-sized items on desktop */
 .topbar-nav {
   /* Use grid so each nav item gets equal width. Min width prevents items from collapsing too small */
   display: grid;
@@ -72,6 +72,57 @@
   gap: 1.8rem; /* more space between items */
   align-items: center;
 }
+
+/* Mobile responsive styles for navbar collapse */
+@media (max-width: 991.98px) {
+  .topbar-nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+  
+  .topbar-nav-item {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.5rem 1rem;
+  }
+  
+  .navbar-collapse {
+    margin-top: 0.5rem;
+  }
+  
+  /* Stack settings vertically on mobile */
+  .topbar-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    align-items: flex-start !important;
+  }
+  
+  .topbar-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Ensure hamburger button is visible and styled */
+.navbar-toggler {
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 0.25rem 0.5rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Dark theme adjustments */
+:root[data-bs-theme='dark'] .navbar-toggler {
+  border-color: rgba(255,255,255,0.1);
+}
+
 .topbar-nav-item {
   display: flex;
   align-items: center;
