@@ -1,14 +1,21 @@
+// React & Core Libraries
 import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+
+// Types & Models
 import { createKid } from '../../types/models';
 import type { Kid, Guardian } from '../../types/models';
+
+// Services & Contexts
 import { validationService } from '../../services/validation';
 import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
+
+// Section Components
 import BasicInfoSection from './sections/BasicInfoSection';
 import AdditionalInfoSection from './sections/AdditionalInfoSection';
 import AddressSection from './sections/AddressSection';
@@ -129,7 +136,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
       console.error('Kid insertion error:', error);
       setServerError(error instanceof Error ? error.message : t('error'));
     }
-  }, [guardians, initialData, refreshKids, onSubmitSuccess, reset]);
+  }, [guardians, initialData, refreshKids, onSubmitSuccess, reset, selectedClass, t]);
 
   return (
     <Container>
