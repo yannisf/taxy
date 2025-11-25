@@ -12,6 +12,7 @@ import { useClass } from '../../contexts/ClassContext';
 import GuardianAccordionItem from '../guardians/GuardianAccordionItem';
 import AddressForm from '../common/AddressForm';
 import { formatAddressString } from '../../utils/addressUtils';
+import AdditionalInfoSection from './sections/AdditionalInfoSection';
 
 type KidFormProps = {
   initialData?: Kid;
@@ -305,46 +306,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
           </Col>
         </Row>
 
-        <Form.Group className="mb-3">
-          <Form.Check 
-            type="checkbox"
-            label={t('extendedDayCare')}
-            {...register('extended_day_care')}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Check 
-            type="checkbox"
-            label={t('specialEducation')}
-            {...register('special_education')}
-          />
-        </Form.Group>
-
-        <Row>
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>{t('notes')}</Form.Label>
-              <Form.Control 
-                {...register('notes')}
-                as="textarea" 
-                placeholder={t('enterNotes')}
-                rows={4} 
-              />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group className="mb-3">
-              <Form.Label>{t('privateNotes')}</Form.Label>
-              <Form.Control 
-                {...register('private_notes')}
-                as="textarea" 
-                placeholder={t('enterPrivateNotes')}
-                rows={4} 
-              />
-            </Form.Group>
-          </Col>
-        </Row>
+        <AdditionalInfoSection register={register} />
 
         {/* Address Section */}
         <Accordion className="mb-4" defaultActiveKey={addressExpanded ? "0" : undefined}>
