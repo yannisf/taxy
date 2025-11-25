@@ -3,8 +3,7 @@ import { validateImportFile, performImport } from '../utils/importUtils';
 import { db } from '../services/database';
 import { validationService } from '../services/validation';
 import type { Kid, Class } from '../types/models';
-import fs from 'fs';
-import path from 'path';
+import testKidsData from '../../test-data/test-kids-data-en-10.json';
 
 // Mock the dependencies
 vi.mock('../services/database', () => ({
@@ -73,9 +72,8 @@ describe('Test Data Import Integration', () => {
   };
 
   it('should successfully validate and import the complete test kids data', async () => {
-    // Load the actual test data file
-    const testDataPath = path.join(process.cwd(), 'test-kids-data.json');
-    const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
+    // Use the imported test data
+    const testData = testKidsData;
     
     expect(Array.isArray(testData)).toBe(true);
     expect(testData).toHaveLength(10);
@@ -131,8 +129,7 @@ describe('Test Data Import Integration', () => {
   });
 
   it('should validate individual kid data structure from test file', async () => {
-    const testDataPath = path.join(process.cwd(), 'test-kids-data.json');
-    const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
+    const testData = testKidsData;
     
     // Test first kid (Emma Johnson)
     const firstKid = testData[0];
@@ -179,8 +176,7 @@ describe('Test Data Import Integration', () => {
   });
 
   it('should validate data variety across all test kids', async () => {
-    const testDataPath = path.join(process.cwd(), 'test-kids-data.json');
-    const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
+    const testData = testKidsData;
     
     // Check gender variety
     const genders = testData.map((kid: any) => kid.gender);
@@ -233,8 +229,7 @@ describe('Test Data Import Integration', () => {
   });
 
   it('should handle import with existing kids in database', async () => {
-    const testDataPath = path.join(process.cwd(), 'test-kids-data.json');
-    const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
+    const testData = testKidsData;
     
     // Mock existing kids in database (first 3 kids already exist)
     const existingKids: Kid[] = testData.slice(0, 3).map((kid: any) => ({
@@ -267,8 +262,7 @@ describe('Test Data Import Integration', () => {
   });
 
   it('should import kids to a specific class when classId is provided', async () => {
-    const testDataPath = path.join(process.cwd(), 'test-kids-data.json');
-    const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
+    const testData = testKidsData;
     
     const mockClass: Class = {
       class_id: 'test-class-id',
@@ -314,8 +308,7 @@ describe('Test Data Import Integration', () => {
   });
 
   it('should handle import failure when class does not exist', async () => {
-    const testDataPath = path.join(process.cwd(), 'test-kids-data.json');
-    const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
+    const testData = testKidsData;
     
     // Mock class not found
     (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('Class not found'));
@@ -341,8 +334,7 @@ describe('Test Data Import Integration', () => {
   });
 
   it('should verify all required fields are present in test data', async () => {
-    const testDataPath = path.join(process.cwd(), 'test-kids-data.json');
-    const testData = JSON.parse(fs.readFileSync(testDataPath, 'utf8'));
+    const testData = testKidsData;
     
     const requiredKidFields = [
       'kid_id', 'first_name', 'last_name', 'gender', 'level', 

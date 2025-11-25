@@ -7,6 +7,7 @@ import type { Kid } from '../types/models';
 vi.mock('../services/database', () => ({
   db: {
     exportData: vi.fn(),
+    exportClassData: vi.fn(),
   },
 }));
 
@@ -63,6 +64,7 @@ describe('exportUtils', () => {
         gender: 'male',
         level: 'kindergartner',
         special_education: false,
+        extended_day_care: false,
         guardians: [],
         created_at: '2023-01-01T00:00:00.000Z',
         updated_at: '2023-01-01T00:00:00.000Z',
@@ -74,6 +76,7 @@ describe('exportUtils', () => {
         gender: 'female',
         level: 'pre-kindergartner',
         special_education: false,
+        extended_day_care: false,
         guardians: [],
         created_at: '2023-01-01T00:00:00.000Z',
         updated_at: '2023-01-01T00:00:00.000Z',
@@ -137,6 +140,7 @@ describe('exportUtils', () => {
         gender: 'male',
         level: 'kindergartner',
         special_education: false,
+        extended_day_care: false,
         guardians: [],
         created_at: '2023-01-01T00:00:00.000Z',
         updated_at: '2023-01-01T00:00:00.000Z',
