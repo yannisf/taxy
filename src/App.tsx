@@ -35,7 +35,7 @@ const App: React.FC = () => {
             <TopBar />
             <Container fluid className="flex-grow-1 content-container">
               <Row className="h-100">
-                <Col xs={3} className="left-panel-col border-end">
+                <Col xs={3} className="left-panel-col">
                   <LeftPanel />
                 </Col>
                 <Col xs={9} className="main-content-col">

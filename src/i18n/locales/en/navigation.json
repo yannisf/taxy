@@ -1,7 +1,7 @@
 {
   "menu": {
     "kids": "Kids",
-    "classes": "Classes",
+    "classes": "Class",
     "reports": "Reports",
     "settings": "Settings"
   },
@@ -24,6 +24,8 @@
   "selectClassToViewKids": "Please select a class to view kids",
   "exportClass": "Export Class",
   "importClass": "Import Class",
+  "importExport": "Data",
+  "exportGuardianEmails": "Export Guardian Emails",
   "generateCatalog": "Generate Catalog",
   "exportClassDataTooltip": "Export class data as JSON",
   "importClassDataTooltip": "Import class data from JSON",

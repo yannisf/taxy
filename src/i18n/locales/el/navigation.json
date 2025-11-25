@@ -1,7 +1,7 @@
 {
   "menu": {
     "kids": "Παιδιά",
-    "classes": "Τάξεις",
+    "classes": "Τάξη",
     "reports": "Αναφορές",
     "settings": "Ρυθμίσεις"
   },
@@ -24,6 +24,8 @@
   "selectClassToViewKids": "Παρακαλώ επιλέξτε μια τάξη για να δείτε τα παιδιά",
   "exportClass": "Εξαγωγή Τάξης",
   "importClass": "Εισαγωγή Τάξης",
+  "importExport": "Δεδομένα",
+  "exportGuardianEmails": "Εξαγωγή email κηδεμόνων",
   "generateCatalog": "Δημιουργία Καταλόγου",
   "exportClassDataTooltip": "Εξαγωγή δεδομένων τάξης ως JSON",
   "importClassDataTooltip": "Εισαγωγή δεδομένων τάξης από JSON",

@@ -39,14 +39,6 @@ const KidListView: React.FC = () => {
                   </p>
                 </div>
               </>
-            ) : hasClassesButNoneSelected ? (
-              <>
-                <div className="mb-4">
-                  <p className="text-muted">
-                    {t('common:messages.selectClass')}
-                  </p>
-                </div>
-              </>
             ) : kidCount === 0 ? (
               <>
                 <div className="mb-4">
