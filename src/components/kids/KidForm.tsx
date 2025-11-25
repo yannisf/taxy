@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { Form, Button, Container, Alert, Accordion, Card } from 'react-bootstrap';
+import { Form, Button, Container, Alert, Card, Accordion } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createKid } from '../../types/models';
@@ -10,10 +10,9 @@ import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
 import GuardianAccordionItem from '../guardians/GuardianAccordionItem';
-import AddressForm from '../common/AddressForm';
-import { formatAddressString } from '../../utils/addressUtils';
 import BasicInfoSection from './sections/BasicInfoSection';
 import AdditionalInfoSection from './sections/AdditionalInfoSection';
+import AddressSection from './sections/AddressSection';
 
 type KidFormProps = {
   initialData?: Kid;
@@ -81,9 +80,6 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
 
   // Simple values - no need for memoization
   const guardianCount = guardians.length;
-  const addressString = formatAddressString(initialData?.address);
-  const addressTitle = addressString ? `${t('address')}: ${addressString}` : t('address');
-  const addressExpanded = !addressString; // Expanded if no address, collapsed if address exists
 
   const handleCancel = () => {
     if (kidId) {
@@ -177,18 +173,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess }
 
         <AdditionalInfoSection register={register} />
 
-        {/* Address Section */}
-        <Accordion className="mb-4" defaultActiveKey={addressExpanded ? "0" : undefined}>
-          <Accordion.Item eventKey="0">
-            <Accordion.Header>{addressTitle}</Accordion.Header>
-            <Accordion.Body>
-              <AddressForm 
-                control={control}
-                errors={errors.address}
-              />
-            </Accordion.Body>
-          </Accordion.Item>
-        </Accordion>
+        <AddressSection control={control} errors={errors} initialAddress={initialData?.address} />
 
         {/* Guardians Section */}
         <Card className="mb-4">
