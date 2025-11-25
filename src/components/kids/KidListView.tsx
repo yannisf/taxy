@@ -20,6 +20,7 @@ const KidListView: React.FC = () => {
 
   // Determine the current state
   const hasNoClasses = classes.length === 0;
+  const hasNoSelectedClass = !selectedClass && classes.length > 0;
 
   return (
     <Container className="mt-3">
@@ -35,6 +36,14 @@ const KidListView: React.FC = () => {
                 <div className="mb-4">
                   <p className="text-muted">
                     {t('noClassesAvailable')}
+                  </p>
+                </div>
+              </>
+            ) : hasNoSelectedClass ? (
+              <>
+                <div className="mb-4">
+                  <p className="text-muted">
+                    {t('noClassSelected')}
                   </p>
                 </div>
               </>

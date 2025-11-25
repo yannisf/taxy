@@ -2,6 +2,7 @@ import type { TDocumentDefinitions, Content } from 'pdfmake/interfaces';
 import type { Kid, Guardian, Telephone, ClassRecord } from '../types/models';
 import type { TFunction } from 'i18next';
 import { initializePDFMakeFonts, getDefaultFontFamily } from './customFonts';
+import i18n from '../i18n';
 
 /**
  * Formats a telephone number for PDF (XXX XXX XXXX format, no country code)
@@ -123,7 +124,11 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
   await initializePDFMakeFonts(pdfMake);
   const fontFamily = 'Roboto'; // Catalog always uses Roboto font
 
-  const currentDate = new Date().toLocaleDateString('en-GB', {
+  // Get current locale from i18n
+  const currentLanguage = i18n.language || 'en';
+  const locale = currentLanguage === 'el' ? 'el-GR' : 'en-GB';
+
+  const currentDate = new Date().toLocaleDateString(locale, {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric'
@@ -161,7 +166,8 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
         table: {
           headerRows: 1,
           widths: [30, 'auto', '*'],
-          body: createTableData(kids, t)
+          body: createTableData(kids, t),
+          dontBreakRows: true
         },
         layout: {
           fillColor: function(rowIndex: number) {

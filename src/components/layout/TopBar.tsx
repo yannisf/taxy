@@ -6,6 +6,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import TopBarLogo from './TopBarLogo';
 import TopBarClassMenu from './TopBarClassMenu';
 import TopBarDataMenu from './TopBarDataMenu';
+import TopBarCardsMenu from './TopBarCardsMenu';
 import TopBarReportsMenu from './TopBarReportsMenu';
 import TopBarSettings from './TopBarSettings';
 
@@ -36,6 +37,7 @@ const TopBar: React.FC = () => {
           <Nav className="me-auto">
             <TopBarClassMenu theme={theme} />
             <TopBarDataMenu theme={theme} />
+            <TopBarCardsMenu theme={theme} />
             <TopBarReportsMenu theme={theme} />
           </Nav>
 
