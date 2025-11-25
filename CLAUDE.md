@@ -1,0 +1,245 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+Taxy is a React-based class management system for educational institutions. It manages students (referred to as "kids"), guardians, and class information with multilingual support (English/Greek). The application runs entirely client-side using IndexedDB for local data persistence.
+
+**Key Stack:**
+- React 19 + TypeScript
+- Vite 7.1.7 (build tool)
+- Dexie 4.2.0 (IndexedDB wrapper)
+- Bootstrap 5.3.8 + React Bootstrap 2.10.10
+- React Router DOM 7.9.3
+- i18next for internationalization
+- Vitest + React Testing Library
+
+## Development Commands
+
+```bash
+# Development
+npm run dev              # Start dev server at http://localhost:5173
+
+# Testing
+npm run test            # Run tests in watch mode
+npm run test:run        # Run tests once and exit
+npm run test:ui         # Run tests with UI interface
+
+# Code Quality
+npm run lint            # Run ESLint
+npm run lint -- --fix   # Auto-fix linting issues
+npx tsc --noEmit        # Type check without emitting files
+
+# Build & Preview
+npm run build           # Build for production (outputs to dist/)
+npm run preview         # Preview production build at http://localhost:4173
+```
+
+## Architecture & Data Model
+
+### Database Layer (IndexedDB via Dexie)
+
+The application uses `ClassManagementDatabase` defined in `src/services/database.ts`. The database schema has evolved through migrations:
+
+- **v1**: Original kids table
+- **v2**: Added timestamps (created_at, updated_at)
+- **v3**: Added classes table
+
+**Tables:**
+- `kids`: Student records with guardians, addresses, telephones
+- `classes`: Class definitions with kid_ids arrays (many-to-many relationship)
+
+**Key Database Methods:**
+- Kid CRUD: `addKid()`, `getKids()`, `getKidById()`, `updateKid()`, `deleteKid()`
+- Class CRUD: `addClass()`, `getClasses()`, `getClassById()`, `updateClass()`, `deleteClass()`
+- Class-Kid operations: `addKidToClass()`, `removeKidFromClass()`, `getKidsByClassId()`
+- Import/Export: `exportClassData()`, `mergeKidsToClass()`, `mergeKids()`
+
+### Data Models (src/types/models.ts)
+
+**Core Types:**
+- `Kid`: Student record with personal info, guardians, addresses, notes
+- `Guardian`: Guardian information including relation, contact details
+- `Class`: Class definition (school_name, class_name, school_year, kid_ids)
+- `Address`: Address information (street, city, postal code, etc.)
+- `Telephone`: Phone numbers with type (mobile/home/work/other)
+
+**Important Constraints:**
+- All primary entities use UUIDs (via uuid library)
+- Timestamps (created_at, updated_at) are automatically managed
+- Kids can have multiple guardians and phone numbers
+- Classes contain arrays of kid_ids (not embedded kids)
+
+### Context Architecture
+
+The app uses React Context for state management with three main providers:
+
+1. **ThemeProvider** (`src/contexts/ThemeContext.tsx`): Manages light/dark theme
+2. **ClassProvider** (`src/contexts/ClassContext.tsx`):
+   - Manages class list and selected class state
+   - Selected class persists in localStorage
+   - Provides class CRUD operations
+3. **KidsProvider** (`src/contexts/KidsContext.tsx`):
+   - Provides global kids list
+   - Handles refreshing kids data
+
+**Provider Nesting** (in App.tsx):
+```
+ThemeProvider > ClassProvider > KidsProvider > Router
+```
+
+### Component Organization
+
+```
+src/components/
+├── classes/       # Class management (ClassModal)
+├── common/        # Reusable components (AddressForm, TelephoneForm, etc.)
+├── guardians/     # Guardian display components
+├── kids/          # Student management views (Add, Edit, Details, List)
+└── layout/        # App layout (TopBar, LeftPanel, Statistics)
+```
+
+### Routing Structure
+
+- `/` → Redirects to `/kids`
+- `/kids` → Student list view
+- `/kids/add` → Add new student
+- `/kids/:kidId` → Student details
+- `/kids/:kidId/edit` → Edit student
+
+## Internationalization (i18n)
+
+Translation files are in `src/i18n/locales/` (en.json, el.json). The app uses i18next with:
+- Language detection via localStorage and browser settings
+- Fallback language: English
+- Debug mode enabled
+
+**Usage in components:**
+```typescript
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation();
+```
+
+## Import/Export Functionality
+
+**Import Logic** (`src/utils/importUtils.ts`):
+- Validates JSON files containing Kid arrays
+- Uses JSON schema validation (via ajv)
+- Handles ID conflicts: When importing to a class, if a kid_id exists in another class, generates a new UUID
+- Statistics: Tracks newKids, updatedKids, unchangedKids, conflictingKids
+
+**Export Logic** (`src/utils/exportUtils.ts`):
+- Can export entire class with all kids
+- Exports as ClassRecord JSON format with filename: `{school-name}-{class-name}-export-{date}.json`
+
+## Reporting Capabilities
+
+The application provides two main reporting features, accessible via the Reports menu in the top bar:
+
+### 1. Class Catalog PDF Report
+
+**Function**: `generateClassCatalogPDF()` in `src/utils/pdfUtils.ts`
+
+**Features:**
+- Generates landscape A4 PDF using pdfmake library
+- Contains student roster with guardian contact information
+- Filename format: `{school_name}_{class_name}_{school_year}_catalog.pdf`
+
+**PDF Structure:**
+- **Header**: School name, class name, school year, and generation date
+- **Table Columns**:
+  1. Number (sequential, 1-indexed)
+  2. Student Name (uses preferred_name if available, otherwise first_name)
+  3. Guardian Information (formatted per guardian):
+     - Guardian full name
+     - Relation badge (uppercase, xx-small bold font)
+     - Phone numbers (up to 3, formatted as XXX XXX XXXX)
+
+**Key Implementation Details:**
+- Phone formatting: Strips country code, formats as XXX XXX XXXX
+- Relations are translated via i18n keys: `pdfRelationFather`, `pdfRelationMother`, etc.
+- Each guardian displayed on separate line within the cell
+- Alternating row colors (#ffffff and #f8f9fa) for readability
+- Dynamic import of pdfmake to ensure proper font initialization
+
+**Requires:**
+- A selected class with at least one student
+- Guardians with telephone numbers (optional, but recommended)
+
+### 2. Guardian Emails Export
+
+**Function**: `exportGuardianEmails()` in `src/utils/exportUtils.ts`
+
+**Features:**
+- Exports unique guardian email addresses to CSV format
+- Deduplicates emails (same guardian for multiple kids counted once)
+- Filename format: `{school-name}-{class-name}-guardian-emails-{date}.csv`
+
+**CSV Structure:**
+```
+first_name,last_name,email
+John,Doe,john.doe@example.com
+Jane,Smith,jane.smith@example.com
+```
+
+**Key Implementation Details:**
+- Filters out guardians without email addresses
+- CSV field escaping for commas, quotes, and newlines
+- Returns count of unique emails exported
+- Throws error if no guardians with emails found
+
+**Requires:**
+- A selected class with at least one student
+- At least one guardian with an email address
+
+### Reports Menu Component
+
+**Location**: `src/components/layout/TopBarReportsMenu.tsx`
+
+**UI/UX:**
+- Both reports disabled if no class selected or class has no students
+- Loading states prevent duplicate generation
+- Success/error toasts provide user feedback
+- Translation keys used: `selectClassToExport`, `catalogGenerated`, `failedToGenerateCatalog`, `guardianEmailsExported`, `noGuardianEmailsFound`, `failedToExportGuardianEmails`
+
+## Common Patterns
+
+### Timestamp Management
+All database updates automatically set `updated_at`. When creating records, both `created_at` and `updated_at` are set. The database layer handles this automatically.
+
+### UUID Generation
+Use the `createKid()` and `createClass()` utility functions from `src/types/models.ts` to ensure proper UUID and timestamp initialization.
+
+### Form Handling
+Forms use React Hook Form for validation and state management. See `src/components/kids/KidForm.tsx` for the main student form pattern.
+
+### Drag & Drop
+Telephone ordering uses @dnd-kit library. See `src/components/common/SortableTelephoneForm.tsx`.
+
+## Testing
+
+Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment uses:
+- jsdom for DOM simulation
+- @testing-library/react for component testing
+- Global test utilities enabled
+
+## Important Notes
+
+- **Database Constraints**: Cannot delete a class that contains kids. Must remove all kids first.
+- **Class Context**: The selected class is persisted in localStorage and restored on app load.
+- **Guardian Same Address**: Guardians can share the kid's address (same_address_as_kid flag).
+- **Telephone Sorting**: Telephones are displayed in array order and can be reordered via drag-and-drop.
+- **PDF Generation**: Uses pdfmake library (see `src/utils/pdfUtils.ts`).
+
+## File Locations
+
+- Database schema: `src/services/database.ts`
+- Type definitions: `src/types/models.ts`
+- Validation service: `src/services/validation.ts` (uses ajv with JSON schemas from `src/schemas/`)
+- Main app component: `src/App.tsx`
+- Entry point: `src/main.tsx`
+- PDF generation: `src/utils/pdfUtils.ts`
+- Export utilities: `src/utils/exportUtils.ts`
+- Import utilities: `src/utils/importUtils.ts`
+- Reports menu: `src/components/layout/TopBarReportsMenu.tsx`

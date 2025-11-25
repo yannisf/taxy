@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
 import { exportGuardianEmails } from '../../utils/exportUtils';
-import { generateClassCatalogPDF } from '../../utils/pdfUtils';
+import { generateClassCatalogPDF, generateStudentGridPDF, generateStudentListPDF } from '../../utils/pdfUtils';
 
 interface TopBarReportsMenuProps {
   theme: 'light' | 'dark';
@@ -19,6 +19,8 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
   const [reportsDropdownOpen, setReportsDropdownOpen] = useState(false);
   const [isGeneratingCatalog, setIsGeneratingCatalog] = useState(false);
   const [isExportingEmails, setIsExportingEmails] = useState(false);
+  const [isGeneratingGrid, setIsGeneratingGrid] = useState(false);
+  const [isGeneratingList, setIsGeneratingList] = useState(false);
 
   const handleGenerateCatalog = async () => {
     if (!selectedClass) {
@@ -61,6 +63,44 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
     }
   };
 
+  const handleGenerateStudentGrid = async () => {
+    if (!selectedClass) {
+      toast.error(t('selectClassToExport'));
+      return;
+    }
+
+    setIsGeneratingGrid(true);
+    try {
+      const classRecord = { ...selectedClass, kids: classKids };
+      await generateStudentGridPDF(classRecord, classKids, t);
+      toast.success(t('studentGridGenerated'));
+    } catch (error) {
+      console.error('Student grid generation failed:', error);
+      toast.error(t('failedToGenerateStudentGrid'));
+    } finally {
+      setIsGeneratingGrid(false);
+    }
+  };
+
+  const handleGenerateStudentList = async () => {
+    if (!selectedClass) {
+      toast.error(t('selectClassToExport'));
+      return;
+    }
+
+    setIsGeneratingList(true);
+    try {
+      const classRecord = { ...selectedClass, kids: classKids };
+      await generateStudentListPDF(classRecord, classKids, t);
+      toast.success(t('studentListGenerated'));
+    } catch (error) {
+      console.error('Student list generation failed:', error);
+      toast.error(t('failedToGenerateStudentList'));
+    } finally {
+      setIsGeneratingList(false);
+    }
+  };
+
   return (
     <Dropdown show={reportsDropdownOpen} onToggle={(show: boolean) => setReportsDropdownOpen(show)} className="me-2">
       <Dropdown.Toggle
@@ -79,6 +119,12 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
       <Dropdown.Menu align="start" className={`topbar-dropdown-menu narrow ${theme === 'light' ? 'light' : 'dark'}`}>
         <Dropdown.Item onClick={() => { handleGenerateCatalog(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isGeneratingCatalog || classKids.length === 0}>
           <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateCatalog')}</span>
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => { handleGenerateStudentGrid(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isGeneratingGrid || classKids.length === 0}>
+          <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateStudentGrid')}</span>
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => { handleGenerateStudentList(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isGeneratingList || classKids.length === 0}>
+          <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateStudentList')}</span>
         </Dropdown.Item>
         <Dropdown.Item onClick={() => { handleExportGuardianEmails(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isExportingEmails || classKids.length === 0}>
           <span className="d-flex align-items-center gap-2"><Envelope /> {t('exportGuardianEmails')}</span>
