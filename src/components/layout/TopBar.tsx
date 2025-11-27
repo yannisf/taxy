@@ -43,14 +43,6 @@ const TopBar: React.FC = () => {
 
           {/* Right-aligned items */}
           <Nav className="ms-auto align-items-lg-center">
-            {!selectedClass && classes.length === 0 && (
-              <Nav.Item className="px-2">
-                <Alert variant="warning" className="mb-0 py-1 px-2 small">
-                  {t('noClassesAvailable')}
-                </Alert>
-              </Nav.Item>
-            )}
-            
             <Nav.Item>
               <TopBarSettings />
             </Nav.Item>

@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useClass } from '../../contexts/ClassContext';
+import AutocompleteInput from '../common/AutocompleteInput';
+import {
+  extractUniqueSchoolNames,
+  extractUniqueClassNames,
+  filterNamesByQuery
+} from '../../utils/nameUtils';
 
 interface ClassModalProps {
   show: boolean;
@@ -19,15 +26,16 @@ interface ClassModalProps {
   };
 }
 
-const ClassModal: React.FC<ClassModalProps> = ({ 
-  show, 
-  onHide, 
-  onSubmit, 
-  loading = false, 
+const ClassModal: React.FC<ClassModalProps> = ({
+  show,
+  onHide,
+  onSubmit,
+  loading = false,
   mode = 'create',
-  initialData 
+  initialData
 }) => {
   const { t } = useTranslation();
+  const { classes } = useClass();
   const [formData, setFormData] = useState({
     school_name: initialData?.school_name || '',
     class_name: initialData?.class_name || '',
@@ -35,6 +43,10 @@ const ClassModal: React.FC<ClassModalProps> = ({
   });
   const [error, setError] = useState<string | null>(null);
   const [validated, setValidated] = useState(false);
+
+  // Extract unique school and class names for autocomplete
+  const allSchoolNames = useMemo(() => extractUniqueSchoolNames(classes), [classes]);
+  const allClassNames = useMemo(() => extractUniqueClassNames(classes), [classes]);
 
   // Generate default school year (current year - next year)
   const currentYear = new Date().getFullYear();
@@ -141,32 +153,58 @@ const ClassModal: React.FC<ClassModalProps> = ({
           
           <Form.Group className="mb-3">
             <Form.Label>{t('schoolName')} {t('required')}</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.school_name}
-              onChange={(e) => handleInputChange('school_name', e.target.value)}
-              placeholder={t('enterSchoolName')}
-              required
-              disabled={loading}
-            />
-            <Form.Control.Feedback type="invalid">
-              {t('schoolNameRequired')}
-            </Form.Control.Feedback>
+            {loading ? (
+              <Form.Control
+                type="text"
+                value={formData.school_name}
+                onChange={(e) => handleInputChange('school_name', e.target.value)}
+                placeholder={t('enterSchoolName')}
+                required
+                disabled={loading}
+              />
+            ) : (
+              <AutocompleteInput
+                value={formData.school_name}
+                onChange={(value) => handleInputChange('school_name', value)}
+                onBlur={() => {}}
+                suggestions={filterNamesByQuery(allSchoolNames, formData.school_name)}
+                placeholder={t('enterSchoolName')}
+                isInvalid={validated && !formData.school_name}
+              />
+            )}
+            {validated && !formData.school_name && (
+              <div className="invalid-feedback d-block">
+                {t('schoolNameRequired')}
+              </div>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>{t('className')} {t('required')}</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.class_name}
-              onChange={(e) => handleInputChange('class_name', e.target.value)}
-              placeholder={t('enterClassName')}
-              required
-              disabled={loading}
-            />
-            <Form.Control.Feedback type="invalid">
-              {t('classNameRequired')}
-            </Form.Control.Feedback>
+            {loading ? (
+              <Form.Control
+                type="text"
+                value={formData.class_name}
+                onChange={(e) => handleInputChange('class_name', e.target.value)}
+                placeholder={t('enterClassName')}
+                required
+                disabled={loading}
+              />
+            ) : (
+              <AutocompleteInput
+                value={formData.class_name}
+                onChange={(value) => handleInputChange('class_name', value)}
+                onBlur={() => {}}
+                suggestions={filterNamesByQuery(allClassNames, formData.class_name)}
+                placeholder={t('enterClassName')}
+                isInvalid={validated && !formData.class_name}
+              />
+            )}
+            {validated && !formData.class_name && (
+              <div className="invalid-feedback d-block">
+                {t('classNameRequired')}
+              </div>
+            )}
           </Form.Group>
 
           <Form.Group className="mb-3">

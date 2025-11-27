@@ -1,4 +1,4 @@
-import type { Kid, Address } from '../types/models';
+import type { Kid, Address, Class } from '../types/models';
 
 /**
  * Normalizes a string by removing accents and converting to lowercase
@@ -42,7 +42,7 @@ export function extractUniqueFirstNames(kids: Kid[]): string[] {
  * Performs case-insensitive and accent-insensitive matching
  */
 export function filterNamesByQuery(names: string[], query: string): string[] {
-  if (!query || query.length < 2) {
+  if (!query || query.length < 1) {
     return [];
   }
 
@@ -138,4 +138,42 @@ export function extractUniqueCities(kids: Kid[]): string[] {
 export function extractUniqueCountries(kids: Kid[]): string[] {
   const addresses = extractAllAddresses(kids);
   return extractUniqueAddressField(addresses, 'country');
+}
+
+/**
+ * Extracts unique school names from a list of classes
+ * Returns a sorted array of unique school names
+ */
+export function extractUniqueSchoolNames(classes: Class[]): string[] {
+  const schoolNamesSet = new Set<string>();
+
+  classes.forEach(classObj => {
+    if (classObj.school_name && classObj.school_name.trim()) {
+      schoolNamesSet.add(classObj.school_name.trim());
+    }
+  });
+
+  // Convert to array and sort alphabetically (case-insensitive)
+  return Array.from(schoolNamesSet).sort((a, b) =>
+    a.toLowerCase().localeCompare(b.toLowerCase())
+  );
+}
+
+/**
+ * Extracts unique class names from a list of classes
+ * Returns a sorted array of unique class names
+ */
+export function extractUniqueClassNames(classes: Class[]): string[] {
+  const classNamesSet = new Set<string>();
+
+  classes.forEach(classObj => {
+    if (classObj.class_name && classObj.class_name.trim()) {
+      classNamesSet.add(classObj.class_name.trim());
+    }
+  });
+
+  // Convert to array and sort alphabetically (case-insensitive)
+  return Array.from(classNamesSet).sort((a, b) =>
+    a.toLowerCase().localeCompare(b.toLowerCase())
+  );
 }

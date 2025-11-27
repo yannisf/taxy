@@ -69,37 +69,41 @@ function createGuardianTextArray(guardians: Guardian[], t: TFunction): Content[]
  */
 function createTableData(kids: Kid[], t: TFunction): Content[][] {
   const tableData: Content[][] = [];
-  
+
   // Header row
   tableData.push([
     { text: t('pdfNumber'), style: 'tableHeader' },
     { text: t('pdfStudentName'), style: 'tableHeader' },
-    { text: t('pdfGuardianInformation'), style: 'tableHeader' }
+    { text: t('pdfGuardianInformation'), style: 'tableHeader' },
+    { text: t('pdfNotes'), style: 'tableHeader' }
   ]);
-  
+
   kids.forEach((kid, index) => {
     const kidName = `${kid.preferred_name || kid.first_name} ${kid.last_name}`;
-    
+    const notes = kid.notes || '';
+
     if (kid.guardians.length === 0) {
       // Kid with no guardians
       tableData.push([
         { text: (index + 1).toString(), style: 'tableCell' },
         { text: kidName, style: 'tableCell' },
-        { text: t('pdfNoGuardians'), style: 'tableCell', italics: true, color: '#666666' }
+        { text: t('pdfNoGuardians'), style: 'tableCell', italics: true, color: '#666666' },
+        { text: notes, style: 'tableCell', fontSize: 8 }
       ]);
     } else {
       // Kid with guardians - each guardian on a separate line
       tableData.push([
         { text: (index + 1).toString(), style: 'tableCell' },
         { text: kidName, style: 'tableCell' },
-        { 
+        {
           text: createGuardianTextArray(kid.guardians, t),
           style: 'tableCell'
-        }
+        },
+        { text: notes, style: 'tableCell', fontSize: 8 }
       ]);
     }
   });
-  
+
   return tableData;
 }
 
@@ -165,7 +169,7 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
       {
         table: {
           headerRows: 1,
-          widths: [30, 'auto', '*'],
+          widths: [30, 100, '*', 130],
           body: createTableData(kids, t),
           dontBreakRows: true
         },

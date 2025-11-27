@@ -44,7 +44,10 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
       relation_with_kid: 'mother',
       authorized_for_pickup: false,
       same_address_as_kid: true,
-      telephones: []
+      telephones: [],
+      address: {
+        country: 'Ελλάδα'
+      }
     }
   });
 

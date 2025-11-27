@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Dropdown, Form } from 'react-bootstrap';
-import { PlusCircle, PencilSquare, BoxArrowLeft, ChevronDown } from 'react-bootstrap-icons';
+import { Dropdown, Form, Modal, Button } from 'react-bootstrap';
+import { PlusCircle, PencilSquare, BoxArrowLeft, ChevronDown, Trash } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -13,13 +13,16 @@ interface TopBarClassMenuProps {
 
 const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
   const { t } = useTranslation();
-  const { classes, selectedClass, selectClass, createClass, updateClass, clearSelectedClass } = useClass();
+  const { classes, selectedClass, selectClass, createClass, updateClass, deleteClass, clearSelectedClass } = useClass();
   const navigate = useNavigate();
   const location = useLocation();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [showDeleteWithKidsConfirmModal, setShowDeleteWithKidsConfirmModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [classDropdownOpen, setClassDropdownOpen] = useState(false);
 
   const handleClassSelect = async (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -86,6 +89,64 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
     navigate('/kids');
   };
 
+  const handleDeleteClick = () => {
+    if (!selectedClass) {
+      toast.info(t('needSelectOrCreate'));
+      return;
+    }
+
+    // Check if class has kids
+    if (selectedClass.kid_ids && selectedClass.kid_ids.length > 0) {
+      setShowDeleteWithKidsConfirmModal(true);
+    } else {
+      setShowDeleteConfirmModal(true);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedClass) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteClass(selectedClass.class_id);
+      toast.success(t('classDeleted'));
+      setShowDeleteConfirmModal(false);
+      navigate('/kids');
+    } catch (error) {
+      console.error('Error deleting class:', error);
+      toast.error(t('failedToDeleteClass'));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleConfirmDeleteWithKids = async () => {
+    if (!selectedClass) return;
+
+    setIsDeleting(true);
+    try {
+      // Import db to delete kids first
+      const { db } = await import('../../services/database');
+
+      // Delete all kids in this class
+      const kidIds = selectedClass.kid_ids || [];
+      for (const kidId of kidIds) {
+        await db.deleteKid(kidId);
+      }
+
+      // Now delete the class
+      await deleteClass(selectedClass.class_id);
+      toast.success(t('classAndKidsDeleted'));
+      setShowDeleteWithKidsConfirmModal(false);
+      navigate('/kids');
+    } catch (error) {
+      console.error('Error deleting class with kids:', error);
+      toast.error(t('failedToDeleteClass'));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const formatClassDisplay = (classObj: typeof selectedClass) => {
     if (!classObj) return '';
     return `${classObj.school_name} - ${classObj.class_name} (${classObj.school_year})`;
@@ -132,6 +193,9 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
           <Dropdown.Item onClick={() => { handleCloseClass(); setClassDropdownOpen(false); }} disabled={!selectedClass} title={t('closeClassTooltip')}>
             <span className="d-flex align-items-center gap-2"><BoxArrowLeft /> {t('close')}</span>
           </Dropdown.Item>
+          <Dropdown.Item onClick={() => { handleDeleteClick(); setClassDropdownOpen(false); }} disabled={!selectedClass}>
+            <span className="d-flex align-items-center gap-2 text-danger"><Trash /> {t('deleteClass')}</span>
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -148,6 +212,59 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
           school_year: selectedClass.school_year
         } : undefined}
       />
+
+      {/* Delete Confirmation Modal (empty class) */}
+      <Modal show={showDeleteConfirmModal} onHide={() => setShowDeleteConfirmModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('confirmDelete')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{t('confirmDeleteClassMessage')}</p>
+          {selectedClass && (
+            <p className="mb-0">
+              <strong>{formatClassDisplay(selectedClass)}</strong>
+            </p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteConfirmModal(false)} disabled={isDeleting}>
+            {t('cancel')}
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete} disabled={isDeleting}>
+            {isDeleting ? t('deleting') : t('delete')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Delete Confirmation Modal (class with kids) */}
+      <Modal show={showDeleteWithKidsConfirmModal} onHide={() => setShowDeleteWithKidsConfirmModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="text-danger">{t('confirmDelete')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="alert alert-danger">
+            <strong>{t('warning')}!</strong> {t('confirmDeleteClassWithKidsMessage')}
+          </div>
+          {selectedClass && (
+            <>
+              <p className="mb-2">
+                <strong>{formatClassDisplay(selectedClass)}</strong>
+              </p>
+              <p className="mb-0 text-danger">
+                <strong>{t('kidsInClass', { count: selectedClass.kid_ids?.length || 0 })}</strong>
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteWithKidsConfirmModal(false)} disabled={isDeleting}>
+            {t('cancel')}
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDeleteWithKids} disabled={isDeleting}>
+            {isDeleting ? t('deleting') : t('deleteClassAndKids')}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

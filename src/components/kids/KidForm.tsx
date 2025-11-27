@@ -51,7 +51,10 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       special_education: false,
       guardians: [],
       notes: '',
-      private_notes: ''
+      private_notes: '',
+      address: {
+        country: 'Ελλάδα'
+      }
     }
   });
 

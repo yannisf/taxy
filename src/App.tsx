@@ -34,7 +34,7 @@ const App: React.FC = () => {
           <div className="App d-flex flex-column min-vh-100">
             <TopBar />
             <Container fluid className="flex-grow-1 content-container">
-              <Row className="h-100">
+              <Row className="h-100 gx-2">
                 <Col xs={3} className="left-panel-col">
                   <LeftPanel />
                 </Col>
