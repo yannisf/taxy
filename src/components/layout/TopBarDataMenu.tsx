@@ -8,6 +8,7 @@ import { useClassKids } from '../../hooks/useClassKids';
 import { useKids } from '../../contexts/KidsContext';
 import { exportClassData } from '../../utils/exportUtils';
 import { validateImportFile, performImport, type ImportValidationResult } from '../../utils/importUtils';
+import ExportModal, { type ExportOptions } from '../classes/ExportModal';
 
 interface TopBarDataMenuProps {
   theme: 'light' | 'dark';
@@ -22,23 +23,62 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [importValidationResult, setImportValidationResult] = useState<ImportValidationResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleExport = async () => {
+  const handleExport = () => {
     if (!selectedClass) {
       toast.error(t('selectClassToExport'));
       return;
     }
+    setShowExportModal(true);
+    setImportExportDropdownOpen(false);
+  };
+
+  const handleConfirmExport = async (options: ExportOptions) => {
+    console.log('handleConfirmExport called with options:', { encrypt: options.encrypt, hasPassword: !!options.password });
+    if (!selectedClass) return;
 
     setIsExporting(true);
     try {
-      await exportClassData(selectedClass.class_id);
-      toast.success(t('classDataExported'));
+      console.log('Starting export with classId:', selectedClass.class_id);
+      await exportClassData(selectedClass.class_id, options);
+      console.log('Export completed successfully');
+
+      // Clear password from options object immediately after use
+      if (options.password) {
+        options.password = '';
+      }
+
+      toast.success(
+        options.encrypt
+          ? t('encryptedClassDataExported')
+          : t('classDataExported')
+      );
+      setShowExportModal(false);
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error(t('failedToExportClassData'));
+
+      // Clear password even on error
+      if (options.password) {
+        options.password = '';
+      }
+
+      // Specific error messages based on error type
+      if (error instanceof Error) {
+        if (error.name === 'CryptoError' || error.name === 'CompressionError') {
+          toast.error(t('encryptionFailed'));
+        } else if (error.name === 'InvalidPasswordError') {
+          toast.error(t('invalidPassword'));
+        } else {
+          toast.error(t('failedToExportClassData'));
+        }
+      } else {
+        toast.error(t('failedToExportClassData'));
+      }
     } finally {
+      console.log('Setting isExporting to false');
       setIsExporting(false);
     }
   };
@@ -131,7 +171,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
           <Dropdown.Item onClick={() => { handleImportClick(); setImportExportDropdownOpen(false); }} disabled={!selectedClass || isImporting}>
             <span className="d-flex align-items-center gap-2"><Upload /> {t('importClass')}</span>
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => { handleExport(); setImportExportDropdownOpen(false); }} disabled={!selectedClass || isExporting || classKids.length === 0}>
+          <Dropdown.Item onClick={handleExport} disabled={!selectedClass || isExporting || classKids.length === 0}>
             <span className="d-flex align-items-center gap-2"><Download /> {t('exportClass')}</span>
           </Dropdown.Item>
         </Dropdown.Menu>
@@ -185,6 +225,16 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Export Modal */}
+      <ExportModal
+        show={showExportModal}
+        onHide={() => setShowExportModal(false)}
+        onConfirmExport={handleConfirmExport}
+        loading={isExporting}
+        className={selectedClass?.class_name}
+        schoolName={selectedClass?.school_name}
+      />
     </>
   );
 };

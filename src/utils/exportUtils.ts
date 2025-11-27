@@ -1,10 +1,17 @@
 import { db } from '../services/database';
 import type { Kid } from '../types/models';
+import {
+  encryptAndCompressJSON,
+  validateBrowserSupport,
+} from './cryptoUtils';
 
-export const exportClassData = async (classId?: string) => {
+export const exportClassData = async (
+  classId?: string,
+  options?: { encrypt: boolean; password?: string }
+) => {
   try {
     let classData;
-    
+
     if (classId) {
       // Export specific class data
       classData = await db.exportClassData(classId);
@@ -12,36 +19,63 @@ export const exportClassData = async (classId?: string) => {
       // Fall back to legacy export method
       classData = await db.exportData();
     }
-    
-    // Create a JSON string from the complete class record
-    const jsonString = JSON.stringify(classData, null, 2);
-    
-    // Create a blob with the JSON data
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    
+
+    let blob: Blob;
+    let fileExtension: string;
+
+    if (options?.encrypt && options?.password) {
+      // Encryption path
+      try {
+        // Validate browser support first
+        const browserSupport = validateBrowserSupport();
+        if (!browserSupport.supported) {
+          throw new Error(
+            `Browser does not support required features: ${browserSupport.missing.join(', ')}`
+          );
+        }
+
+        // Encrypt and compress
+        const encryptedData = await encryptAndCompressJSON(
+          classData,
+          options.password
+        );
+
+        blob = new Blob([encryptedData], { type: 'text/plain' });
+        fileExtension = 'json.enc';
+      } catch (error) {
+        console.error('Encryption failed:', error);
+        throw error; // Re-throw to be caught by handler
+      }
+    } else {
+      // Standard unencrypted export
+      const jsonString = JSON.stringify(classData, null, 2);
+      blob = new Blob([jsonString], { type: 'application/json' });
+      fileExtension = 'json';
+    }
+
     // Create a download URL
     const url = URL.createObjectURL(blob);
-    
+
     // Create a temporary download link
     const link = document.createElement('a');
     link.href = url;
-    
+
     // Generate filename with current date and class info
     const now = new Date();
     const timestamp = now.toISOString().split('T')[0]; // YYYY-MM-DD format
-    const classIdentifier = classId && classData.class_name 
+    const classIdentifier = classId && classData.class_name
       ? `${classData.school_name.replace(/\s+/g, '-')}-${classData.class_name.replace(/\s+/g, '-')}`
       : 'class';
-    link.download = `${classIdentifier}-export-${timestamp}.json`;
-    
+    link.download = `${classIdentifier}-export-${timestamp}.${fileExtension}`;
+
     // Trigger download
     document.body.appendChild(link);
     link.click();
-    
+
     // Clean up
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    
+
     return true;
   } catch (error) {
     console.error('Error exporting class data:', error);

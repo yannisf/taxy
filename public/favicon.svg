@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Pastel Green Background -->
+  <rect width="64" height="64" fill="#A5D6A7" rx="8"/>
+
+  <!-- Head -->
+  <circle cx="32" cy="28" r="16" fill="#FFD4A3"/>
+
+  <!-- Hair -->
+  <path d="M 20 20 Q 16 16, 18 12 Q 20 8, 24 10 Q 28 6, 32 8 Q 36 6, 40 10 Q 44 8, 46 12 Q 48 16, 44 20 Z" fill="#8B4513"/>
+
+  <!-- Eyes -->
+  <circle cx="26" cy="26" r="2.5" fill="#333"/>
+  <circle cx="38" cy="26" r="2.5" fill="#333"/>
+
+  <!-- Smile -->
+  <path d="M 24 32 Q 32 36, 40 32" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Body (simple shirt) -->
+  <path d="M 20 44 L 16 54 L 20 60 L 32 60 L 44 60 L 48 54 L 44 44 Z" fill="#FF9800"/>
+
+  <!-- Arms -->
+  <circle cx="14" cy="50" r="4" fill="#FFD4A3"/>
+  <circle cx="50" cy="50" r="4" fill="#FFD4A3"/>
+</svg>

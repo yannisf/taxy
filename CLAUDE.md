@@ -290,6 +290,47 @@ Provides autocomplete for all address fields (street name, neighborhood, postal 
 
 **Tests:** `src/test/nameUtils.test.ts` (22 tests covering all extraction and filtering functions)
 
+## Data Security & Encryption
+
+The application includes cryptographic utilities for secure data handling when exporting sensitive information.
+
+### Encryption Utilities (`src/utils/cryptoUtils.ts`)
+
+**Features:**
+- AES-GCM-256 encryption with PBKDF2 key derivation (100,000 iterations)
+- Gzip compression using native browser Compression Streams API
+- Zero external dependencies (uses Web Crypto API)
+- Supports large JSON files (up to 5MB)
+- Comprehensive error handling with custom error types
+
+**Main Functions:**
+- `encryptAndCompressJSON(data, password)`: Encrypts and compresses JSON data, returns Base64 string
+- `decryptAndDecompressJSON(encryptedData, password)`: Decrypts and decompresses encrypted data
+- `validateBrowserSupport()`: Checks if browser supports required crypto APIs
+- `clearSensitiveData(data)`: Best-effort memory clearing for sensitive data
+
+**Custom Error Types:**
+- `CryptoError`: General encryption/decryption errors
+- `CompressionError`: Compression/decompression failures
+- `InvalidPasswordError`: Wrong password or authentication failure
+- `CorruptedDataError`: Invalid or corrupted encrypted data
+
+**Process Flow:**
+1. JSON → String → UTF-8 bytes
+2. Gzip compression
+3. Generate random salt (16 bytes) and IV (12 bytes)
+4. Derive AES-256 key using PBKDF2
+5. Encrypt with AES-GCM
+6. Combine: salt + IV + encrypted data
+7. Encode to Base64
+
+**Browser Requirements:**
+- Web Crypto API (crypto.subtle)
+- Compression Streams API (CompressionStream/DecompressionStream)
+- TextEncoder/TextDecoder
+
+**Tests:** `src/test/cryptoUtils.test.ts`
+
 ## Testing
 
 Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment uses:
@@ -318,3 +359,4 @@ Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment
 - Reports menu: `src/components/layout/TopBarReportsMenu.tsx`
 - Name utilities: `src/utils/nameUtils.ts`
 - Autocomplete input: `src/components/common/AutocompleteInput.tsx`
+- Crypto utilities: `src/utils/cryptoUtils.ts`
