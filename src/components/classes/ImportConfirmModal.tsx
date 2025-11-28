@@ -9,7 +9,7 @@ interface ImportConfirmModalProps {
   onConfirm: () => void;
   loading: boolean;
   validationResult: ImportValidationResult | null;
-  className?: string;
+  className?: string; // Current class name (if importing to existing class)
 }
 
 const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
@@ -22,6 +22,11 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Use class name from context if available, otherwise use class data from import file
+  const displayClassName = className || validationResult?.classData?.class_name;
+  const displaySchoolName = validationResult?.classData?.school_name;
+  const displaySchoolYear = validationResult?.classData?.school_year;
+
   return (
     <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton>
@@ -30,8 +35,14 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
       <Modal.Body>
         <Alert variant="info">
           <p className="mb-0">
-            {validationResult?.validatedKids?.length} {validationResult?.validatedKids?.length === 1 ? 'kid' : 'kids'} will be imported to {className}.
+            {validationResult?.validatedKids?.length} {validationResult?.validatedKids?.length === 1 ? 'kid' : 'kids'} will be imported to <strong>{displayClassName}</strong>.
           </p>
+          {displaySchoolName && (
+            <p className="mb-0 small text-muted mt-2">
+              School: <strong>{displaySchoolName}</strong>
+              {displaySchoolYear && ` (${displaySchoolYear})`}
+            </p>
+          )}
         </Alert>
         <p className="text-muted">
           Any existing kids with the same ID will be overwritten with the imported data.
