@@ -22,10 +22,15 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // Use class name from context if available, otherwise use class data from import file
-  const displayClassName = className || validationResult?.classData?.class_name;
+  // Determine if this class already exists (class is in context)
+  const classExists = !!className;
   const displaySchoolName = validationResult?.classData?.school_name;
-  const displaySchoolYear = validationResult?.classData?.school_year;
+  const displayClassName = validationResult?.classData?.class_name;
+
+  // Format: "School Name - Class Name"
+  const classDisplay = displaySchoolName && displayClassName
+    ? `${displaySchoolName} - ${displayClassName}`
+    : className || displayClassName;
 
   return (
     <Modal show={show} onHide={onHide} size="lg">
@@ -35,18 +40,17 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
       <Modal.Body>
         <Alert variant="info">
           <p className="mb-0">
-            {validationResult?.validatedKids?.length} {validationResult?.validatedKids?.length === 1 ? 'kid' : 'kids'} will be imported to <strong>{displayClassName}</strong>.
+            {validationResult?.validatedKids?.length} {validationResult?.validatedKids?.length === 1 ? 'kid' : 'kids'} will be imported.
           </p>
-          {displaySchoolName && (
-            <p className="mb-0 small text-muted mt-2">
-              School: <strong>{displaySchoolName}</strong>
-              {displaySchoolYear && ` (${displaySchoolYear})`}
-            </p>
-          )}
+          <p className="mb-0 mt-2">
+            <strong>{classDisplay}</strong>
+          </p>
         </Alert>
-        <p className="text-muted">
-          Any existing kids with the same ID will be overwritten with the imported data.
-        </p>
+        {classExists && (
+          <p className="text-warning">
+            <strong>Warning:</strong> All existing kids in this class will be replaced with the imported data.
+          </p>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide} disabled={loading}>
