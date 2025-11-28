@@ -161,8 +161,9 @@ describe('exportUtils', () => {
 
     // Mock Blob constructor to capture the JSON content
     const mockBlob = { type: 'application/json' };
-    const BlobConstructor = vi.fn().mockReturnValue(mockBlob);
-    global.Blob = BlobConstructor;
+    // Use function instead of arrow function for constructor compatibility with vitest v4
+    const BlobConstructor = vi.fn(function() { return mockBlob; });
+    global.Blob = BlobConstructor as any;
 
     await exportClassData();
 
