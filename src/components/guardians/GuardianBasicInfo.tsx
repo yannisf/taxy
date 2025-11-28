@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
-import { Controller, Control, FieldErrors } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
+import type { Control, FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../types/models';
 

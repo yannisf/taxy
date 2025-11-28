@@ -59,6 +59,7 @@ describe('exportUtils', () => {
     const mockKids: Kid[] = [
       {
         kid_id: '123e4567-e89b-12d3-a456-426614174000',
+        class_id: 'test-class-id',
         first_name: 'John',
         last_name: 'Doe',
         gender: 'male',
@@ -71,6 +72,7 @@ describe('exportUtils', () => {
       },
       {
         kid_id: '123e4567-e89b-12d3-a456-426614174001',
+        class_id: 'test-class-id',
         first_name: 'Jane',
         last_name: 'Smith',
         gender: 'female',
@@ -135,6 +137,7 @@ describe('exportUtils', () => {
     const mockKids: Kid[] = [
       {
         kid_id: '123e4567-e89b-12d3-a456-426614174000',
+        class_id: 'test-class-id',
         first_name: 'John',
         last_name: 'Doe',
         gender: 'male',

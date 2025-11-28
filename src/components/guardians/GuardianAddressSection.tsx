@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Accordion } from 'react-bootstrap';
-import { Controller, Control, FieldErrors, UseFormWatch } from 'react-hook-form';
+import type { Control, FieldErrors, UseFormWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../types/models';
 import { formatAddressString } from '../../utils/addressUtils';

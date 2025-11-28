@@ -1,5 +1,5 @@
 import { db } from '../services/database';
-import type { Kid } from '../types/models';
+import type { Kid, ClassRecord, ClassExport } from '../types/models';
 import {
   encryptAndCompressJSON,
   validateBrowserSupport,
@@ -11,7 +11,7 @@ export const exportClassData = async (
   options?: { encrypt: boolean; password?: string }
 ) => {
   try {
-    let classData;
+    let classData: ClassRecord | ClassExport;
 
     if (classId) {
       // Export specific class data
@@ -57,8 +57,22 @@ export const exportClassData = async (
     // Generate filename with current date and class info
     const now = new Date();
     const timestamp = now.toISOString().split('T')[0];
-    const classIdentifier = classId && classData.class_name
-      ? `${classData.school_name.replace(/\s+/g, '-')}-${classData.class_name.replace(/\s+/g, '-')}`
+
+    // Handle both ClassRecord and ClassExport formats
+    let schoolName: string;
+    let className: string;
+    if ('class' in classData) {
+      // ClassExport format
+      schoolName = classData.class.school_name;
+      className = classData.class.class_name;
+    } else {
+      // ClassRecord format
+      schoolName = classData.school_name;
+      className = classData.class_name;
+    }
+
+    const classIdentifier = classId
+      ? `${schoolName.replace(/\s+/g, '-')}-${className.replace(/\s+/g, '-')}`
       : 'class';
     const filename = `${classIdentifier}-export-${timestamp}.${fileExtension}`;
 

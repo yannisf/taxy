@@ -39,6 +39,7 @@ describe('nameUtils', () => {
       const kids: Kid[] = [
         {
           kid_id: '1',
+          class_id: 'test-class',
           first_name: 'John',
           last_name: 'Doe',
           gender: 'male',
@@ -51,6 +52,7 @@ describe('nameUtils', () => {
         },
         {
           kid_id: '2',
+          class_id: 'test-class',
           first_name: 'Jane',
           last_name: 'Smith',
           gender: 'female',
@@ -71,6 +73,7 @@ describe('nameUtils', () => {
       const kids: Kid[] = [
         {
           kid_id: '1',
+          class_id: 'test-class',
           first_name: 'Jonathan',
           last_name: 'Doe',
           preferred_name: 'Johnny',
@@ -93,6 +96,7 @@ describe('nameUtils', () => {
       const kids: Kid[] = [
         {
           kid_id: '1',
+          class_id: 'test-class',
           first_name: 'John',
           last_name: 'Doe',
           gender: 'male',
@@ -105,6 +109,7 @@ describe('nameUtils', () => {
         },
         {
           kid_id: '2',
+          class_id: 'test-class',
           first_name: 'John',
           last_name: 'Smith',
           gender: 'male',
@@ -125,6 +130,7 @@ describe('nameUtils', () => {
       const kids: Kid[] = [
         {
           kid_id: '1',
+          class_id: 'test-class',
           first_name: '',
           last_name: 'Doe',
           gender: 'male',
@@ -145,6 +151,7 @@ describe('nameUtils', () => {
       const kids: Kid[] = [
         {
           kid_id: '1',
+          class_id: 'test-class',
           first_name: 'Zoe',
           last_name: 'Doe',
           gender: 'female',
@@ -157,6 +164,7 @@ describe('nameUtils', () => {
         },
         {
           kid_id: '2',
+          class_id: 'test-class',
           first_name: 'anna',
           last_name: 'Smith',
           gender: 'female',
@@ -214,6 +222,7 @@ describe('nameUtils', () => {
     const kids: Kid[] = [
       {
         kid_id: '1',
+        class_id: 'test-class',
         first_name: 'John',
         last_name: 'Doe',
         gender: 'male',
@@ -246,6 +255,7 @@ describe('nameUtils', () => {
       },
       {
         kid_id: '2',
+        class_id: 'test-class',
         first_name: 'Mary',
         last_name: 'Smith',
         gender: 'female',

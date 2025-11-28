@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../services/database';
 import { validationService } from '../services/validation';
-import type { Kid, ClassExport } from '../types/models';
+import type { Kid } from '../types/models';
 
 export interface ImportStatistics {
   totalImported: number;

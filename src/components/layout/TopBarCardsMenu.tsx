@@ -27,8 +27,7 @@ const TopBarCardsMenu: React.FC<TopBarCardsMenuProps> = ({ theme }) => {
 
     setIsGeneratingGrid(true);
     try {
-      const classRecord = { ...selectedClass, kids: classKids };
-      await generateStudentGridPDF(classRecord, classKids, t);
+      await generateStudentGridPDF(selectedClass, classKids, t);
       toast.success(t('studentGridGenerated'));
     } catch (error) {
       console.error('Student grid generation failed:', error);
@@ -46,8 +45,7 @@ const TopBarCardsMenu: React.FC<TopBarCardsMenuProps> = ({ theme }) => {
 
     setIsGeneratingList(true);
     try {
-      const classRecord = { ...selectedClass, kids: classKids };
-      await generateStudentListPDF(classRecord, classKids, t);
+      await generateStudentListPDF(selectedClass, classKids, t);
       toast.success(t('studentListGenerated'));
     } catch (error) {
       console.error('Student list generation failed:', error);

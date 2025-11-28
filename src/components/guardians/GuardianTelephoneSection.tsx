@@ -1,5 +1,5 @@
 import React from 'react';
-import { Controller, Control, FieldErrors, UseFieldArrayReturn } from 'react-hook-form';
+import type { Control, FieldErrors, FieldArrayWithId } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../types/models';
 import TelephoneForm from '../common/TelephoneForm';
@@ -8,7 +8,7 @@ import TelephonesSectionHeader from './TelephonesSectionHeader';
 interface GuardianTelephoneSectionProps {
   control: Control<Guardian>;
   errors: FieldErrors<Guardian>;
-  telephoneFields: ReturnType<UseFieldArrayReturn['fields']>;
+  telephoneFields: FieldArrayWithId<Guardian, 'telephones', 'id'>[];
   onAddTelephone: () => void;
   onRemoveTelephone: (index: number) => void;
 }
@@ -34,7 +34,7 @@ const GuardianTelephoneSection: React.FC<GuardianTelephoneSectionProps> = ({
         </div>
       ) : (
         <>
-          {telephoneFields.map((field, index) => (
+          {telephoneFields.map((field: FieldArrayWithId<Guardian, 'telephones', 'id'>, index: number) => (
             <TelephoneForm
               key={field.id}
               control={control as any}

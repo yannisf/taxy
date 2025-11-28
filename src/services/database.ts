@@ -291,12 +291,8 @@ export class ClassManagementDatabase extends Dexie {
       const unchangedKids = existingKids.filter(kid => !importIds.has(kid.kid_id)).length;
       
       return {
-        newKids,
-        updatedKids,
-        unchangedKids,
-        conflictingKids: 0, // Legacy method doesn't handle conflicts
-        totalInFile: kidsToMerge.length,
-        totalInDatabase: existingKids.length
+        totalImported: newKids + updatedKids,
+        totalInClass: newKids + updatedKids + unchangedKids
       };
     });
   }

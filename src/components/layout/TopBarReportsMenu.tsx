@@ -28,8 +28,7 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
 
     setIsGeneratingCatalog(true);
     try {
-      const classRecord = { ...selectedClass, kids: classKids };
-      await generateClassCatalogPDF(classRecord, classKids, t);
+      await generateClassCatalogPDF(selectedClass, classKids, t);
       toast.success(t('catalogGenerated'));
     } catch (error) {
       console.error('Catalog generation failed:', error);
