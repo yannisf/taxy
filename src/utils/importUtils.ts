@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../services/database';
 import { validationService } from '../services/validation';
-import type { Kid } from '../types/models';
+import type { Kid, Class } from '../types/models';
 
 export interface ImportStatistics {
   totalImported: number;
@@ -12,6 +12,7 @@ export interface ImportValidationResult {
   valid: boolean;
   errors: string[];
   validatedKids?: Kid[];
+  classData?: Omit<Class, 'class_id' | 'created_at' | 'updated_at'> & { class_id: string };
 }
 
 export interface ImportResult {
@@ -101,7 +102,13 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
     return {
       valid: true,
       errors: [],
-      validatedKids
+      validatedKids,
+      classData: {
+        class_id: exportData.class.class_id,
+        school_name: exportData.class.school_name,
+        class_name: exportData.class.class_name,
+        school_year: exportData.class.school_year
+      }
     };
 
   } catch (error) {
@@ -115,9 +122,32 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
 /**
  * Performs the actual import operation
  * Imports all kids to the specified class, overriding any existing kids with the same kid_id
+ * Creates the class if it doesn't exist
  */
-export const performImport = async (validatedKids: Kid[], classId: string): Promise<ImportResult> => {
+export const performImport = async (
+  validatedKids: Kid[],
+  classId: string,
+  classData?: Omit<Class, 'class_id' | 'created_at' | 'updated_at'> & { class_id: string }
+): Promise<ImportResult> => {
   try {
+    // Check if class exists, create if not
+    if (classData) {
+      const existingClass = await db.getClassById(classId);
+      if (!existingClass) {
+        // Create the class with the provided metadata
+        const now = new Date().toISOString();
+        const newClass: Class = {
+          class_id: classData.class_id,
+          school_name: classData.school_name,
+          class_name: classData.class_name,
+          school_year: classData.school_year,
+          created_at: now,
+          updated_at: now
+        };
+        await db.addClass(newClass);
+      }
+    }
+
     const statistics = await db.mergeKidsToClass(classId, validatedKids);
 
     return {

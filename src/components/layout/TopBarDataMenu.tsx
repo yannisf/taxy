@@ -123,7 +123,11 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
 
     importModal.setLoading(true);
     try {
-      const result = await performImport(importValidationResult.validatedKids, classIdFromImport);
+      const result = await performImport(
+        importValidationResult.validatedKids,
+        classIdFromImport,
+        importValidationResult.classData
+      );
       if (result.success) {
         toast.success(t('importSuccessful', { count: result.statistics?.totalImported || 0 }));
 
