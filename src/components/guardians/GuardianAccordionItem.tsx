@@ -1,14 +1,15 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Accordion, Button, Modal, Form, Row, Col } from 'react-bootstrap';
+import { Accordion, Button } from 'react-bootstrap';
 import { X } from 'react-bootstrap-icons';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../types/models';
 import { validationService } from '../../services/validation';
-import AddressForm from '../common/AddressForm';
-import TelephoneForm from '../common/TelephoneForm';
-import TelephonesSectionHeader from './TelephonesSectionHeader';
-import { formatAddressString } from '../../utils/addressUtils';
+import GuardianBasicInfo from './GuardianBasicInfo';
+import GuardianContactInfo from './GuardianContactInfo';
+import GuardianAddressSection from './GuardianAddressSection';
+import GuardianTelephoneSection from './GuardianTelephoneSection';
+import GuardianDeleteModal from './GuardianDeleteModal';
 
 interface GuardianAccordionItemProps {
   guardian?: Guardian;
@@ -111,19 +112,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
       );
     }
     return t('guardian');
-  }, [isNew, guardian?.first_name, guardian?.last_name, guardian?.relation_with_kid, t]);
-
-  // Memoized address title for guardian
-  const guardianAddressTitle = useMemo(() => {
-    const addressString = formatAddressString(guardian?.address);
-    return addressString ? `${t('guardianAddress')}: ${addressString}` : t('guardianAddress');
-  }, [guardian?.address, t]);
-
-  // Address accordion expanded state for guardian
-  const guardianAddressExpanded = useMemo(() => {
-    const addressString = formatAddressString(guardian?.address);
-    return !addressString; // Expanded if no address, collapsed if address exists
-  }, [guardian?.address]);
+  }, [isNew, guardian, t]);
 
   return (
     <>
@@ -147,210 +136,26 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             {validationError && (
               <div className="alert alert-danger">{validationError}</div>
             )}
-            
-            <Row>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Form.Label>{t('firstName')}</Form.Label>
-                  <Controller
-                    name="first_name"
-                    control={control}
-                    rules={{ required: t('firstNameRequired') }}
-                    render={({ field }) => (
-                      <Form.Control
-                        {...field}
-                        value={field.value ?? ''}
-                        type="text"
-                        placeholder={t('enterGuardianFirstName')}
-                        isInvalid={!!errors.first_name}
-                      />
-                    )}
-                  />
-                  {errors.first_name && (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.first_name.message}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Form.Label>{t('lastName')}</Form.Label>
-                  <Controller
-                    name="last_name"
-                    control={control}
-                    rules={{ required: t('lastNameRequired') }}
-                    render={({ field }) => (
-                      <Form.Control
-                        {...field}
-                        value={field.value ?? ''}
-                        type="text"
-                        placeholder={t('enterGuardianLastName')}
-                        isInvalid={!!errors.last_name}
-                      />
-                    )}
-                  />
-                  {errors.last_name && (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.last_name.message}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-              </Col>
-            </Row>
 
-            <Row>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Form.Label>{t('relationWithKid')}</Form.Label>
-                  <Controller
-                    name="relation_with_kid"
-                    control={control}
-                    render={({ field }) => (
-                      <Form.Select {...field}>
-                        <option value="father">{t('relationFather')}</option>
-                        <option value="mother">{t('relationMother')}</option>
-                        <option value="sibling">{t('relationSibling')}</option>
-                        <option value="grandparent">{t('relationGrandparent')}</option>
-                        <option value="extended family">{t('relationExtendedFamily')}</option>
-                        <option value="friend">{t('relationFriend')}</option>
-                      </Form.Select>
-                    )}
-                  />
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Controller
-                    name="authorized_for_pickup"
-                    control={control}
-                    render={({ field }) => (
-                      <Form.Check
-                        type="checkbox"
-                        label={t('authorizedForPickup')}
-                        checked={field.value}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                  <Controller
-                    name="same_address_as_kid"
-                    control={control}
-                    render={({ field }) => (
-                      <Form.Check
-                        type="checkbox"
-                        label={t('sameAddressAsKid')}
-                        checked={field.value}
-                        onChange={field.onChange}
-                      />
-                    )}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Form.Label>{t('email')}</Form.Label>
-                  <Controller
-                    name="email"
-                    control={control}
-                    render={({ field }) => (
-                      <Form.Control
-                        {...field}
-                        value={field.value ?? ''}
-                        type="email"
-                        placeholder={t('enterEmail')}
-                        isInvalid={!!errors.email}
-                      />
-                    )}
-                  />
-                  {errors.email && (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.email.message}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-              </Col>
-              <Col>
-                <Form.Group className="mb-3">
-                  <Form.Label>{t('profession')}</Form.Label>
-                  <Controller
-                    name="profession"
-                    control={control}
-                    render={({ field }) => (
-                      <Form.Control
-                        {...field}
-                        value={field.value ?? ''}
-                        type="text"
-                        placeholder={t('enterProfession')}
-                        isInvalid={!!errors.profession}
-                      />
-                    )}
-                  />
-                  {errors.profession && (
-                    <Form.Control.Feedback type="invalid">
-                      {errors.profession.message}
-                    </Form.Control.Feedback>
-                  )}
-                </Form.Group>
-              </Col>
-            </Row>
-
-            {/* Address Section - Only show if NOT same address as kid */}
-            {!watch('same_address_as_kid') && (
-              <Accordion className="mb-3" defaultActiveKey={guardianAddressExpanded ? "0" : undefined}>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>{guardianAddressTitle}</Accordion.Header>
-                  <Accordion.Body>
-                    <AddressForm 
-                      control={control as any}
-                      errors={errors.address}
-                    />
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-            )}
-
-            {/* Show message when same address as kid is checked */}
-            {watch('same_address_as_kid') && (
-              <div className="mb-3 p-3 bg-body-secondary rounded">
-                <small className="text-muted">
-                  {t('sameAddressMessage')}
-                </small>
-              </div>
-            )}
-
-            {/* Telephone Section */}
-            <div className="mb-4">
-              <TelephonesSectionHeader
-                telephoneCount={telephoneFields.length}
-                onAddTelephone={() => appendTelephone({
-                  country_code: '+30',
-                  number: '',
-                  telephone_type: 'mobile' as const
-                })}
-              />
-              {telephoneFields.length === 0 ? (
-                <div className="mb-0 p-3 bg-body-tertiary rounded text-muted">
-                  {t('noTelephonesYet')}
-                </div>
-              ) : (
-                <>
-                  {telephoneFields.map((field, index) => (
-                    <TelephoneForm
-                      key={field.id}
-                      control={control as any}
-                      errors={errors.telephones?.[index]}
-                      fieldPrefix={`telephones.${index}`}
-                      onRemove={() => removeTelephone(index)}
-                      showRemoveButton={true}
-                    />
-                  ))}
-                </>
-              )}
-            </div>
+            <GuardianBasicInfo control={control} errors={errors} />
+            <GuardianContactInfo control={control} errors={errors} />
+            <GuardianAddressSection
+              control={control}
+              errors={errors}
+              watch={watch}
+              guardian={guardian}
+            />
+            <GuardianTelephoneSection
+              control={control}
+              errors={errors}
+              telephoneFields={telephoneFields}
+              onAddTelephone={() => appendTelephone({
+                country_code: '+30',
+                number: '',
+                telephone_type: 'mobile' as const
+              })}
+              onRemoveTelephone={removeTelephone}
+            />
 
             <div className="d-flex gap-2">
               {(isNew || isDirty) && (
@@ -368,23 +173,12 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
         </Accordion.Body>
       </Accordion.Item>
 
-      {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>{t('confirmDelete')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {t('confirmDeleteGuardian', { name: `${guardian?.first_name} ${guardian?.last_name}` })}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            {t('cancel')}
-          </Button>
-          <Button variant="danger" onClick={handleDelete}>
-            {t('delete')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <GuardianDeleteModal
+        show={showDeleteModal}
+        guardian={guardian}
+        onConfirm={handleDelete}
+        onCancel={() => setShowDeleteModal(false)}
+      />
     </>
   );
 };

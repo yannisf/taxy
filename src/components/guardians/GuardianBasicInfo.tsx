@@ -1,0 +1,121 @@
+import React from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
+import { Controller, Control, FieldErrors } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import type { Guardian } from '../../types/models';
+
+interface GuardianBasicInfoProps {
+  control: Control<Guardian>;
+  errors: FieldErrors<Guardian>;
+}
+
+const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }) => {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <Row>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>{t('firstName')}</Form.Label>
+            <Controller
+              name="first_name"
+              control={control}
+              rules={{ required: t('firstNameRequired') }}
+              render={({ field }) => (
+                <Form.Control
+                  {...field}
+                  value={field.value ?? ''}
+                  type="text"
+                  placeholder={t('enterGuardianFirstName')}
+                  isInvalid={!!errors.first_name}
+                />
+              )}
+            />
+            {errors.first_name && (
+              <Form.Control.Feedback type="invalid">
+                {errors.first_name.message}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>{t('lastName')}</Form.Label>
+            <Controller
+              name="last_name"
+              control={control}
+              rules={{ required: t('lastNameRequired') }}
+              render={({ field }) => (
+                <Form.Control
+                  {...field}
+                  value={field.value ?? ''}
+                  type="text"
+                  placeholder={t('enterGuardianLastName')}
+                  isInvalid={!!errors.last_name}
+                />
+              )}
+            />
+            {errors.last_name && (
+              <Form.Control.Feedback type="invalid">
+                {errors.last_name.message}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <Form.Group className="mb-3">
+            <Form.Label>{t('relationWithKid')}</Form.Label>
+            <Controller
+              name="relation_with_kid"
+              control={control}
+              render={({ field }) => (
+                <Form.Select {...field}>
+                  <option value="father">{t('relationFather')}</option>
+                  <option value="mother">{t('relationMother')}</option>
+                  <option value="sibling">{t('relationSibling')}</option>
+                  <option value="grandparent">{t('relationGrandparent')}</option>
+                  <option value="extended family">{t('relationExtendedFamily')}</option>
+                  <option value="friend">{t('relationFriend')}</option>
+                </Form.Select>
+              )}
+            />
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group className="mb-3">
+            <Controller
+              name="authorized_for_pickup"
+              control={control}
+              render={({ field }) => (
+                <Form.Check
+                  type="checkbox"
+                  label={t('authorizedForPickup')}
+                  checked={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+            <Controller
+              name="same_address_as_kid"
+              control={control}
+              render={({ field }) => (
+                <Form.Check
+                  type="checkbox"
+                  label={t('sameAddressAsKid')}
+                  checked={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+    </>
+  );
+};
+
+export default GuardianBasicInfo;
