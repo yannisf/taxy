@@ -18,7 +18,7 @@ interface TopBarDataMenuProps {
 
 const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
   const { t } = useTranslation();
-  const { selectedClass, clearSelectedClass } = useClass();
+  const { selectedClass, selectClass, refreshClasses } = useClass();
   const classKids = useClassKids();
   const { refreshKids } = useKids();
 
@@ -131,11 +131,13 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       if (result.success) {
         toast.success(t('importSuccessful', { count: result.statistics?.totalImported || 0 }));
 
-        // Deselect current class context after successful import
-        if (selectedClass) {
-          clearSelectedClass();
-        }
+        // Refresh classes to show the newly imported class
+        await refreshClasses();
 
+        // Auto-select the newly imported class in context
+        await selectClass(classIdFromImport);
+
+        // Refresh kids to show the imported students
         await refreshKids();
       } else {
         toast.error(t('importFailed'));
