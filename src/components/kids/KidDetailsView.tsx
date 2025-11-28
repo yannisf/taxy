@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useClassKids } from '../../hooks/useClassKids';
 import { useKids } from '../../contexts/KidsContext';
+import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import GuardianCard from '../guardians/GuardianCard';
 import AddressDisplay from '../common/AddressDisplay';
 import { formatDateDisplay } from '../../utils/dateUtils';
@@ -92,30 +93,11 @@ const KidDetailsView: React.FC = () => {
   };
 
   // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Only handle navigation if no input elements are focused
-      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
-        return;
-      }
-
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        handlePrevious();
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        handleNext();
-      } else if (event.key.toLowerCase() === 'e') {
-        event.preventDefault();
-        handleEditClick();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [handlePrevious, handleNext, handleEditClick]);
+  useKeyboardNavigation([
+    { key: 'ArrowLeft', handler: handlePrevious },
+    { key: 'ArrowRight', handler: handleNext },
+    { key: 'e', handler: handleEditClick },
+  ]);
 
   const getDisplayName = () => {
     if (!kid) return '';

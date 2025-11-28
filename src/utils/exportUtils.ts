@@ -4,6 +4,7 @@ import {
   encryptAndCompressJSON,
   validateBrowserSupport,
 } from './cryptoUtils';
+import { downloadFile } from './downloadUtils';
 
 export const exportClassData = async (
   classId?: string,
@@ -53,29 +54,15 @@ export const exportClassData = async (
       fileExtension = 'json';
     }
 
-    // Create a download URL
-    const url = URL.createObjectURL(blob);
-
-    // Create a temporary download link
-    const link = document.createElement('a');
-    link.href = url;
-
     // Generate filename with current date and class info
     const now = new Date();
-    const timestamp = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const timestamp = now.toISOString().split('T')[0];
     const classIdentifier = classId && classData.class_name
       ? `${classData.school_name.replace(/\s+/g, '-')}-${classData.class_name.replace(/\s+/g, '-')}`
       : 'class';
-    link.download = `${classIdentifier}-export-${timestamp}.${fileExtension}`;
+    const filename = `${classIdentifier}-export-${timestamp}.${fileExtension}`;
 
-    // Trigger download
-    document.body.appendChild(link);
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
+    downloadFile(blob, filename);
     return true;
   } catch (error) {
     console.error('Error exporting class data:', error);
@@ -118,31 +105,15 @@ export const exportGuardianEmails = async (classKids: Kid[], className: string, 
     });
 
     const csvContent = [csvHeaders, ...csvRows].join('\n');
-
-    // Create a blob with the CSV data
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-
-    // Create a download URL
-    const url = URL.createObjectURL(blob);
-
-    // Create a temporary download link
-    const link = document.createElement('a');
-    link.href = url;
 
     // Generate filename with current date and class info
     const now = new Date();
-    const timestamp = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const timestamp = now.toISOString().split('T')[0];
     const classIdentifier = `${schoolName.replace(/\s+/g, '-')}-${className.replace(/\s+/g, '-')}`;
-    link.download = `${classIdentifier}-guardian-emails-${timestamp}.csv`;
+    const filename = `${classIdentifier}-guardian-emails-${timestamp}.csv`;
 
-    // Trigger download
-    document.body.appendChild(link);
-    link.click();
-
-    // Clean up
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
+    downloadFile(blob, filename);
     return {
       success: true,
       count: uniqueGuardians.length

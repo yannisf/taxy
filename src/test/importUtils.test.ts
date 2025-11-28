@@ -2,14 +2,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { validateImportFile, performImport } from '../utils/importUtils';
 import { db } from '../services/database';
 import { validationService } from '../services/validation';
-import type { Kid } from '../types/models';
+import type { Kid, ClassExport } from '../types/models';
 
 // Mock the dependencies
 vi.mock('../services/database', () => ({
   db: {
-    getKids: vi.fn(),
-    getKidsByClassId: vi.fn(),
-    mergeKids: vi.fn(),
     mergeKidsToClass: vi.fn(),
   },
 }));
@@ -28,16 +25,12 @@ vi.mock('uuid', () => ({
 describe('importUtils', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     // Set up default successful validation
     (validationService.validateKid as ReturnType<typeof vi.fn>).mockReturnValue({
       valid: true,
       errors: null,
     });
-
-    // Set up default empty database
-    (db.getKids as ReturnType<typeof vi.fn>).mockResolvedValue([]);
-    (db.getKidsByClassId as ReturnType<typeof vi.fn>).mockResolvedValue([]);
   });
 
   afterEach(() => {
@@ -50,34 +43,46 @@ describe('importUtils', () => {
       return new File([blob], 'test.json', { type: 'application/json' });
     };
 
-    it('should successfully validate a valid JSON file with kids array', async () => {
+    it('should successfully validate a valid ClassExport JSON file', async () => {
       const validKids = [
         {
           first_name: 'John',
           last_name: 'Doe',
-          gender: 'male',
-          level: 'kindergartner',
+          gender: 'male' as const,
+          level: 'kindergartner' as const,
           special_education: false,
           guardians: [],
         },
       ];
 
-      const file = createMockFile(JSON.stringify(validKids));
-      
-      // Mock FileReader to return our test content
+      const classExport: ClassExport = {
+        class: {
+          class_id: 'test-class-id',
+          school_name: 'Test School',
+          class_name: 'Test Class',
+          school_year: '2024-2025',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+        },
+        kids: validKids as any,
+      };
+
+      const file = createMockFile(JSON.stringify(classExport));
+
       const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.FileReader = class MockFileReader {
         onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
-        
+
         readAsText(): void {
           setTimeout(() => {
-            const event = { target: { result: JSON.stringify(validKids) } } as ProgressEvent<FileReader>;
+            const event = { target: { result: JSON.stringify(classExport) } } as ProgressEvent<FileReader>;
             this.onload?.(event);
           }, 0);
         }
       } as any;
 
-      const result = await validateImportFile(file, 'test-class-id');
+      const result = await validateImportFile(file);
 
       expect(result.valid).toBe(true);
       expect(result.errors).toEqual([]);
@@ -87,6 +92,7 @@ describe('importUtils', () => {
         last_name: 'Doe',
         gender: 'male',
         level: 'kindergartner',
+        class_id: 'test-class-id', // Should have class_id set
         kid_id: 'mocked-uuid-1234', // UUID should be generated
       });
 
@@ -95,11 +101,12 @@ describe('importUtils', () => {
 
     it('should reject invalid JSON format', async () => {
       const file = createMockFile('invalid json {');
-      
+
       const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.FileReader = class MockFileReader {
         onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
-        
+
         readAsText(): void {
           setTimeout(() => {
             const event = { target: { result: 'invalid json {' } } as ProgressEvent<FileReader>;
@@ -108,7 +115,7 @@ describe('importUtils', () => {
         }
       } as any;
 
-      const result = await validateImportFile(file, 'test-class-id');
+      const result = await validateImportFile(file);
 
       expect(result.valid).toBe(false);
       expect(result.errors).toContain('Invalid JSON format. Please ensure the file contains valid JSON.');
@@ -116,25 +123,61 @@ describe('importUtils', () => {
       global.FileReader = originalFileReader;
     });
 
-    it('should reject non-array JSON', async () => {
-      const file = createMockFile('{"not": "an array"}');
-      
+    it('should reject non-ClassExport JSON', async () => {
+      const file = createMockFile('{"not": "a ClassExport"}');
+
       const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.FileReader = class MockFileReader {
         onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
-        
+
         readAsText(): void {
           setTimeout(() => {
-            const event = { target: { result: '{"not": "an array"}' } } as ProgressEvent<FileReader>;
+            const event = { target: { result: '{"not": "a ClassExport"}' } } as ProgressEvent<FileReader>;
             this.onload?.(event);
           }, 0);
         }
       } as any;
 
-      const result = await validateImportFile(file, 'test-class-id');
+      const result = await validateImportFile(file);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Import file must contain an array of kids.');
+      expect(result.errors[0]).toContain('class');
+
+      global.FileReader = originalFileReader;
+    });
+
+    it('should reject ClassExport without kids array', async () => {
+      const invalidExport = {
+        class: {
+          class_id: 'test-class-id',
+          school_name: 'Test School',
+          class_name: 'Test Class',
+          school_year: '2024-2025',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+        },
+      };
+
+      const file = createMockFile(JSON.stringify(invalidExport));
+
+      const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      global.FileReader = class MockFileReader {
+        onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
+
+        readAsText(): void {
+          setTimeout(() => {
+            const event = { target: { result: JSON.stringify(invalidExport) } } as ProgressEvent<FileReader>;
+            this.onload?.(event);
+          }, 0);
+        }
+      } as any;
+
+      const result = await validateImportFile(file);
+
+      expect(result.valid).toBe(false);
+      expect(result.errors).toContain('Import file must contain a "kids" array property.');
 
       global.FileReader = originalFileReader;
     });
@@ -150,8 +193,20 @@ describe('importUtils', () => {
         },
       ];
 
-      const file = createMockFile(JSON.stringify(invalidKids));
-      
+      const classExport: ClassExport = {
+        class: {
+          class_id: 'test-class-id',
+          school_name: 'Test School',
+          class_name: 'Test Class',
+          school_year: '2024-2025',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+        },
+        kids: invalidKids as any,
+      };
+
+      const file = createMockFile(JSON.stringify(classExport));
+
       // Mock validation to return error
       (validationService.validateKid as ReturnType<typeof vi.fn>).mockReturnValue({
         valid: false,
@@ -159,18 +214,19 @@ describe('importUtils', () => {
       });
 
       const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.FileReader = class MockFileReader {
         onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
-        
+
         readAsText(): void {
           setTimeout(() => {
-            const event = { target: { result: JSON.stringify(invalidKids) } } as ProgressEvent<FileReader>;
+            const event = { target: { result: JSON.stringify(classExport) } } as ProgressEvent<FileReader>;
             this.onload?.(event);
           }, 0);
         }
       } as any;
 
-      const result = await validateImportFile(file, 'test-class-id');
+      const result = await validateImportFile(file);
 
       expect(result.valid).toBe(false);
       expect(result.errors).toContain('Kid 1: First name is required');
@@ -183,28 +239,41 @@ describe('importUtils', () => {
         {
           first_name: 'John',
           last_name: 'Doe',
-          gender: 'male',
-          level: 'kindergartner',
+          gender: 'male' as const,
+          level: 'kindergartner' as const,
           special_education: false,
           guardians: [],
         },
       ];
 
-      const file = createMockFile(JSON.stringify(kidsWithoutIds));
-      
+      const classExport: ClassExport = {
+        class: {
+          class_id: 'test-class-id',
+          school_name: 'Test School',
+          class_name: 'Test Class',
+          school_year: '2024-2025',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+        },
+        kids: kidsWithoutIds as any,
+      };
+
+      const file = createMockFile(JSON.stringify(classExport));
+
       const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.FileReader = class MockFileReader {
         onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
-        
+
         readAsText(): void {
           setTimeout(() => {
-            const event = { target: { result: JSON.stringify(kidsWithoutIds) } } as ProgressEvent<FileReader>;
+            const event = { target: { result: JSON.stringify(classExport) } } as ProgressEvent<FileReader>;
             this.onload?.(event);
           }, 0);
         }
       } as any;
 
-      const result = await validateImportFile(file, 'test-class-id');
+      const result = await validateImportFile(file);
 
       expect(result.valid).toBe(true);
       expect(result.validatedKids?.[0].kid_id).toBe('mocked-uuid-1234');
@@ -218,29 +287,42 @@ describe('importUtils', () => {
           kid_id: 'existing-id-123',
           first_name: 'John',
           lastName: 'Doe',
-          gender: 'male',
-          level: 'kindergartner',
+          gender: 'male' as const,
+          level: 'kindergartner' as const,
           special_education: false,
           guardians: [],
           created_at: '2023-01-01T00:00:00.000Z',
         },
       ];
 
-      const file = createMockFile(JSON.stringify(kidsWithIds));
-      
+      const classExport: ClassExport = {
+        class: {
+          class_id: 'test-class-id',
+          school_name: 'Test School',
+          class_name: 'Test Class',
+          school_year: '2024-2025',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+        },
+        kids: kidsWithIds as any,
+      };
+
+      const file = createMockFile(JSON.stringify(classExport));
+
       const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.FileReader = class MockFileReader {
         onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
-        
+
         readAsText(): void {
           setTimeout(() => {
-            const event = { target: { result: JSON.stringify(kidsWithIds) } } as ProgressEvent<FileReader>;
+            const event = { target: { result: JSON.stringify(classExport) } } as ProgressEvent<FileReader>;
             this.onload?.(event);
           }, 0);
         }
       } as any;
 
-      const result = await validateImportFile(file, 'test-class-id');
+      const result = await validateImportFile(file);
 
       expect(result.valid).toBe(true);
       expect(result.validatedKids?.[0].kid_id).toBe('existing-id-123');
@@ -249,80 +331,76 @@ describe('importUtils', () => {
       global.FileReader = originalFileReader;
     });
 
-    it('should calculate correct statistics for import', async () => {
-      const existingKids: Kid[] = [
+    it('should validate multiple kids in ClassExport', async () => {
+      const multipleKids = [
         {
-          kid_id: 'existing-1',
-          first_name: 'Existing',
-          last_name: 'Kid',
-          gender: 'male',
-          level: 'kindergartner',
-          extended_day_care: false,
-          special_education: false,
-          guardians: [],
-          created_at: '2023-01-01T00:00:00.000Z',
-          updated_at: '2023-01-01T00:00:00.000Z',
-        },
-      ];
-
-      const importKids = [
-        {
-          kid_id: 'existing-1', // Will update existing
-          first_name: 'Updated',
-          last_name: 'Kid',
-          gender: 'male',
-          level: 'kindergartner',
+          first_name: 'John',
+          last_name: 'Doe',
+          gender: 'male' as const,
+          level: 'kindergartner' as const,
           special_education: false,
           guardians: [],
         },
         {
-          first_name: 'New', // Will create new (no ID)
-          last_name: 'Kid',
-          gender: 'female',
-          level: 'pre-kindergartner',
+          first_name: 'Jane',
+          last_name: 'Smith',
+          gender: 'female' as const,
+          level: 'pre-kindergartner' as const,
           special_education: false,
+          guardians: [],
+        },
+        {
+          first_name: 'Bob',
+          last_name: 'Johnson',
+          gender: 'male' as const,
+          level: 'kindergartner-repeating' as const,
+          special_education: true,
           guardians: [],
         },
       ];
 
-      (db.getKids as ReturnType<typeof vi.fn>).mockResolvedValue(existingKids);
-      (db.getKidsByClassId as ReturnType<typeof vi.fn>).mockResolvedValue(existingKids);
+      const classExport: ClassExport = {
+        class: {
+          class_id: 'test-class-id',
+          school_name: 'Test School',
+          class_name: 'Test Class',
+          school_year: '2024-2025',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+        },
+        kids: multipleKids as any,
+      };
 
-      const file = createMockFile(JSON.stringify(importKids));
-      
+      const file = createMockFile(JSON.stringify(classExport));
+
       const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.FileReader = class MockFileReader {
         onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
-        
+
         readAsText(): void {
           setTimeout(() => {
-            const event = { target: { result: JSON.stringify(importKids) } } as ProgressEvent<FileReader>;
+            const event = { target: { result: JSON.stringify(classExport) } } as ProgressEvent<FileReader>;
             this.onload?.(event);
           }, 0);
         }
       } as any;
 
-      const result = await validateImportFile(file, 'test-class-id');
+      const result = await validateImportFile(file);
 
       expect(result.valid).toBe(true);
-      expect(result.statistics).toEqual({
-        newKids: 1,        // New kid without ID
-        updatedKids: 1,    // Existing kid with same ID
-        unchangedKids: 0,  // No kids will remain unchanged (all existing kids are being updated)
-        conflictingKids: 0, // No conflicts in this test case
-        totalInFile: 2,
-        totalInDatabase: 1,
-      });
+      expect(result.validatedKids).toHaveLength(3);
 
       global.FileReader = originalFileReader;
     });
   });
 
   describe('performImport', () => {
-    it('should successfully import validated kids', async () => {
+    it('should successfully import validated kids to a class', async () => {
       const validatedKids: Kid[] = [
         {
           kid_id: 'test-id-1',
+          class_id: 'test-class-id',
           first_name: 'John',
           last_name: 'Doe',
           gender: 'male',
@@ -336,12 +414,8 @@ describe('importUtils', () => {
       ];
 
       const mockStatistics = {
-        newKids: 1,
-        updatedKids: 0,
-        unchangedKids: 0,
-        conflictingKids: 0,
-        totalInFile: 1,
-        totalInDatabase: 0,
+        totalImported: 1,
+        totalInClass: 1,
       };
 
       (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockResolvedValue(mockStatistics);
@@ -358,6 +432,7 @@ describe('importUtils', () => {
       const validatedKids: Kid[] = [
         {
           kid_id: 'test-id-1',
+          class_id: 'test-class-id',
           first_name: 'John',
           last_name: 'Doe',
           gender: 'male',
@@ -379,16 +454,39 @@ describe('importUtils', () => {
       expect(result.message).toBe('Import failed: Database transaction failed');
     });
 
-    it('should report correct import counts in success message', async () => {
-      const validatedKids: Kid[] = [];
+    it('should import multiple kids to a class', async () => {
+      const validatedKids: Kid[] = [
+        {
+          kid_id: 'test-id-1',
+          class_id: 'test-class-id',
+          first_name: 'John',
+          last_name: 'Doe',
+          gender: 'male',
+          level: 'kindergartner',
+          extended_day_care: false,
+          special_education: false,
+          guardians: [],
+          created_at: '2023-01-01T00:00:00.000Z',
+          updated_at: '2023-01-01T00:00:00.000Z',
+        },
+        {
+          kid_id: 'test-id-2',
+          class_id: 'test-class-id',
+          first_name: 'Jane',
+          last_name: 'Smith',
+          gender: 'female',
+          level: 'pre-kindergartner',
+          extended_day_care: false,
+          special_education: false,
+          guardians: [],
+          created_at: '2023-01-01T00:00:00.000Z',
+          updated_at: '2023-01-01T00:00:00.000Z',
+        },
+      ];
 
       const mockStatistics = {
-        newKids: 3,
-        updatedKids: 2,
-        unchangedKids: 1,
-        conflictingKids: 0,
-        totalInFile: 5,
-        totalInDatabase: 3,
+        totalImported: 2,
+        totalInClass: 2,
       };
 
       (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockResolvedValue(mockStatistics);
@@ -396,7 +494,38 @@ describe('importUtils', () => {
       const result = await performImport(validatedKids, 'test-class-id');
 
       expect(result.success).toBe(true);
-      expect(result.message).toBe('Successfully imported 5 kids'); // 3 new + 2 updated
+      expect(result.message).toBe('Successfully imported 2 kids');
+      expect(db.mergeKidsToClass).toHaveBeenCalledWith('test-class-id', validatedKids);
+    });
+
+    it('should override existing kids with same ID on import', async () => {
+      const validatedKids: Kid[] = [
+        {
+          kid_id: 'existing-id-1',
+          class_id: 'test-class-id',
+          first_name: 'Updated Name',
+          last_name: 'Updated Lastname',
+          gender: 'male',
+          level: 'kindergartner',
+          extended_day_care: false,
+          special_education: false,
+          guardians: [],
+          created_at: '2023-01-01T00:00:00.000Z',
+          updated_at: '2024-01-01T00:00:00.000Z',
+        },
+      ];
+
+      const mockStatistics = {
+        totalImported: 1,
+        totalInClass: 1,
+      };
+
+      (db.mergeKidsToClass as ReturnType<typeof vi.fn>).mockResolvedValue(mockStatistics);
+
+      const result = await performImport(validatedKids, 'test-class-id');
+
+      expect(result.success).toBe(true);
+      expect(db.mergeKidsToClass).toHaveBeenCalledWith('test-class-id', validatedKids);
     });
   });
 });

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
+import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import KidForm from './KidForm';
 import type { Kid } from '../../types/models';
 
@@ -52,19 +53,9 @@ const KidEditView: React.FC = () => {
   };
 
   // Keyboard navigation - Escape key to cancel/close edit mode
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        handleCancel();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [kidId]);
+  useKeyboardNavigation([
+    { key: 'Escape', handler: handleCancel, skipOnInputFocused: false },
+  ]);
 
   if (loading) {
     return (

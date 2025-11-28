@@ -15,6 +15,9 @@ import { db } from '../../services/database';
 import { useKids } from '../../contexts/KidsContext';
 import { useClass } from '../../contexts/ClassContext';
 
+// Utils
+import { withTimeout } from '../../utils/asyncUtils';
+
 // Section Components
 import BasicInfoSection from './sections/BasicInfoSection';
 import AdditionalInfoSection from './sections/AdditionalInfoSection';
@@ -106,12 +109,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       if (initialData) {
         // Update existing kid
         const updates = { ...data, guardians };
-        await Promise.race([
-          db.updateKid(initialData.kid_id, updates),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Update timed out')), 5000)
-          )
-        ]);
+        await withTimeout(db.updateKid(initialData.kid_id, updates), 5000, 'Update timed out');
       } else {
         // Create new kid
         if (!selectedClass) {
@@ -119,21 +117,18 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
           return;
         }
 
-        const kidToSave = createKid(data);
-        await Promise.race([
-          db.addKid(kidToSave),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Insertion timed out')), 5000)
-          )
-        ]);
+        // Validate class exists
+        const classExists = await db.getClassById(selectedClass.class_id);
+        if (!classExists) {
+          setServerError('Class not found. It may have been deleted.');
+          return;
+        }
 
-        // Add kid to the selected class
-        await Promise.race([
-          db.addKidToClass(selectedClass.class_id, kidToSave.kid_id),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Adding to class timed out')), 5000)
-          )
-        ]);
+        const kidToSave = createKid({
+          ...data,
+          class_id: selectedClass.class_id
+        });
+        await withTimeout(db.addKid(kidToSave), 5000, 'Insertion timed out');
       }
 
       // Reset form, refresh kids list, and notify parent

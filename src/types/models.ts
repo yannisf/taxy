@@ -29,6 +29,7 @@ export interface Guardian {
 
 export interface Kid {
   kid_id: string;
+  class_id: string;
   first_name: string;
   last_name: string;
   preferred_name?: string;
@@ -50,7 +51,6 @@ export interface Class {
   school_name: string;
   class_name: string;
   school_year: string;
-  kid_ids: string[];
   created_at: string;
   updated_at: string;
 }
@@ -66,7 +66,13 @@ export interface ClassRecord {
   updated_at: string;
 }
 
+export interface ClassExport {
+  class: Class;
+  kids: Kid[];
+}
+
 // Utility function to create a new kid with default UUID
+// Note: class_id is required and must be provided
 export function createKid(partialKid: Omit<Kid, 'kid_id' | 'created_at' | 'updated_at'>): Kid {
   const now = new Date().toISOString();
   return {
@@ -78,11 +84,10 @@ export function createKid(partialKid: Omit<Kid, 'kid_id' | 'created_at' | 'updat
 }
 
 // Utility function to create a new class with default UUID
-export function createClass(partialClass: Omit<Class, 'class_id' | 'created_at' | 'updated_at' | 'kid_ids'>): Class {
+export function createClass(partialClass: Omit<Class, 'class_id' | 'created_at' | 'updated_at'>): Class {
   const now = new Date().toISOString();
   return {
     class_id: uuidv4(),
-    kid_ids: [],
     created_at: now,
     updated_at: now,
     ...partialClass

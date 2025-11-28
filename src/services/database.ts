@@ -1,6 +1,5 @@
 import Dexie from 'dexie';
-import { v4 as uuidv4 } from 'uuid';
-import type { Kid, Class, ClassRecord } from '../types/models';
+import type { Kid, Class, ClassRecord, ClassExport } from '../types/models';
 import type { ImportStatistics } from '../utils/importUtils';
 
 export class ClassManagementDatabase extends Dexie {
@@ -37,12 +36,85 @@ export class ClassManagementDatabase extends Dexie {
       classes: 'class_id, school_name, class_name, school_year, created_at, updated_at'
     });
 
+    // Version 4: Add class_id index to kids, migrate from kid_ids array to class_id property
+    this.version(4).stores({
+      kids: 'kid_id, first_name, last_name, level, gender, created_at, updated_at, class_id',
+      classes: 'class_id, school_name, class_name, school_year, created_at, updated_at'
+    }).upgrade(async trans => {
+      // Build mapping of kid_id -> class_id from existing class.kid_ids arrays
+      const classesTable = trans.table('classes');
+      const kidsTable = trans.table('kids');
+
+      const allClasses = await classesTable.toArray();
+      const kidToClassMap = new Map<string, string>();
+      const kidsInMultipleClasses = new Set<string>();
+
+      // Build mapping: kid_id -> class_id
+      for (const classObj of allClasses) {
+        // Handle v3 schema that has kid_ids array
+        const kidIds = (classObj as any).kid_ids || [];
+        for (const kidId of kidIds) {
+          if (kidToClassMap.has(kidId)) {
+            kidsInMultipleClasses.add(kidId);
+            console.warn(`Migration v4: Kid ${kidId} found in multiple classes. Using first occurrence.`);
+          } else {
+            kidToClassMap.set(kidId, classObj.class_id);
+          }
+        }
+      }
+
+      // Update all kids with their class_id
+      const orphanedKids: string[] = [];
+      await kidsTable.toCollection().modify((kid: any, ref) => {
+        const classId = kidToClassMap.get(kid.kid_id);
+        if (classId) {
+          ref.value = {
+            ...kid,
+            class_id: classId,
+            updated_at: new Date().toISOString()
+          };
+        } else {
+          orphanedKids.push(`${kid.first_name} ${kid.last_name} (${kid.kid_id})`);
+        }
+      });
+
+      // Fail migration if there are orphaned kids
+      if (orphanedKids.length > 0) {
+        throw new Error(
+          `Migration v4 failed: Found ${orphanedKids.length} orphaned kid(s) with no class assignment:\n` +
+          orphanedKids.join('\n') +
+          '\n\nPlease assign these kids to a class before upgrading.'
+        );
+      }
+
+      // Remove kid_ids from all classes
+      await classesTable.toCollection().modify((classObj: any) => {
+        const { kid_ids, ...classWithoutKidIds } = classObj;
+        const updated = {
+          ...classWithoutKidIds,
+          updated_at: new Date().toISOString()
+        };
+        Object.assign(classObj, updated);
+      });
+    });
+
     this.kids = this.table('kids');
     this.classes = this.table('classes');
   }
 
   // Kid operations
   async addKid(kid: Kid) {
+    // Validate class_id is present
+    if (!kid.class_id) {
+      throw new Error('class_id is required when adding a kid');
+    }
+
+    // Validate the class exists
+    const classExists = await this.getClassById(kid.class_id);
+    if (!classExists) {
+      throw new Error(`Class with ID ${kid.class_id} not found`);
+    }
+
     // Ensure created_at is set if not already present (for new kids)
     if (!kid.created_at) {
       const now = new Date().toISOString();
@@ -70,22 +142,8 @@ export class ClassManagementDatabase extends Dexie {
   }
 
   async deleteKid(id: string) {
-    return this.transaction('rw', [this.kids, this.classes], async () => {
-      // Remove kid from all classes
-      const classes = await this.classes.toArray();
-      for (const classObj of classes) {
-        if (classObj.kid_ids.includes(id)) {
-          const updatedKidIds = classObj.kid_ids.filter(kidId => kidId !== id);
-          await this.classes.update(classObj.class_id, { 
-            kid_ids: updatedKidIds,
-            updated_at: new Date().toISOString()
-          });
-        }
-      }
-      
-      // Delete the kid
-      return this.kids.delete(id);
-    });
+    // Simply delete the kid - no need to update classes since kids now have class_id
+    return this.kids.delete(id);
   }
 
   // Class operations
@@ -115,56 +173,41 @@ export class ClassManagementDatabase extends Dexie {
   }
 
   async deleteClass(id: string) {
-    const classObj = await this.getClassById(id);
-    if (classObj && classObj.kid_ids.length > 0) {
+    const kidsCount = await this.getKidsCountByClassId(id);
+    if (kidsCount > 0) {
       throw new Error('Cannot delete class that contains kids. Remove all kids first.');
     }
     return this.classes.delete(id);
   }
 
-  async addKidToClass(classId: string, kidId: string) {
-    const classObj = await this.getClassById(classId);
+  async moveKidToClass(kidId: string, newClassId: string) {
     const kid = await this.getKidById(kidId);
-    
-    if (!classObj) throw new Error('Class not found');
+    const newClass = await this.getClassById(newClassId);
+
     if (!kid) throw new Error('Kid not found');
-    
-    if (!classObj.kid_ids.includes(kidId)) {
-      const updatedKidIds = [...classObj.kid_ids, kidId];
-      await this.updateClass(classId, { kid_ids: updatedKidIds });
+    if (!newClass) throw new Error('Class not found');
+
+    await this.updateKid(kidId, { class_id: newClassId });
+  }
+
+  async moveKidsToClass(kidIds: string[], newClassId: string) {
+    const newClass = await this.getClassById(newClassId);
+    if (!newClass) throw new Error('Class not found');
+
+    for (const kidId of kidIds) {
+      const kid = await this.getKidById(kidId);
+      if (kid) {
+        await this.updateKid(kidId, { class_id: newClassId });
+      }
     }
   }
 
-  async addKidsToClass(classId: string, kidIds: string[]) {
-    const classObj = await this.getClassById(classId);
-    if (!classObj) throw new Error('Class not found');
-    
-    // Get unique kid IDs that aren't already in the class
-    const newKidIds = kidIds.filter(kidId => !classObj.kid_ids.includes(kidId));
-    
-    if (newKidIds.length > 0) {
-      const updatedKidIds = [...classObj.kid_ids, ...newKidIds];
-      await this.updateClass(classId, { kid_ids: updatedKidIds });
-    }
+  async getKidsByClassId(classId: string): Promise<Kid[]> {
+    return this.kids.where('class_id').equals(classId).toArray();
   }
 
-  async removeKidFromClass(classId: string, kidId: string) {
-    const classObj = await this.getClassById(classId);
-    if (!classObj) throw new Error('Class not found');
-    
-    const updatedKidIds = classObj.kid_ids.filter(id => id !== kidId);
-    await this.updateClass(classId, { kid_ids: updatedKidIds });
-  }
-
-  async getKidsByClassId(classId: string) {
-    const classObj = await this.getClassById(classId);
-    if (!classObj) return [];
-    
-    const kids = await Promise.all(
-      classObj.kid_ids.map(kidId => this.getKidById(kidId))
-    );
-    
-    return kids.filter((kid): kid is Kid => kid !== undefined);
+  async getKidsCountByClassId(classId: string): Promise<number> {
+    return this.kids.where('class_id').equals(classId).count();
   }
 
   // Guardian operations
@@ -174,21 +217,15 @@ export class ClassManagementDatabase extends Dexie {
   }
 
   // Export/Import (class-scoped)
-  async exportClassData(classId: string): Promise<ClassRecord> {
+  async exportClassData(classId: string): Promise<ClassExport> {
     const classObj = await this.getClassById(classId);
     if (!classObj) throw new Error('Class not found');
-    
+
     const kids = await this.getKidsByClassId(classId);
-    
+
     return {
-      class_id: classObj.class_id,
-      school_name: classObj.school_name,
-      class_name: classObj.class_name,
-      school_year: classObj.school_year,
-      kid_ids: classObj.kid_ids,
-      kids,
-      created_at: classObj.created_at,
-      updated_at: classObj.updated_at
+      class: classObj,
+      kids
     };
   }
 
@@ -265,6 +302,7 @@ export class ClassManagementDatabase extends Dexie {
   }
 
   // Merge kids to a specific class with transaction support for import functionality
+  // Imports all kids from the file, overriding any existing kids with the same kid_id
   async mergeKidsToClass(classId: string, kidsToMerge: Kid[]): Promise<ImportStatistics> {
     return this.transaction('rw', [this.kids, this.classes], async () => {
       // Get the class to ensure it exists
@@ -273,73 +311,27 @@ export class ClassManagementDatabase extends Dexie {
         throw new Error('Class not found');
       }
 
-      // Get existing kids in this class for accurate statistics
+      // Get existing kids in this class
       const existingClassKids = await this.getKidsByClassId(classId);
-      const existingClassKidIds = new Set(existingClassKids.map(kid => kid.kid_id));
-      
-      // Get all existing kids in database to check for conflicts
-      const allExistingKids = await this.getKids();
-      const allExistingKidIds = new Set(allExistingKids.map(kid => kid.kid_id));
-      
-      let newKids = 0;
-      let updatedKids = 0;
-      let conflictingKids = 0;
-      const processedKidIds: string[] = [];
-      
-      // Process each kid in the import
+
+      // Process each kid in the import - set class_id and preserve timestamps
       for (const kid of kidsToMerge) {
-        if (existingClassKidIds.has(kid.kid_id)) {
-          // Kid exists in current class - update it
-          const existingKid = existingClassKids.find(k => k.kid_id === kid.kid_id);
-          const updatedKid = {
-            ...kid,
-            created_at: existingKid?.created_at || kid.created_at,
-            updated_at: new Date().toISOString()
-          };
-          await this.kids.put(updatedKid);
-          processedKidIds.push(kid.kid_id);
-          updatedKids++;
-        } else if (allExistingKidIds.has(kid.kid_id)) {
-          // Kid exists in database but not in current class - conflict, generate new UUID
-          const newKidWithNewId = {
-            ...kid,
-            kid_id: uuidv4(), // Generate new UUID
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          };
-          await this.addKid(newKidWithNewId);
-          processedKidIds.push(newKidWithNewId.kid_id);
-          conflictingKids++;
-        } else {
-          // Kid doesn't exist anywhere - add as new
-          await this.addKid(kid);
-          processedKidIds.push(kid.kid_id);
-          newKids++;
-        }
-      }
-      
-      // Add all processed kids to the class (only adds if not already in class)
-      const newKidIdsForClass = processedKidIds.filter(kidId => !classObj.kid_ids.includes(kidId));
-      
-      if (newKidIdsForClass.length > 0) {
-        const updatedKidIds = [...classObj.kid_ids, ...newKidIdsForClass];
-        await this.classes.update(classId, { 
-          kid_ids: updatedKidIds,
+        const existingKid = existingClassKids.find(k => k.kid_id === kid.kid_id);
+        const processedKid = {
+          ...kid,
+          class_id: classId, // Ensure class_id is set to target class
+          created_at: existingKid?.created_at || kid.created_at,
           updated_at: new Date().toISOString()
-        });
+        };
+        await this.kids.put(processedKid);
       }
-      
-      // Calculate unchanged kids (kids that were in the class but not in the import)
-      const importIds = new Set(kidsToMerge.map(kid => kid.kid_id));
-      const unchangedKids = existingClassKids.filter(kid => !importIds.has(kid.kid_id)).length;
-      
+
+      // Get final count of kids in the class
+      const finalKidsCount = await this.getKidsCountByClassId(classId);
+
       return {
-        newKids,
-        updatedKids,
-        unchangedKids,
-        conflictingKids,
-        totalInFile: kidsToMerge.length,
-        totalInDatabase: existingClassKids.length
+        totalImported: kidsToMerge.length,
+        totalInClass: finalKidsCount
       };
     });
   }

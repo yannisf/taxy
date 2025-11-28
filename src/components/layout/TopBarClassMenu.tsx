@@ -89,14 +89,17 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
     navigate('/kids');
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = async () => {
     if (!selectedClass) {
       toast.info(t('needSelectOrCreate'));
       return;
     }
 
-    // Check if class has kids
-    if (selectedClass.kid_ids && selectedClass.kid_ids.length > 0) {
+    // Check if class has kids by querying database
+    const { db } = await import('../../services/database');
+    const kidsCount = await db.getKidsCountByClassId(selectedClass.class_id);
+
+    if (kidsCount > 0) {
       setShowDeleteWithKidsConfirmModal(true);
     } else {
       setShowDeleteConfirmModal(true);
@@ -128,10 +131,12 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
       // Import db to delete kids first
       const { db } = await import('../../services/database');
 
+      // Get all kids in this class
+      const kids = await db.getKidsByClassId(selectedClass.class_id);
+
       // Delete all kids in this class
-      const kidIds = selectedClass.kid_ids || [];
-      for (const kidId of kidIds) {
-        await db.deleteKid(kidId);
+      for (const kid of kids) {
+        await db.deleteKid(kid.kid_id);
       }
 
       // Now delete the class

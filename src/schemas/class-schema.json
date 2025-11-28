@@ -25,21 +25,6 @@
       "description": "The school year (e.g., '2025–2026' or '2025-2026').",
       "pattern": "^[0-9]{4}[–-][0-9]{4}$"
     },
-    "kid_ids": {
-      "type": "array",
-      "minItems": 0,
-      "description": "The list of kid IDs enrolled in this class. May be empty.",
-      "items": {
-        "type": "string",
-        "format": "uuid"
-      }
-    },
-    "kids": {
-      "type": "array",
-      "minItems": 0,
-      "description": "The list of children enrolled in this class. May be empty.",
-      "items": { "$ref": "#/$defs/kid" }
-    },
     "created_at": {
       "type": "string",
       "format": "date-time",
@@ -53,7 +38,7 @@
       "readOnly": true
     }
   },
-  "required": ["class_id", "school_name", "class_name", "school_year", "kid_ids", "kids", "created_at", "updated_at"],
+  "required": ["class_id", "school_name", "class_name", "school_year", "created_at", "updated_at"],
   "$defs": {
     "address": {
       "title": "Address",
@@ -156,6 +141,11 @@
           "readOnly": true,
           "description": "System-generated unique identifier for the child."
         },
+        "class_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The ID of the class this child belongs to."
+        },
         "first_name": { "type": "string", "description": "Child's first name." },
         "last_name": { "type": "string", "description": "Child's last name." },
         "preferred_name": { "type": "string", "description": "Name the child prefers to be called." },
@@ -215,6 +205,7 @@
       },
       "required": [
         "kid_id",
+        "class_id",
         "first_name",
         "last_name",
         "gender",

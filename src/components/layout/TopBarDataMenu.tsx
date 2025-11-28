@@ -106,7 +106,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
 
     setIsImporting(true);
     try {
-      const validationResult = await validateImportFile(file, selectedClass.class_id);
+      const validationResult = await validateImportFile(file);
 
       if (!validationResult.valid) {
         toast.error('Invalid import file');
@@ -186,35 +186,14 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
           <Modal.Title>{t('confirmImportDialog')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {importValidationResult?.statistics && (
-            <>
-              <Alert variant="info">
-                <h6>{t('importSummaryDialog')}:</h6>
-                <ul className="mb-0">
-                  <li><strong>{importValidationResult.statistics.newKids}</strong> {t('newKidsWillBeAddedDialog')}</li>
-                  <li><strong>{importValidationResult.statistics.updatedKids}</strong> {t('existingKidsWillBeUpdated')}</li>
-                  <li><strong>{importValidationResult.statistics.unchangedKids}</strong> {t('kidsWillRemainUnchanged')}</li>
-                  {importValidationResult.statistics.conflictingKids > 0 && (
-                    <li><strong>{importValidationResult.statistics.conflictingKids}</strong> kids have IDs that exist in other classes (will be imported with new IDs)</li>
-                  )}
-                </ul>
-              </Alert>
-              {importValidationResult.statistics.conflictingKids > 0 && (
-                <Alert variant="warning">
-                  <strong>⚠️ ID Conflicts Detected</strong>
-                  <div className="mt-2">
-                    {importValidationResult.statistics.conflictingKids} kid(s) in the import file have IDs that already exist in other classes. These kids will be imported with new unique IDs to avoid conflicts, while the original kids in other classes remain intact.
-                  </div>
-                </Alert>
-              )}
-              <p className="mb-0">
-                {t('importFileStats', {
-                  totalInFile: importValidationResult.statistics.totalInFile,
-                  totalInDatabase: importValidationResult.statistics.totalInDatabase
-                })}
-              </p>
-            </>
-          )}
+          <Alert variant="info">
+            <p className="mb-0">
+              {importValidationResult?.validatedKids?.length} {importValidationResult?.validatedKids?.length === 1 ? 'kid' : 'kids'} will be imported to {selectedClass?.class_name}.
+            </p>
+          </Alert>
+          <p className="text-muted">
+            Any existing kids with the same ID will be overwritten with the imported data.
+          </p>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCancelImport} disabled={isImporting}>

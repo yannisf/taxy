@@ -1,23 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../services/database';
 import { validationService } from '../services/validation';
-import type { Kid } from '../types/models';
+import type { Kid, ClassExport } from '../types/models';
 
 export interface ImportStatistics {
-  newKids: number;
-  updatedKids: number;
-  unchangedKids: number;
-  conflictingKids: number;  // Kids with IDs that exist in other classes
-  totalInFile: number;
-  totalInDatabase: number;
+  totalImported: number;
+  totalInClass: number;
 }
 
 export interface ImportValidationResult {
   valid: boolean;
   errors: string[];
-  statistics?: ImportStatistics;
   validatedKids?: Kid[];
-  conflictingKids?: Kid[];  // Kids that will get new UUIDs due to conflicts
 }
 
 export interface ImportResult {
@@ -27,13 +21,13 @@ export interface ImportResult {
 }
 
 /**
- * Validates and analyzes a JSON file for import
+ * Validates a JSON file for import - expects ClassExport format: { class: {...}, kids: [...] }
  */
-export const validateImportFile = async (file: File, classId: string): Promise<ImportValidationResult> => {
+export const validateImportFile = async (file: File): Promise<ImportValidationResult> => {
   try {
     // Read file content
     const fileContent = await readFileContent(file);
-    
+
     // Parse JSON
     let parsedData: unknown;
     try {
@@ -45,11 +39,27 @@ export const validateImportFile = async (file: File, classId: string): Promise<I
       };
     }
 
-    // Validate it's an array
-    if (!Array.isArray(parsedData)) {
+    // Validate it's a ClassExport object with class and kids properties
+    if (typeof parsedData !== 'object' || parsedData === null) {
       return {
         valid: false,
-        errors: ['Import file must contain an array of kids.']
+        errors: ['Import file must contain a valid ClassExport object.']
+      };
+    }
+
+    const exportData = parsedData as any;
+
+    if (!exportData.class || typeof exportData.class !== 'object') {
+      return {
+        valid: false,
+        errors: ['Import file must contain a "class" object property.']
+      };
+    }
+
+    if (!Array.isArray(exportData.kids)) {
+      return {
+        valid: false,
+        errors: ['Import file must contain a "kids" array property.']
       };
     }
 
@@ -57,9 +67,9 @@ export const validateImportFile = async (file: File, classId: string): Promise<I
     const validatedKids: Kid[] = [];
 
     // Validate each kid
-    for (let i = 0; i < parsedData.length; i++) {
-      const kidData = parsedData[i];
-      
+    for (let i = 0; i < exportData.kids.length; i++) {
+      const kidData = exportData.kids[i];
+
       // Validate kid structure
       const validation = validationService.validateKid(kidData);
       if (!validation.valid) {
@@ -73,6 +83,7 @@ export const validateImportFile = async (file: File, classId: string): Promise<I
       const validatedKid: Kid = {
         ...kidData,
         kid_id: kidData.kid_id || uuidv4(), // Generate UUID if missing
+        class_id: kidData.class_id || exportData.class.class_id, // Use kid's class_id or class ID from export
         created_at: kidData.created_at || now,
         updated_at: now // Always update this during import
       };
@@ -87,15 +98,10 @@ export const validateImportFile = async (file: File, classId: string): Promise<I
       };
     }
 
-    // Calculate statistics and identify conflicts
-    const { statistics, conflictingKids } = await calculateImportStatisticsWithConflicts(validatedKids, classId);
-
     return {
       valid: true,
       errors: [],
-      statistics,
-      validatedKids,
-      conflictingKids: conflictingKids.length > 0 ? conflictingKids : undefined
+      validatedKids
     };
 
   } catch (error) {
@@ -108,17 +114,15 @@ export const validateImportFile = async (file: File, classId: string): Promise<I
 
 /**
  * Performs the actual import operation
+ * Imports all kids to the specified class, overriding any existing kids with the same kid_id
  */
 export const performImport = async (validatedKids: Kid[], classId: string): Promise<ImportResult> => {
   try {
     const statistics = await db.mergeKidsToClass(classId, validatedKids);
-    
-    // Calculate total imported kids (handle potential undefined values)
-    const totalImported = (statistics.newKids || 0) + (statistics.updatedKids || 0) + (statistics.conflictingKids || 0);
-    
+
     return {
       success: true,
-      message: `Successfully imported ${totalImported} kids`,
+      message: `Successfully imported ${statistics.totalImported} kids`,
       statistics
     };
   } catch (error) {
@@ -128,51 +132,6 @@ export const performImport = async (validatedKids: Kid[], classId: string): Prom
     };
   }
 };
-
-/**
- * Calculate import statistics and identify conflicting kids
- */
-async function calculateImportStatisticsWithConflicts(importKids: Kid[], classId: string): Promise<{
-  statistics: ImportStatistics;
-  conflictingKids: Kid[];
-}> {
-  const existingClassKids = await db.getKidsByClassId(classId);
-  const allExistingKids = await db.getKids();
-  
-  const existingClassKidIds = new Set(existingClassKids.map(kid => kid.kid_id));
-  const allExistingKidIds = new Set(allExistingKids.map(kid => kid.kid_id));
-  
-  let newKids = 0;
-  let updatedKids = 0;
-  const conflictingKids: Kid[] = [];
-  
-  for (const kid of importKids) {
-    if (existingClassKidIds.has(kid.kid_id)) {
-      // Kid exists in current class - will be updated
-      updatedKids++;
-    } else if (allExistingKidIds.has(kid.kid_id)) {
-      // Kid exists in database but not in current class - conflict
-      conflictingKids.push(kid);
-    } else {
-      // Kid doesn't exist anywhere - new
-      newKids++;
-    }
-  }
-  
-  const importIds = new Set(importKids.map(kid => kid.kid_id));
-  const unchangedKids = existingClassKids.filter(kid => !importIds.has(kid.kid_id)).length;
-  
-  const statistics: ImportStatistics = {
-    newKids,
-    updatedKids,
-    unchangedKids,
-    conflictingKids: conflictingKids.length,
-    totalInFile: importKids.length,
-    totalInDatabase: existingClassKids.length
-  };
-  
-  return { statistics, conflictingKids };
-}
 
 /**
  * Helper function to read file content
