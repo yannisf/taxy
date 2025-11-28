@@ -25,7 +25,7 @@ const KidListView: React.FC = () => {
   return (
     <Container className="mt-3">
       <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
-        <Card className="text-center" style={{ maxWidth: '500px', width: '100%' }}>
+        <Card className="text-center border-0" style={{ maxWidth: '500px', width: '100%' }}>
           <Card.Body className="p-5">
             <div className="mb-4">
               <h2 className="text-muted">{t('appName')}</h2>
