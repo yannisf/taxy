@@ -118,7 +118,7 @@ describe('importUtils', () => {
       const result = await validateImportFile(file);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Invalid JSON format. Please ensure the file contains valid JSON.');
+      expect(result.errors).toContain('invalidJsonFormat');
 
       global.FileReader = originalFileReader;
     });
@@ -142,7 +142,7 @@ describe('importUtils', () => {
       const result = await validateImportFile(file);
 
       expect(result.valid).toBe(false);
-      expect(result.errors[0]).toContain('class');
+      expect(result.errors).toContain('missingClassProperty');
 
       global.FileReader = originalFileReader;
     });
@@ -177,7 +177,7 @@ describe('importUtils', () => {
       const result = await validateImportFile(file);
 
       expect(result.valid).toBe(false);
-      expect(result.errors).toContain('Import file must contain a "kids" array property.');
+      expect(result.errors).toContain('missingKidsArray');
 
       global.FileReader = originalFileReader;
     });

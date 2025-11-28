@@ -18,7 +18,7 @@ interface TopBarDataMenuProps {
 
 const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
   const { t } = useTranslation();
-  const { selectedClass } = useClass();
+  const { selectedClass, clearSelectedClass } = useClass();
   const classKids = useClassKids();
   const { refreshKids } = useKids();
 
@@ -95,11 +95,6 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       return;
     }
 
-    if (!selectedClass) {
-      toast.error(t('selectClassToExport'));
-      return;
-    }
-
     importModal.setLoading(true);
     try {
       const validationResult = await validateImportFile(file);
@@ -121,13 +116,22 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
   };
 
   const handleConfirmImport = async () => {
-    if (!importValidationResult?.validatedKids || !selectedClass) return;
+    if (!importValidationResult?.validatedKids || importValidationResult.validatedKids.length === 0) return;
+
+    // Extract class_id from the first kid (all kids in import should have same class_id)
+    const classIdFromImport = importValidationResult.validatedKids[0].class_id;
 
     importModal.setLoading(true);
     try {
-      const result = await performImport(importValidationResult.validatedKids, selectedClass.class_id);
+      const result = await performImport(importValidationResult.validatedKids, classIdFromImport);
       if (result.success) {
         toast.success(t('importSuccessful', { count: result.statistics?.totalImported || 0 }));
+
+        // Deselect current class context after successful import
+        if (selectedClass) {
+          clearSelectedClass();
+        }
+
         await refreshKids();
       } else {
         toast.error(t('importFailed'));
@@ -165,7 +169,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
         <Dropdown.Menu align="start" className={`topbar-dropdown-menu medium ${theme === 'light' ? 'light' : 'dark'}`}>
           <Dropdown.Item
             onClick={() => { handleImportClick(); dropdown.close(); }}
-            disabled={!selectedClass || importModal.isLoading}
+            disabled={importModal.isLoading}
           >
             <span className="d-flex align-items-center gap-2"><Upload /> {t('importClass')}</span>
           </Dropdown.Item>
