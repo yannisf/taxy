@@ -26,10 +26,11 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
   const classExists = !!className;
   const displaySchoolName = validationResult?.classData?.school_name;
   const displayClassName = validationResult?.classData?.class_name;
+  const displaySchoolYear = validationResult?.classData?.school_year;
 
-  // Format: "School Name - Class Name"
+  // Format: "School Name - Class Name (Year)"
   const classDisplay = displaySchoolName && displayClassName
-    ? `${displaySchoolName} - ${displayClassName}`
+    ? `${displaySchoolName} - ${displayClassName}${displaySchoolYear ? ` (${displaySchoolYear})` : ''}`
     : className || displayClassName;
 
   return (

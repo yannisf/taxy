@@ -209,6 +209,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
         loading={exportModal.isLoading}
         className={selectedClass?.class_name}
         schoolName={selectedClass?.school_name}
+        schoolYear={selectedClass?.school_year}
       />
     </>
   );

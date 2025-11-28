@@ -11,6 +11,7 @@ interface ExportModalProps {
   loading?: boolean;
   className?: string;
   schoolName?: string;
+  schoolYear?: string;
 }
 
 export interface ExportOptions {
@@ -24,7 +25,8 @@ const ExportModal: React.FC<ExportModalProps> = ({
   onConfirmExport,
   loading = false,
   className,
-  schoolName
+  schoolName,
+  schoolYear
 }) => {
   const { t } = useTranslation();
   const [encryptEnabled, setEncryptEnabled] = useState(true); // Checked by default
@@ -129,8 +131,8 @@ const ExportModal: React.FC<ExportModalProps> = ({
         <Modal.Body>
           {schoolName && className && (
             <Alert variant="info" className="mb-3">
-              <div style={{ whiteSpace: 'nowrap' }}>
-                <strong>{t('exportClassData')}:</strong> {schoolName} - {className}
+              <div>
+                {schoolName} - {className} {schoolYear && `(${schoolYear})`}
               </div>
             </Alert>
           )}
