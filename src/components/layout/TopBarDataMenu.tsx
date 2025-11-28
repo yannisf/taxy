@@ -1,14 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { Dropdown, Modal, Button, Alert } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 import { Download, Upload, ChevronDown } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
 import { useKids } from '../../contexts/KidsContext';
+import { useModalState, useDropdownState } from '../../hooks/useModalState';
 import { exportClassData } from '../../utils/exportUtils';
 import { validateImportFile, performImport, type ImportValidationResult } from '../../utils/importUtils';
 import ExportModal, { type ExportOptions } from '../classes/ExportModal';
+import ImportConfirmModal from '../classes/ImportConfirmModal';
 
 interface TopBarDataMenuProps {
   theme: 'light' | 'dark';
@@ -19,11 +21,11 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
   const { selectedClass } = useClass();
   const classKids = useClassKids();
   const { refreshKids } = useKids();
-  const [importExportDropdownOpen, setImportExportDropdownOpen] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
-  const [isImporting, setIsImporting] = useState(false);
-  const [showImportConfirmModal, setShowImportConfirmModal] = useState(false);
-  const [showExportModal, setShowExportModal] = useState(false);
+
+  const dropdown = useDropdownState();
+  const exportModal = useModalState();
+  const importModal = useModalState();
+
   const [importValidationResult, setImportValidationResult] = useState<ImportValidationResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -32,19 +34,16 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       toast.error(t('selectClassToExport'));
       return;
     }
-    setShowExportModal(true);
-    setImportExportDropdownOpen(false);
+    exportModal.open();
+    dropdown.close();
   };
 
   const handleConfirmExport = async (options: ExportOptions) => {
-    console.log('handleConfirmExport called with options:', { encrypt: options.encrypt, hasPassword: !!options.password });
     if (!selectedClass) return;
 
-    setIsExporting(true);
+    exportModal.setLoading(true);
     try {
-      console.log('Starting export with classId:', selectedClass.class_id);
       await exportClassData(selectedClass.class_id, options);
-      console.log('Export completed successfully');
 
       // Clear password from options object immediately after use
       if (options.password) {
@@ -56,10 +55,8 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
           ? t('encryptedClassDataExported')
           : t('classDataExported')
       );
-      setShowExportModal(false);
+      exportModal.close();
     } catch (error) {
-      console.error('Export failed:', error);
-
       // Clear password even on error
       if (options.password) {
         options.password = '';
@@ -78,8 +75,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
         toast.error(t('failedToExportClassData'));
       }
     } finally {
-      console.log('Setting isExporting to false');
-      setIsExporting(false);
+      exportModal.setLoading(false);
     }
   };
 
@@ -104,7 +100,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       return;
     }
 
-    setIsImporting(true);
+    importModal.setLoading(true);
     try {
       const validationResult = await validateImportFile(file);
 
@@ -115,19 +111,19 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       }
 
       setImportValidationResult(validationResult);
-      setShowImportConfirmModal(true);
+      importModal.open();
     } catch (error) {
       console.error('Import validation failed:', error);
       toast.error('Failed to validate import file');
     } finally {
-      setIsImporting(false);
+      importModal.setLoading(false);
     }
   };
 
   const handleConfirmImport = async () => {
     if (!importValidationResult?.validatedKids || !selectedClass) return;
 
-    setIsImporting(true);
+    importModal.setLoading(true);
     try {
       const result = await performImport(importValidationResult.validatedKids, selectedClass.class_id);
       if (result.success) {
@@ -140,27 +136,26 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       console.error('Import failed:', error);
       toast.error('Import failed due to an unexpected error');
     } finally {
-      setIsImporting(false);
-      setShowImportConfirmModal(false);
-      setImportValidationResult(null);
+      importModal.setLoading(false);
+      handleCancelImport();
     }
   };
 
   const handleCancelImport = () => {
-    setShowImportConfirmModal(false);
+    importModal.close();
     setImportValidationResult(null);
   };
 
   return (
     <>
-      <Dropdown show={importExportDropdownOpen} onToggle={(show: boolean) => setImportExportDropdownOpen(show)} className="me-2">
+      <Dropdown show={dropdown.isOpen} onToggle={dropdown.toggle} className="me-2">
         <Dropdown.Toggle
           as="a"
           id="import-export-dropdown"
           className={`nav-link no-caret text-decoration-none d-flex align-items-center gap-1 topbar-nav-item ${theme === 'light' ? 'text-dark' : 'text-white'}`}
           role="button"
           aria-haspopup="menu"
-          aria-expanded={importExportDropdownOpen}
+          aria-expanded={dropdown.isOpen}
           tabIndex={0}
           style={{ cursor: 'pointer' }}
         >
@@ -168,10 +163,16 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
           <ChevronDown size={14} />
         </Dropdown.Toggle>
         <Dropdown.Menu align="start" className={`topbar-dropdown-menu medium ${theme === 'light' ? 'light' : 'dark'}`}>
-          <Dropdown.Item onClick={() => { handleImportClick(); setImportExportDropdownOpen(false); }} disabled={!selectedClass || isImporting}>
+          <Dropdown.Item
+            onClick={() => { handleImportClick(); dropdown.close(); }}
+            disabled={!selectedClass || importModal.isLoading}
+          >
             <span className="d-flex align-items-center gap-2"><Upload /> {t('importClass')}</span>
           </Dropdown.Item>
-          <Dropdown.Item onClick={handleExport} disabled={!selectedClass || isExporting || classKids.length === 0}>
+          <Dropdown.Item
+            onClick={handleExport}
+            disabled={!selectedClass || exportModal.isLoading || classKids.length === 0}
+          >
             <span className="d-flex align-items-center gap-2"><Download /> {t('exportClass')}</span>
           </Dropdown.Item>
         </Dropdown.Menu>
@@ -181,36 +182,21 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       <input ref={fileInputRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleFileSelect} />
 
       {/* Import Confirmation Modal */}
-      <Modal show={showImportConfirmModal} onHide={handleCancelImport} size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>{t('confirmImportDialog')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Alert variant="info">
-            <p className="mb-0">
-              {importValidationResult?.validatedKids?.length} {importValidationResult?.validatedKids?.length === 1 ? 'kid' : 'kids'} will be imported to {selectedClass?.class_name}.
-            </p>
-          </Alert>
-          <p className="text-muted">
-            Any existing kids with the same ID will be overwritten with the imported data.
-          </p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCancelImport} disabled={isImporting}>
-            {t('cancel')}
-          </Button>
-          <Button variant="success" onClick={handleConfirmImport} disabled={isImporting}>
-            {isImporting ? t('importing') : t('confirmImport')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <ImportConfirmModal
+        show={importModal.show}
+        onHide={handleCancelImport}
+        onConfirm={handleConfirmImport}
+        loading={importModal.isLoading}
+        validationResult={importValidationResult}
+        className={selectedClass?.class_name}
+      />
 
       {/* Export Modal */}
       <ExportModal
-        show={showExportModal}
-        onHide={() => setShowExportModal(false)}
+        show={exportModal.show}
+        onHide={exportModal.close}
         onConfirmExport={handleConfirmExport}
-        loading={isExporting}
+        loading={exportModal.isLoading}
         className={selectedClass?.class_name}
         schoolName={selectedClass?.school_name}
       />

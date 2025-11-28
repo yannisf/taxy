@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Card, Row, Col, Alert, Badge, OverlayTrigger, Tooltip, Button, Modal } from 'react-bootstrap';
-import { PencilSquare, CheckLg, InfoCircle, ChevronLeft, ChevronRight, XLg } from 'react-bootstrap-icons';
+import { Container, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useClassKids } from '../../hooks/useClassKids';
 import { useKids } from '../../contexts/KidsContext';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
-import GuardianCard from '../guardians/GuardianCard';
-import AddressDisplay from '../common/AddressDisplay';
-import { formatDateDisplay } from '../../utils/dateUtils';
+import { useModalState } from '../../hooks/useModalState';
+import KidDetailsHeader from './details/KidDetailsHeader';
+import KidDetailsPersonalInfo from './details/KidDetailsPersonalInfo';
+import KidDetailsGuardians from './details/KidDetailsGuardians';
+import KidDetailsDeleteModal from './details/KidDetailsDeleteModal';
 import type { Kid } from '../../types/models';
 
 const KidDetailsView: React.FC = () => {
   const { kidId } = useParams<{ kidId: string }>();
   const navigate = useNavigate();
   const [kid, setKid] = useState<Kid | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const deleteModal = useModalState();
   const { t } = useTranslation();
   const { refreshKids } = useKids();
   const classKids = useClassKids();
@@ -70,26 +71,17 @@ const KidDetailsView: React.FC = () => {
     }
   };
 
-  const handleDeleteClick = () => {
-    setShowDeleteModal(true);
-  };
-
   const confirmDelete = async () => {
     if (kid) {
       try {
         await db.deleteKid(kid.kid_id);
-        await refreshKids(); // Refresh the list using context
-        setShowDeleteModal(false);
-        // Navigate to default view since the current kid is deleted
+        await refreshKids();
+        deleteModal.close();
         navigate('/kids');
       } catch (error) {
         console.error('Error deleting kid:', error);
       }
     }
-  };
-
-  const cancelDelete = () => {
-    setShowDeleteModal(false);
   };
 
   // Keyboard navigation
@@ -116,166 +108,27 @@ const KidDetailsView: React.FC = () => {
   return (
     <Container className="mt-3">
       <Card>
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <h2>{getDisplayName()}</h2>
-          <div className="d-flex align-items-center gap-2">
-            {/* Previous Kid Button */}
-            <OverlayTrigger
-              placement="bottom"
-              overlay={<Tooltip>{t('previousKidTooltip')}</Tooltip>}
-            >
-              <Button
-                variant="link"
-                size="sm"
-                className="p-1 text-decoration-none"
-                onClick={handlePrevious}
-                disabled={!getPreviousKid()}
-                style={{ 
-                  cursor: getPreviousKid() ? 'pointer' : 'not-allowed',
-                  opacity: getPreviousKid() ? 1 : 0.5
-                }}
-              >
-                <ChevronLeft size={24} className="text-primary" />
-              </Button>
-            </OverlayTrigger>
-
-            {/* Next Kid Button */}
-            <OverlayTrigger
-              placement="bottom"
-              overlay={<Tooltip>{t('nextKidTooltip')}</Tooltip>}
-            >
-              <Button
-                variant="link"
-                size="sm"
-                className="p-1 text-decoration-none"
-                onClick={handleNext}
-                disabled={!getNextKid()}
-                style={{ 
-                  cursor: getNextKid() ? 'pointer' : 'not-allowed',
-                  opacity: getNextKid() ? 1 : 0.5
-                }}
-              >
-                <ChevronRight size={24} className="text-primary" />
-              </Button>
-            </OverlayTrigger>
-
-            <OverlayTrigger
-              placement="bottom"
-              overlay={
-                <Tooltip>
-                  <div>
-                    <strong>{t('created')}:</strong> {formatDateDisplay(kid.created_at, true)}<br />
-                    <strong>{t('lastUpdated')}:</strong> {formatDateDisplay(kid.updated_at, true)}
-                  </div>
-                </Tooltip>
-              }
-            >
-              <InfoCircle 
-                size={24} 
-                className="text-primary" 
-                style={{ cursor: 'pointer' }}
-              />
-            </OverlayTrigger>
-            <OverlayTrigger
-              placement="bottom"
-              overlay={<Tooltip>{t('editDetails')} ({t('editModeShortcut')})</Tooltip>}
-            >
-              <PencilSquare 
-                size={24} 
-                className="text-primary" 
-                style={{ cursor: 'pointer' }}
-                onClick={handleEditClick}
-              />
-            </OverlayTrigger>
-
-            {/* Delete Button */}
-            <OverlayTrigger
-              placement="bottom"
-              overlay={<Tooltip>{t('delete')}</Tooltip>}
-            >
-              <XLg 
-                size={24} 
-                className="text-danger" 
-                style={{ cursor: 'pointer' }}
-                onClick={handleDeleteClick}
-              />
-            </OverlayTrigger>
-          </div>
-        </Card.Header>
-        <Card.Body>
-          <p><strong>{t('firstName')}:</strong> {kid.first_name}</p>
-          <p><strong>{t('lastName')}:</strong> {kid.last_name}</p>
-          {kid.preferred_name && (
-            <p><strong>{t('preferredName')}:</strong> {kid.preferred_name}</p>
-          )}
-          <p><strong>{t('dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
-          <p><strong>{t('gender')}:</strong> {t(`gender${kid.gender === 'male' ? 'Boy' : kid.gender === 'female' ? 'Girl' : 'Other'}`)}</p>
-          <p><strong>{t('level')}:</strong> {t(`level${kid.level === 'pre-kindergartner' ? 'PreKindergarten' : kid.level === 'kindergartner' ? 'Kindergarten' : 'KindergartenRepeating'}`)}</p>
-          {kid.extended_day_care && (
-            <p><strong>{t('extendedDayCare')}</strong> <CheckLg className="text-success" /></p>
-          )}
-          {kid.special_education && (
-            <p><strong>{t('specialEducationStatus')}</strong> <CheckLg className="text-success" /></p>
-          )}
-          
-          {/* Address within main card */}
-          <p><strong>{t('address')}:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
-          
-          {kid.notes && (
-            <div className="mt-3">
-              <strong>{t('notes')}:</strong>
-              <p>{kid.notes}</p>
-            </div>
-          )}
-
-        </Card.Body>
+        <KidDetailsHeader
+          kid={kid}
+          displayName={getDisplayName()}
+          onEdit={handleEditClick}
+          onDelete={deleteModal.open}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          hasPrevious={!!getPreviousKid()}
+          hasNext={!!getNextKid()}
+        />
+        <KidDetailsPersonalInfo kid={kid} />
       </Card>
 
-      {/* Guardians Section */}
-      <Card className="mt-3">
-        <Card.Header className="d-flex align-items-center gap-2">
-          <h4 className="mb-0">{t('guardians')}</h4>
-          <Badge bg="secondary">{kid.guardians?.length || 0}</Badge>
-        </Card.Header>
-        <Card.Body>
-          {!kid.guardians || kid.guardians.length === 0 ? (
-            <Alert variant="secondary" className="mb-0">
-              {t('noGuardiansForKid')}
-            </Alert>
-          ) : (
-            <Row>
-              {kid.guardians.map((guardian, index) => (
-                <Col key={index} md={6} lg={4} className="mb-3">
-                  <GuardianCard guardian={guardian} />
-                </Col>
-              ))}
-            </Row>
-          )}
-        </Card.Body>
-      </Card>
+      <KidDetailsGuardians guardians={kid.guardians || []} />
 
-      {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={cancelDelete}>
-        <Modal.Header closeButton>
-          <Modal.Title>{t('confirmDelete')}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {t('confirmDeleteKid', { 
-            firstName: kid?.first_name, 
-            lastName: kid?.last_name 
-          })}
-          <br />
-          {t('actionCannotBeUndone')}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={cancelDelete}>
-            {t('cancel')}
-          </Button>
-          <Button variant="danger" onClick={confirmDelete}>
-            {t('delete')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <KidDetailsDeleteModal
+        show={deleteModal.show}
+        onHide={deleteModal.close}
+        onConfirm={confirmDelete}
+        kid={kid}
+      />
     </Container>
   );
 };

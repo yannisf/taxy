@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../contexts/ClassContext';
-import AutocompleteInput from '../common/AutocompleteInput';
 import {
   extractUniqueSchoolNames,
   extractUniqueClassNames,
   filterNamesByQuery
 } from '../../utils/nameUtils';
+import ClassFormField from './ClassFormField';
 
 interface ClassModalProps {
   show: boolean;
@@ -57,7 +57,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
       ...prev,
       [field]: value
     }));
-    
+
     // Clear error when user starts typing
     if (error) {
       setError(null);
@@ -129,7 +129,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
   };
 
   // Update data when modal shows or mode/initialData changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (show) {
       handleShow();
     }
@@ -142,7 +142,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
           {mode === 'create' ? t('createClass') : t('editClass')}
         </Modal.Title>
       </Modal.Header>
-      
+
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Modal.Body>
           {error && (
@@ -150,89 +150,54 @@ const ClassModal: React.FC<ClassModalProps> = ({
               {error}
             </Alert>
           )}
-          
-          <Form.Group className="mb-3">
-            <Form.Label>{t('schoolName')} {t('required')}</Form.Label>
-            {loading ? (
-              <Form.Control
-                type="text"
-                value={formData.school_name}
-                onChange={(e) => handleInputChange('school_name', e.target.value)}
-                placeholder={t('enterSchoolName')}
-                required
-                disabled={loading}
-              />
-            ) : (
-              <AutocompleteInput
-                value={formData.school_name}
-                onChange={(value) => handleInputChange('school_name', value)}
-                onBlur={() => {}}
-                suggestions={filterNamesByQuery(allSchoolNames, formData.school_name)}
-                placeholder={t('enterSchoolName')}
-                isInvalid={validated && !formData.school_name}
-              />
-            )}
-            {validated && !formData.school_name && (
-              <div className="invalid-feedback d-block">
-                {t('schoolNameRequired')}
-              </div>
-            )}
-          </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>{t('className')} {t('required')}</Form.Label>
-            {loading ? (
-              <Form.Control
-                type="text"
-                value={formData.class_name}
-                onChange={(e) => handleInputChange('class_name', e.target.value)}
-                placeholder={t('enterClassName')}
-                required
-                disabled={loading}
-              />
-            ) : (
-              <AutocompleteInput
-                value={formData.class_name}
-                onChange={(value) => handleInputChange('class_name', value)}
-                onBlur={() => {}}
-                suggestions={filterNamesByQuery(allClassNames, formData.class_name)}
-                placeholder={t('enterClassName')}
-                isInvalid={validated && !formData.class_name}
-              />
-            )}
-            {validated && !formData.class_name && (
-              <div className="invalid-feedback d-block">
-                {t('classNameRequired')}
-              </div>
-            )}
-          </Form.Group>
+          <ClassFormField
+            label={`${t('schoolName')} ${t('required')}`}
+            value={formData.school_name}
+            onChange={(value) => handleInputChange('school_name', value)}
+            placeholder={t('enterSchoolName')}
+            required={true}
+            disabled={loading}
+            validated={validated}
+            errorMessage={t('schoolNameRequired')}
+            useAutocomplete={true}
+            suggestions={filterNamesByQuery(allSchoolNames, formData.school_name)}
+          />
 
-          <Form.Group className="mb-3">
-            <Form.Label>{t('schoolYear')} {t('required')}</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.school_year}
-              onChange={(e) => handleInputChange('school_year', e.target.value)}
-              placeholder={t('enterSchoolYear')}
-              pattern="[0-9]{4}-[0-9]{4}"
-              required
-              disabled={loading}
-            />
-            <Form.Control.Feedback type="invalid">
-              {t('schoolYearRequired')}
-            </Form.Control.Feedback>
-            <Form.Text className="text-muted">
-              {t('schoolYearFormatHelp')}
-            </Form.Text>
-          </Form.Group>
+          <ClassFormField
+            label={`${t('className')} ${t('required')}`}
+            value={formData.class_name}
+            onChange={(value) => handleInputChange('class_name', value)}
+            placeholder={t('enterClassName')}
+            required={true}
+            disabled={loading}
+            validated={validated}
+            errorMessage={t('classNameRequired')}
+            useAutocomplete={true}
+            suggestions={filterNamesByQuery(allClassNames, formData.class_name)}
+          />
+
+          <ClassFormField
+            label={`${t('schoolYear')} ${t('required')}`}
+            value={formData.school_year}
+            onChange={(value) => handleInputChange('school_year', value)}
+            placeholder={t('enterSchoolYear')}
+            pattern="[0-9]{4}-[0-9]{4}"
+            required={true}
+            disabled={loading}
+            validated={validated}
+            errorMessage={t('schoolYearRequired')}
+            helpText={t('schoolYearFormatHelp')}
+            useAutocomplete={false}
+          />
         </Modal.Body>
-        
+
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose} disabled={loading}>
             {t('cancel')}
           </Button>
           <Button variant="primary" type="submit" disabled={loading}>
-            {loading 
+            {loading
               ? (mode === 'create' ? t('creating') : t('updating'))
               : (mode === 'create' ? t('createClassAction') : t('updateClass'))
             }

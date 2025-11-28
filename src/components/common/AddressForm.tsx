@@ -10,10 +10,9 @@ import {
   extractUniqueNeighborhoods,
   extractUniquePostalCodes,
   extractUniqueCities,
-  extractUniqueCountries,
-  filterNamesByQuery
+  extractUniqueCountries
 } from '../../utils/nameUtils';
-import AutocompleteInput from './AutocompleteInput';
+import AddressFieldInput from './AddressFieldInput';
 
 interface AddressFormProps {
   control: Control<any>;
@@ -42,40 +41,15 @@ const AddressForm: React.FC<AddressFormProps> = ({
     <>
       <Row>
         <Col md={8}>
-          <Form.Group className="mb-3">
-            <Form.Label>{t('streetName')}</Form.Label>
-            <Controller
-              name={`${fieldPrefix}.street_name`}
-              control={control}
-              render={({ field }) => {
-                const filteredSuggestions = filterNamesByQuery(allStreetNames, field.value || '');
-                return disabled ? (
-                  <Form.Control
-                    {...field}
-                    value={field.value ?? ''}
-                    type="text"
-                    placeholder={t('enterStreetName')}
-                    disabled={disabled}
-                    isInvalid={!!errors?.street_name}
-                  />
-                ) : (
-                  <AutocompleteInput
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    suggestions={filteredSuggestions}
-                    placeholder={t('enterStreetName')}
-                    isInvalid={!!errors?.street_name}
-                  />
-                );
-              }}
-            />
-            {errors?.street_name && (
-              <Form.Control.Feedback type="invalid" className="d-block">
-                {errors.street_name.message}
-              </Form.Control.Feedback>
-            )}
-          </Form.Group>
+          <AddressFieldInput
+            name={`${fieldPrefix}.street_name`}
+            control={control}
+            label={t('streetName')}
+            placeholder={t('enterStreetName')}
+            suggestions={allStreetNames}
+            error={errors?.street_name}
+            disabled={disabled}
+          />
         </Col>
         <Col md={4}>
           <Form.Group className="mb-3">
@@ -105,151 +79,51 @@ const AddressForm: React.FC<AddressFormProps> = ({
 
       <Row>
         <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>{t('neighborhood')}</Form.Label>
-            <Controller
-              name={`${fieldPrefix}.neighborhood`}
-              control={control}
-              render={({ field }) => {
-                const filteredSuggestions = filterNamesByQuery(allNeighborhoods, field.value || '');
-                return disabled ? (
-                  <Form.Control
-                    {...field}
-                    value={field.value ?? ''}
-                    type="text"
-                    placeholder={t('enterNeighborhood')}
-                    disabled={disabled}
-                    isInvalid={!!errors?.neighborhood}
-                  />
-                ) : (
-                  <AutocompleteInput
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    suggestions={filteredSuggestions}
-                    placeholder={t('enterNeighborhood')}
-                    isInvalid={!!errors?.neighborhood}
-                  />
-                );
-              }}
-            />
-            {errors?.neighborhood && (
-              <Form.Control.Feedback type="invalid" className="d-block">
-                {errors.neighborhood.message}
-              </Form.Control.Feedback>
-            )}
-          </Form.Group>
+          <AddressFieldInput
+            name={`${fieldPrefix}.neighborhood`}
+            control={control}
+            label={t('neighborhood')}
+            placeholder={t('enterNeighborhood')}
+            suggestions={allNeighborhoods}
+            error={errors?.neighborhood}
+            disabled={disabled}
+          />
         </Col>
         <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>{t('postalCode')}</Form.Label>
-            <Controller
-              name={`${fieldPrefix}.postal_code`}
-              control={control}
-              render={({ field }) => {
-                const filteredSuggestions = filterNamesByQuery(allPostalCodes, field.value || '');
-                return disabled ? (
-                  <Form.Control
-                    {...field}
-                    value={field.value ?? ''}
-                    type="text"
-                    placeholder={t('enterPostalCode')}
-                    disabled={disabled}
-                    isInvalid={!!errors?.postal_code}
-                  />
-                ) : (
-                  <AutocompleteInput
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    suggestions={filteredSuggestions}
-                    placeholder={t('enterPostalCode')}
-                    isInvalid={!!errors?.postal_code}
-                  />
-                );
-              }}
-            />
-            {errors?.postal_code && (
-              <Form.Control.Feedback type="invalid" className="d-block">
-                {errors.postal_code.message}
-              </Form.Control.Feedback>
-            )}
-          </Form.Group>
+          <AddressFieldInput
+            name={`${fieldPrefix}.postal_code`}
+            control={control}
+            label={t('postalCode')}
+            placeholder={t('enterPostalCode')}
+            suggestions={allPostalCodes}
+            error={errors?.postal_code}
+            disabled={disabled}
+          />
         </Col>
       </Row>
 
       <Row>
         <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>{t('city')}</Form.Label>
-            <Controller
-              name={`${fieldPrefix}.city`}
-              control={control}
-              render={({ field }) => {
-                const filteredSuggestions = filterNamesByQuery(allCities, field.value || '');
-                return disabled ? (
-                  <Form.Control
-                    {...field}
-                    value={field.value ?? ''}
-                    type="text"
-                    placeholder={t('enterCity')}
-                    disabled={disabled}
-                    isInvalid={!!errors?.city}
-                  />
-                ) : (
-                  <AutocompleteInput
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    suggestions={filteredSuggestions}
-                    placeholder={t('enterCity')}
-                    isInvalid={!!errors?.city}
-                  />
-                );
-              }}
-            />
-            {errors?.city && (
-              <Form.Control.Feedback type="invalid" className="d-block">
-                {errors.city.message}
-              </Form.Control.Feedback>
-            )}
-          </Form.Group>
+          <AddressFieldInput
+            name={`${fieldPrefix}.city`}
+            control={control}
+            label={t('city')}
+            placeholder={t('enterCity')}
+            suggestions={allCities}
+            error={errors?.city}
+            disabled={disabled}
+          />
         </Col>
         <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>{t('country')}</Form.Label>
-            <Controller
-              name={`${fieldPrefix}.country`}
-              control={control}
-              render={({ field }) => {
-                const filteredSuggestions = filterNamesByQuery(allCountries, field.value || '');
-                return disabled ? (
-                  <Form.Control
-                    {...field}
-                    value={field.value ?? ''}
-                    type="text"
-                    placeholder={t('enterCountry')}
-                    disabled={disabled}
-                    isInvalid={!!errors?.country}
-                  />
-                ) : (
-                  <AutocompleteInput
-                    value={field.value || ''}
-                    onChange={field.onChange}
-                    onBlur={field.onBlur}
-                    suggestions={filteredSuggestions}
-                    placeholder={t('enterCountry')}
-                    isInvalid={!!errors?.country}
-                  />
-                );
-              }}
-            />
-            {errors?.country && (
-              <Form.Control.Feedback type="invalid" className="d-block">
-                {errors.country.message}
-              </Form.Control.Feedback>
-            )}
-          </Form.Group>
+          <AddressFieldInput
+            name={`${fieldPrefix}.country`}
+            control={control}
+            label={t('country')}
+            placeholder={t('enterCountry')}
+            suggestions={allCountries}
+            error={errors?.country}
+            disabled={disabled}
+          />
         </Col>
       </Row>
     </>
