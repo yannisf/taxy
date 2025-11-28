@@ -1,35 +1,44 @@
 import React, { useState } from 'react';
-import { Navbar, Container, Nav, Alert } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { useClass } from '../../contexts/ClassContext';
+import { Navbar, Container, Nav } from 'react-bootstrap';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useClass } from '../../contexts/ClassContext';
 import TopBarLogo from './TopBarLogo';
 import TopBarClassMenu from './TopBarClassMenu';
 import TopBarDataMenu from './TopBarDataMenu';
 import TopBarCardsMenu from './TopBarCardsMenu';
 import TopBarReportsMenu from './TopBarReportsMenu';
 import TopBarSettings from './TopBarSettings';
+import SidebarToggleButton from './SidebarToggleButton';
 
-const TopBar: React.FC = () => {
-  const { t } = useTranslation();
-  const { classes, selectedClass } = useClass();
+interface TopBarProps {
+  onSidebarToggle?: () => void;
+}
+
+const TopBar: React.FC<TopBarProps> = ({ onSidebarToggle }) => {
   const { theme } = useTheme();
+  const { selectedClass } = useClass();
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <Navbar 
-      fixed='top' 
-      bg={theme === 'light' ? 'light' : 'dark'} 
-      variant={theme === 'light' ? 'light' : 'dark'} 
+    <Navbar
+      fixed='top'
+      bg={theme === 'light' ? 'light' : 'dark'}
+      variant={theme === 'light' ? 'light' : 'dark'}
       expand="lg"
       expanded={expanded}
       onToggle={(expanded) => setExpanded(expanded)}
     >
       <Container fluid>
         <TopBarLogo />
-        
-        {/* Hamburger toggle button - shows on mobile */}
-        <Navbar.Toggle aria-controls="navbar-nav" onClick={() => setExpanded(!expanded)} />
+
+        {/* Toggle buttons container - sidebar toggle on left, hamburger on right */}
+        <div className="d-flex align-items-center gap-2 ms-auto">
+          {/* Sidebar toggle button - shows on small screens only when a class is selected */}
+          {onSidebarToggle && selectedClass && <SidebarToggleButton onClick={onSidebarToggle} />}
+
+          {/* Hamburger toggle button - shows on mobile */}
+          <Navbar.Toggle aria-controls="navbar-nav" onClick={() => setExpanded(!expanded)} />
+        </div>
         
         {/* Collapsible navbar content */}
         <Navbar.Collapse id="navbar-nav">

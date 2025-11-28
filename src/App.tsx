@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Container, Row, Col } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 
 // Import layout components
 import TopBar from './components/layout/TopBar';
@@ -26,19 +27,54 @@ import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 const App: React.FC = () => {
+  const { t } = useTranslation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const closeSidebar = () => setSidebarOpen(false);
+
+  // Auto-close sidebar when resizing from mobile to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 576 && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [sidebarOpen]);
+
+  // Lock body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [sidebarOpen]);
+
   return (
     <ThemeProvider>
       <ClassProvider>
         <KidsProvider>
           <Router>
           <div className="App d-flex flex-column min-vh-100">
-            <TopBar />
+            <TopBar onSidebarToggle={toggleSidebar} />
             <Container fluid className="flex-grow-1 content-container">
               <Row className="h-100 gx-2">
-                <Col xs={3} className="left-panel-col">
-                  <LeftPanel />
+                {/* Left Panel - Hidden on mobile, 3 cols on desktop */}
+                <Col xs={12} sm={3} className={`left-panel-col ${sidebarOpen ? 'mobile-open' : ''}`}>
+                  <LeftPanel
+                    isOpen={sidebarOpen}
+                    onClose={closeSidebar}
+                    onKidClick={closeSidebar}
+                  />
                 </Col>
-                <Col xs={9} className="main-content-col">
+                {/* Main Content - Full width on mobile, 9 cols on desktop */}
+                <Col xs={12} sm={9} className="main-content-col">
                   <Routes>
                     <Route path="/" element={<Navigate to="/kids" replace />} />
                     <Route path="/kids" element={<KidListView />} />
@@ -49,6 +85,17 @@ const App: React.FC = () => {
                 </Col>
               </Row>
             </Container>
+
+            {/* Backdrop - only on mobile when sidebar is open */}
+            {sidebarOpen && (
+              <div
+                className="sidebar-backdrop show d-sm-none"
+                onClick={closeSidebar}
+                role="button"
+                tabIndex={-1}
+                aria-label={t('closeSidebar')}
+              />
+            )}
           </div>
           <ToastContainer
             position="top-right"

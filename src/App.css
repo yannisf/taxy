@@ -51,16 +51,38 @@
 /* Control compact navbar height and spacing */
 :root {
   /* Restore a more compact topbar while keeping slightly larger fonts for nav items */
-  --topbar-height: 56px; /* compact navbar height */
-  --topbar-item-height: 44px; /* compact but accessible */
-  --topbar-action-height: 32px; /* slightly smaller action buttons on right */
+  --topbar-height: 48px; /* compact navbar height */
+  --topbar-item-height: 40px; /* compact but accessible */
+  --topbar-action-height: 28px; /* slightly smaller action buttons on right */
   --topbar-item-minwidth: 140px;
   --topbar-item-maxwidth: 220px;
 }
 
 .navbar {
-  padding-top: 0.35rem;
-  padding-bottom: 0.35rem;
+  height: var(--topbar-height);
+  padding: 0;
+  margin: 0;
+  align-items: center;
+}
+
+.navbar .container-fluid {
+  height: 100%;
+  padding: 0 0.75rem 0 0;
+  margin: 0;
+  align-items: center;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  height: var(--topbar-height);
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.navbar-brand img {
+  height: 40px;
 }
 
 /* Topbar navigation group - equal-sized items on desktop */
@@ -75,6 +97,20 @@
 
 /* Mobile responsive styles for navbar collapse */
 @media (max-width: 991.98px) {
+  /* Override Bootstrap's navbar padding on mobile */
+  .navbar {
+    padding: 0 !important;
+  }
+
+  .navbar .container-fluid {
+    padding: 0 0.75rem 0 0 !important;
+  }
+
+  .navbar-brand {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
   .topbar-nav {
     display: flex;
     flex-direction: column;
@@ -82,15 +118,51 @@
     gap: 0.5rem;
     padding: 0.5rem 0;
   }
-  
+
   .topbar-nav-item {
     width: 100%;
     justify-content: flex-start;
     padding: 0.5rem 1rem;
   }
-  
+
+  .navbar-brand img {
+    height: 36px;
+  }
+
   .navbar-collapse {
-    margin-top: 0.5rem;
+    position: absolute;
+    top: var(--topbar-height);
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-top: 0;
+    padding: 0.5rem;
+    background-color: var(--bs-body-bg);
+    border-top: 1px solid var(--bs-border-color);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1050;
+  }
+
+  /* Make dropdowns expand inline on mobile instead of floating */
+  .navbar-collapse .dropdown-menu {
+    position: static !important;
+    float: none;
+    width: auto;
+    margin-top: 0;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    transform: none !important;
+  }
+
+  .navbar-collapse .dropdown-menu .dropdown-item {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+  }
+
+  .navbar-collapse .dropdown-divider {
+    margin: 0.25rem 0;
   }
   
   /* Stack settings vertically on mobile */
@@ -111,11 +183,22 @@
 /* Ensure hamburger button is visible and styled */
 .navbar-toggler {
   border: 1px solid rgba(0,0,0,0.1);
-  padding: 0.25rem 0.5rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1;
+  margin: 0;
+  height: auto;
+  max-height: calc(var(--topbar-height) - 4px);
 }
 
 .navbar-toggler:focus {
   box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.navbar-toggler-icon {
+  width: 1.2em;
+  height: 1.2em;
+  display: block;
 }
 
 /* Dark theme adjustments */
@@ -128,7 +211,7 @@
   align-items: center;
   justify-content: center;
   width: 100%; /* fill column */
-  padding: 0.35rem 1rem; /* compact padding */
+  padding: 0 1rem; /* minimal padding */
   font-size: 1.08rem; /* slightly bigger font without increasing height */
   min-height: var(--topbar-item-height);
   height: var(--topbar-item-height);
@@ -267,4 +350,124 @@
   color: rgba(0,0,0,0.26);
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Responsive Left Panel - Mobile Sidebar */
+
+/* Mobile Sidebar Styles (< 576px) */
+@media (max-width: 575.98px) {
+  /* Remove container padding on mobile */
+  .content-container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* Left panel becomes fixed overlay on mobile */
+  .left-panel-col {
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 320px;
+    height: calc(100vh - var(--topbar-height));
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform 300ms ease-in-out;
+    background-color: var(--bs-body-bg);
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* When sidebar is open */
+  .left-panel-col.mobile-open {
+    transform: translateX(0);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Main content takes full width on mobile with minimal padding */
+  .main-content-col {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Sidebar toggle button - only visible on mobile, in navbar */
+.sidebar-toggle-button {
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 0.4rem 0.5rem;
+  font-size: 1rem;
+  line-height: 1;
+  margin: 0;
+  height: auto;
+  max-height: calc(var(--topbar-height) - 4px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-toggle-button svg {
+  width: 1.2em;
+  height: 1.2em;
+  display: block;
+}
+
+/* Dark theme adjustments */
+:root[data-bs-theme='dark'] .sidebar-toggle-button {
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* Backdrop styles */
+.sidebar-backdrop {
+  position: fixed;
+  top: var(--topbar-height);
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - var(--topbar-height));
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+  pointer-events: none;
+}
+
+.sidebar-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Desktop Styles (≥ 576px) - Keep current behavior */
+@media (min-width: 576px) {
+  .left-panel-col {
+    /* Reset mobile styles */
+    position: relative;
+    transform: none;
+    width: auto;
+    max-width: none;
+    box-shadow: none;
+  }
+
+  /* Sidebar toggle button hidden on desktop */
+  .sidebar-toggle-button {
+    display: none;
+  }
+
+  /* Backdrop never shown on desktop */
+  .sidebar-backdrop {
+    display: none;
+  }
+}
+
+/* Dark theme adjustments */
+:root[data-bs-theme='dark'] .sidebar-backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+:root[data-bs-theme='dark'] .left-panel-col.mobile-open {
+  box-shadow: 2px 0 8px rgba(255, 255, 255, 0.1);
+}
+
+:root[data-bs-theme='dark'] .sidebar-toggle-button {
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
 }

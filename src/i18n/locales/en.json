@@ -344,5 +344,10 @@
   "invalidPassword": "Invalid password provided",
   "browserNotSupported": "Your browser doesn't support the required encryption features",
   "encryptionInfo": "This file will be encrypted with your password.",
-  "passwordSecurityNote": "Use a strong password with at least 8 characters."
+  "passwordSecurityNote": "Use a strong password with at least 8 characters.",
+  "toggleSidebar": "Toggle Students Sidebar",
+  "openStudentsSidebar": "Open Students Sidebar",
+  "closeStudentsSidebar": "Close Students Sidebar",
+  "closeSidebar": "Close Sidebar",
+  "studentsNavigation": "Students Navigation"
 }

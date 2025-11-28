@@ -71,7 +71,7 @@ async function deriveKeyFromPassword(password: string, salt: Uint8Array): Promis
     const derivedKey = await crypto.subtle.deriveKey(
       {
         name: 'PBKDF2',
-        salt: salt,
+        salt: salt as BufferSource,
         iterations: CONFIG.PBKDF2_ITERATIONS,
         hash: CONFIG.HASH_ALGORITHM,
       },
@@ -116,7 +116,7 @@ async function compressData(data: Uint8Array): Promise<Uint8Array> {
     })();
 
     // Write data to compression stream
-    await writer.write(data);
+    await writer.write(data as BufferSource);
     await writer.close();
 
     // Wait for reading to complete
@@ -159,7 +159,7 @@ async function decompressData(compressedData: Uint8Array): Promise<Uint8Array> {
     })();
 
     // Write compressed data to decompression stream
-    await writer.write(compressedData);
+    await writer.write(compressedData as BufferSource);
     await writer.close();
 
     // Wait for reading to complete
@@ -269,7 +269,7 @@ export async function encryptAndCompressJSON(data: object, password: string): Pr
         iv: iv,
       },
       key,
-      compressedData
+      compressedData as BufferSource
     );
     
     // Step 7: Combine salt + iv + encrypted data

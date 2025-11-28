@@ -2,13 +2,14 @@
  * Custom fonts configuration for pdfmake with OpenDyslexic and Greek support
  */
 
-interface FontDefinition {
-  [key: string]: string;
-}
+// Unused for now - reserved for future use
+// interface FontDefinition {
+//   [key: string]: string;
+// }
 
-interface FontsConfig {
-  [fontFamily: string]: FontDefinition;
-}
+// interface FontsConfig {
+//   [fontFamily: string]: FontDefinition;
+// }
 
 /**
  * Fetch and convert font file to ArrayBuffer for pdfmake VFS

@@ -3,8 +3,6 @@ import {
   encryptAndCompressJSON,
   decryptAndDecompressJSON,
   validateBrowserSupport,
-  CryptoError,
-  CompressionError,
   InvalidPasswordError,
   CorruptedDataError,
 } from '../utils/cryptoUtils';
@@ -332,14 +330,14 @@ describe('cryptoUtils', () => {
 
     it('should handle multiple round-trips', async () => {
       const password = 'multi-round-trip';
-      let data = testObjects.complex;
-      
+      let data: typeof testObjects.complex = testObjects.complex;
+
       // Encrypt and decrypt 5 times
       for (let i = 0; i < 5; i++) {
         const encrypted = await encryptAndCompressJSON(data, password);
-        data = await decryptAndDecompressJSON(encrypted, password);
+        data = await decryptAndDecompressJSON(encrypted, password) as typeof testObjects.complex;
       }
-      
+
       expect(data).toEqual(testObjects.complex);
     });
   });

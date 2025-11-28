@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ListGroup, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Plus, ExclamationTriangle } from 'react-bootstrap-icons';
@@ -11,19 +11,48 @@ import ClassStatistics from './ClassStatistics';
 // Import/Export moved to TopBar
 // ClassModal moved to TopBar
 
-const LeftPanel: React.FC = () => {
+interface LeftPanelProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  onKidClick?: () => void;
+}
+
+const LeftPanel: React.FC<LeftPanelProps> = ({
+  isOpen = true,
+  onClose,
+  onKidClick
+}) => {
   const { t } = useTranslation();
   // refreshKids moved to TopBar's import flow
   const { selectedClass } = useClass();
-  
+
   const classKids = useClassKids();
   // edit/close class moved to TopBar
   // file input handled in TopBar
   const navigate = useNavigate();
 
+  const isMobile = window.innerWidth < 576;
+
   const handleKidClick = (kid: Kid) => {
     navigate(`/kids/${kid.kid_id}`);
+    // Close sidebar on mobile after selecting a kid
+    if (isMobile && onKidClick) {
+      onKidClick();
+    }
   };
+
+  // Escape key handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMobile && isOpen) {
+        onClose?.();
+      }
+    };
+    if (isMobile && isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isMobile, isOpen, onClose]);
 
 
   // Import/Export moved to TopBar

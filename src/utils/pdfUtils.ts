@@ -237,7 +237,7 @@ export async function generateClassCatalogPDF(classRecord: ClassRecord, kids: Ki
  * Generates and downloads a student name grid PDF (2 columns)
  * Uses OpenDyslexic font for better readability
  */
-export async function generateStudentGridPDF(classRecord: ClassRecord, kids: Kid[], t: TFunction): Promise<void> {
+export async function generateStudentGridPDF(classRecord: ClassRecord, kids: Kid[], _t: TFunction): Promise<void> {
   // Dynamic import to ensure proper initialization
   const pdfMakeModule = await import('pdfmake/build/pdfmake');
   const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
@@ -334,7 +334,7 @@ export async function generateStudentGridPDF(classRecord: ClassRecord, kids: Kid
  * One student per row with full name
  * Uses OpenDyslexic font for better readability
  */
-export async function generateStudentListPDF(classRecord: ClassRecord, kids: Kid[], t: TFunction): Promise<void> {
+export async function generateStudentListPDF(classRecord: ClassRecord, kids: Kid[], _t: TFunction): Promise<void> {
   // Dynamic import to ensure proper initialization
   const pdfMakeModule = await import('pdfmake/build/pdfmake');
   const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
