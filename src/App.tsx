@@ -62,7 +62,7 @@ const App: React.FC = () => {
         <KidsProvider>
           <Router>
           <div className="App d-flex flex-column min-vh-100">
-            <TopBar onSidebarToggle={toggleSidebar} />
+            <TopBar onSidebarToggle={toggleSidebar} onSidebarClose={closeSidebar} />
             <Container fluid className="flex-grow-1 content-container">
               <Row className="h-100 gx-2">
                 {/* Left Panel - Hidden on mobile, 3 cols on desktop */}

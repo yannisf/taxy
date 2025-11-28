@@ -12,12 +12,21 @@ import SidebarToggleButton from './SidebarToggleButton';
 
 interface TopBarProps {
   onSidebarToggle?: () => void;
+  onSidebarClose?: () => void;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ onSidebarToggle }) => {
+const TopBar: React.FC<TopBarProps> = ({ onSidebarToggle, onSidebarClose }) => {
   const { theme } = useTheme();
   const { selectedClass } = useClass();
   const [expanded, setExpanded] = useState(false);
+
+  const handleHamburgerToggle = () => {
+    // Close sidebar when opening hamburger menu
+    if (!expanded && onSidebarClose) {
+      onSidebarClose();
+    }
+    setExpanded(!expanded);
+  };
 
   return (
     <Navbar
@@ -37,7 +46,7 @@ const TopBar: React.FC<TopBarProps> = ({ onSidebarToggle }) => {
           {onSidebarToggle && selectedClass && <SidebarToggleButton onClick={onSidebarToggle} />}
 
           {/* Hamburger toggle button - shows on mobile */}
-          <Navbar.Toggle aria-controls="navbar-nav" onClick={() => setExpanded(!expanded)} />
+          <Navbar.Toggle aria-controls="navbar-nav" onClick={handleHamburgerToggle} />
         </div>
         
         {/* Collapsible navbar content */}
