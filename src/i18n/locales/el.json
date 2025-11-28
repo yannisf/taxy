@@ -349,5 +349,16 @@
   "openStudentsSidebar": "Άνοιγμα Πλαϊνής Μπάρας Μαθητών",
   "closeStudentsSidebar": "Κλείσιμο Πλαϊνής Μπάρας Μαθητών",
   "closeSidebar": "Κλείσιμο Πλαϊνής Μπάρας",
-  "studentsNavigation": "Πλοήγηση Μαθητών"
+  "studentsNavigation": "Πλοήγηση Μαθητών",
+  "invalidFileFormat": "Παρακαλώ επιλέξτε ένα αρχείο JSON",
+  "invalidImportFile": "Μη έγκυρο αρχείο εισαγωγής",
+  "failedToValidateImportFile": "Αποτυχία επικύρωσης αρχείου εισαγωγής",
+  "importSuccessful": "Επιτυχής εισαγωγή {{count}} μαθητών",
+  "importFailed": "Η εισαγωγή απέτυχε",
+  "importFailedUnexpected": "Η εισαγωγή απέτυχε λόγω μη αναμενόμενου σφάλματος",
+  "invalidJsonFormat": "Μη έγκυρη μορφή JSON. Παρακαλώ βεβαιωθείτε ότι το αρχείο περιέχει έγκυρο JSON.",
+  "invalidClassExportObject": "Το αρχείο εισαγωγής πρέπει να περιέχει ένα έγκυρο αντικείμενο ClassExport.",
+  "missingClassProperty": "Το αρχείο εισαγωγής πρέπει να περιέχει μια ιδιότητα αντικειμένου \"class\".",
+  "missingKidsArray": "Το αρχείο εισαγωγής πρέπει να περιέχει έναν πίνακα ιδιότητας \"kids\".",
+  "failedToProcessFile": "Αποτυχία επεξεργασίας αρχείου"
 }

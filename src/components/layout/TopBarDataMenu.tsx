@@ -91,7 +91,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
     event.target.value = '';
 
     if (!file.name.toLowerCase().endsWith('.json')) {
-      toast.error('Please select a JSON file');
+      toast.error(t('invalidFileFormat'));
       return;
     }
 
@@ -105,7 +105,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       const validationResult = await validateImportFile(file);
 
       if (!validationResult.valid) {
-        toast.error('Invalid import file');
+        toast.error(t('invalidImportFile'));
         console.error('Import validation errors:', validationResult.errors);
         return;
       }
@@ -114,7 +114,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
       importModal.open();
     } catch (error) {
       console.error('Import validation failed:', error);
-      toast.error('Failed to validate import file');
+      toast.error(t('failedToValidateImportFile'));
     } finally {
       importModal.setLoading(false);
     }
@@ -127,14 +127,14 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
     try {
       const result = await performImport(importValidationResult.validatedKids, selectedClass.class_id);
       if (result.success) {
-        toast.success(result.message);
+        toast.success(t('importSuccessful', { count: result.statistics?.totalImported || 0 }));
         await refreshKids();
       } else {
-        toast.error(result.message);
+        toast.error(t('importFailed'));
       }
     } catch (error) {
       console.error('Import failed:', error);
-      toast.error('Import failed due to an unexpected error');
+      toast.error(t('importFailedUnexpected'));
     } finally {
       importModal.setLoading(false);
       handleCancelImport();

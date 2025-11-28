@@ -349,5 +349,16 @@
   "openStudentsSidebar": "Open Students Sidebar",
   "closeStudentsSidebar": "Close Students Sidebar",
   "closeSidebar": "Close Sidebar",
-  "studentsNavigation": "Students Navigation"
+  "studentsNavigation": "Students Navigation",
+  "invalidFileFormat": "Please select a JSON file",
+  "invalidImportFile": "Invalid import file",
+  "failedToValidateImportFile": "Failed to validate import file",
+  "importSuccessful": "Successfully imported {{count}} students",
+  "importFailed": "Import failed",
+  "importFailedUnexpected": "Import failed due to an unexpected error",
+  "invalidJsonFormat": "Invalid JSON format. Please ensure the file contains valid JSON.",
+  "invalidClassExportObject": "Import file must contain a valid ClassExport object.",
+  "missingClassProperty": "Import file must contain a \"class\" object property.",
+  "missingKidsArray": "Import file must contain a \"kids\" array property.",
+  "failedToProcessFile": "Failed to process file"
 }

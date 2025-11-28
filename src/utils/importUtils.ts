@@ -35,7 +35,7 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
     } catch {
       return {
         valid: false,
-        errors: ['Invalid JSON format. Please ensure the file contains valid JSON.']
+        errors: ['invalidJsonFormat']
       };
     }
 
@@ -43,7 +43,7 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
     if (typeof parsedData !== 'object' || parsedData === null) {
       return {
         valid: false,
-        errors: ['Import file must contain a valid ClassExport object.']
+        errors: ['invalidClassExportObject']
       };
     }
 
@@ -52,14 +52,14 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
     if (!exportData.class || typeof exportData.class !== 'object') {
       return {
         valid: false,
-        errors: ['Import file must contain a "class" object property.']
+        errors: ['missingClassProperty']
       };
     }
 
     if (!Array.isArray(exportData.kids)) {
       return {
         valid: false,
-        errors: ['Import file must contain a "kids" array property.']
+        errors: ['missingKidsArray']
       };
     }
 
@@ -107,7 +107,7 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
   } catch (error) {
     return {
       valid: false,
-      errors: [`Failed to process file: ${error instanceof Error ? error.message : 'Unknown error'}`]
+      errors: ['failedToProcessFile']
     };
   }
 };
