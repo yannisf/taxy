@@ -37,7 +37,9 @@
       }
     ],
     "created_at": "2025-09-02T13:54:00Z",
-    "updated_at": "2025-09-15T09:10:00Z"
+    "updated_at": "2025-09-15T09:10:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "6f861ce8-2e93-4a52-8b43-1e79e1a942ce",
@@ -87,7 +89,9 @@
       }
     ],
     "created_at": "2025-09-04T18:20:00Z",
-    "updated_at": "2025-09-07T02:12:00Z"
+    "updated_at": "2025-09-07T02:12:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "65563ba8-5914-4832-ab1e-0de1f5686949",
@@ -156,7 +160,9 @@
       }
     ],
     "created_at": "2025-09-09T16:58:00Z",
-    "updated_at": "2025-09-11T12:18:00Z"
+    "updated_at": "2025-09-11T12:18:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "938acf87-d730-488c-a872-d9051db3428a",
@@ -196,7 +202,9 @@
       }
     ],
     "created_at": "2025-09-02T13:01:00Z",
-    "updated_at": "2025-09-22T06:15:00Z"
+    "updated_at": "2025-09-22T06:15:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "e4581cb4-434f-448f-b1f1-e2791a0fd731",
@@ -262,7 +270,9 @@
       }
     ],
     "created_at": "2025-09-08T15:13:00Z",
-    "updated_at": "2025-09-21T16:23:00Z"
+    "updated_at": "2025-09-21T16:23:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "3135be5c-1151-4db8-a199-29da58818db9",
@@ -315,7 +325,9 @@
       }
     ],
     "created_at": "2025-09-15T12:13:00Z",
-    "updated_at": "2025-09-26T19:29:00Z"
+    "updated_at": "2025-09-26T19:29:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "079ac0bb-2568-49d5-8b68-ba4551176527",
@@ -397,7 +409,9 @@
       }
     ],
     "created_at": "2025-09-03T14:08:00Z",
-    "updated_at": "2025-09-05T23:31:00Z"
+    "updated_at": "2025-09-05T23:31:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "efc563c5-c16f-40b5-93f7-b1afa75af99b",
@@ -492,7 +506,9 @@
       }
     ],
     "created_at": "2025-09-06T14:04:00Z",
-    "updated_at": "2025-09-18T09:24:00Z"
+    "updated_at": "2025-09-18T09:24:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "0eac5c4b-589c-43a9-a036-fbaac2e560a3",
@@ -542,7 +558,9 @@
       }
     ],
     "created_at": "2025-09-11T12:14:00Z",
-    "updated_at": "2025-09-18T16:15:00Z"
+    "updated_at": "2025-09-18T16:15:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "d0bc0900-3adf-4de7-9189-2b93c3fa644f",
@@ -592,7 +610,9 @@
       }
     ],
     "created_at": "2025-09-12T15:28:00Z",
-    "updated_at": "2025-09-21T23:21:00Z"
+    "updated_at": "2025-09-21T23:21:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "e9506d67-3c8f-4a67-97a2-b092b35050a0",
@@ -697,7 +717,9 @@
       }
     ],
     "created_at": "2025-09-04T18:04:00Z",
-    "updated_at": "2025-09-06T18:19:00Z"
+    "updated_at": "2025-09-06T18:19:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "2ee55c9a-1e8b-4d05-82f8-3099684b397a",
@@ -747,7 +769,9 @@
       }
     ],
     "created_at": "2025-09-09T18:21:00Z",
-    "updated_at": "2025-09-11T08:13:00Z"
+    "updated_at": "2025-09-11T08:13:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "ca75171e-eead-44de-9958-76d8af3260d9",
@@ -845,7 +869,9 @@
       }
     ],
     "created_at": "2025-09-05T17:48:00Z",
-    "updated_at": "2025-09-23T13:06:00Z"
+    "updated_at": "2025-09-23T13:06:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "584bc2d1-13e6-44c5-91a3-2dd1f292c34b",
@@ -942,7 +968,9 @@
       }
     ],
     "created_at": "2025-09-12T15:04:00Z",
-    "updated_at": "2025-09-20T23:54:00Z"
+    "updated_at": "2025-09-20T23:54:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "faa91d67-c455-419d-9eac-7a0f9c032479",
@@ -1032,7 +1060,9 @@
       }
     ],
     "created_at": "2025-09-11T16:29:00Z",
-    "updated_at": "2025-09-25T17:41:00Z"
+    "updated_at": "2025-09-25T17:41:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "5fc3c3cf-8001-47da-a78e-7a00b79b9a2e",
@@ -1122,7 +1152,9 @@
       }
     ],
     "created_at": "2025-09-06T09:55:00Z",
-    "updated_at": "2025-09-21T13:28:00Z"
+    "updated_at": "2025-09-21T13:28:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "cc2afe50-a17f-4200-a768-00b4c1be6989",
@@ -1162,7 +1194,9 @@
       }
     ],
     "created_at": "2025-09-13T08:18:00Z",
-    "updated_at": "2025-09-25T19:45:00Z"
+    "updated_at": "2025-09-25T19:45:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "f276bb6a-5ebd-427e-a06f-895b54426838",
@@ -1238,7 +1272,9 @@
       }
     ],
     "created_at": "2025-09-10T13:14:00Z",
-    "updated_at": "2025-09-18T08:30:00Z"
+    "updated_at": "2025-09-18T08:30:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "04a2b3da-07c3-466d-83ad-4b1c363ca897",
@@ -1317,7 +1353,9 @@
       }
     ],
     "created_at": "2025-09-03T14:29:00Z",
-    "updated_at": "2025-09-16T12:16:00Z"
+    "updated_at": "2025-09-16T12:16:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "c936fa4f-fe19-45a3-9b6d-b0cb8c1588a5",
@@ -1404,7 +1442,9 @@
       }
     ],
     "created_at": "2025-09-08T16:14:00Z",
-    "updated_at": "2025-09-28T18:00:00Z"
+    "updated_at": "2025-09-28T18:00:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "bd9e8356-6006-4348-85c9-c0efca06f63f",
@@ -1514,7 +1554,9 @@
       }
     ],
     "created_at": "2025-09-13T17:39:00Z",
-    "updated_at": "2025-10-01T18:17:00Z"
+    "updated_at": "2025-10-01T18:17:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "ac423019-eab8-46dc-80e1-92a47fed67c0",
@@ -1588,7 +1630,9 @@
       }
     ],
     "created_at": "2025-09-05T13:07:00Z",
-    "updated_at": "2025-09-07T04:54:00Z"
+    "updated_at": "2025-09-07T04:54:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   },
   {
     "kid_id": "976ec27c-7d94-4378-83b2-dbaffdeae4c6",
@@ -1654,6 +1698,8 @@
       }
     ],
     "created_at": "2025-09-03T12:12:00Z",
-    "updated_at": "2025-09-10T07:21:00Z"
+    "updated_at": "2025-09-10T07:21:00Z",
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "extended_day_care": false
   }
 ]

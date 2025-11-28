@@ -1,0 +1,1715 @@
+{
+  "class": {
+    "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+    "school_name": "Δημοτικό Σχολείο Αθήνας",
+    "class_name": "Νηπιαγωγείο Α",
+    "school_year": "2024-2025",
+    "created_at": "2025-11-28T21:59:11.715Z",
+    "updated_at": "2025-11-28T21:59:11.715Z"
+  },
+  "kids": [
+    {
+      "kid_id": "c959174d-8e1f-488b-a663-9070025d588b",
+      "first_name": "Μαρία",
+      "last_name": "Σταυρίδης",
+      "preferred_name": null,
+      "date_of_birth": "2018-12-04",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Νικηφόρου Φωκά",
+        "street_number": "45",
+        "neighborhood": "Πυλαία",
+        "postal_code": "370013",
+        "city": "Ηράκλειο",
+        "country": "Ελλάδα"
+      },
+      "notes": "Πολύ δημιουργικό παιδί, αγαπά τις καλλιτεχνικές δραστηριότητες",
+      "private_notes": null,
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Σπύρος",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6940265423",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "spyros.dimitrioy@email.com",
+          "profession": "Μάγειρας/Μαγείρισσα"
+        }
+      ],
+      "created_at": "2025-09-02T13:54:00Z",
+      "updated_at": "2025-09-15T09:10:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "6f861ce8-2e93-4a52-8b43-1e79e1a942ce",
+      "first_name": "Αγγελική",
+      "last_name": "Παππάς",
+      "preferred_name": null,
+      "date_of_birth": "2019-02-18",
+      "gender": "female",
+      "level": "kindergartner",
+      "address": {
+        "street_name": "Κρήτης",
+        "street_number": "454",
+        "neighborhood": "Χαριλάου",
+        "postal_code": "463103",
+        "city": "Λάρισα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Υπέροχος/η στην αριθμητική, μεγάλη περιέργεια για αριθμούς",
+      "private_notes": "Χρειάζεται ξεκάθαρες οδηγίες και ρουτίνα",
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Δημήτρης",
+          "last_name": "Σταυρίδης",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6952553419",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310271339",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2105528972",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "dimitris.stayridis@email.com",
+          "profession": "Πυροσβέστης"
+        }
+      ],
+      "created_at": "2025-09-04T18:20:00Z",
+      "updated_at": "2025-09-07T02:12:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "65563ba8-5914-4832-ab1e-0de1f5686949",
+      "first_name": "Αντώνης",
+      "last_name": "Σταυρίδης",
+      "preferred_name": null,
+      "date_of_birth": "2019-04-21",
+      "gender": "male",
+      "level": "kindergartner",
+      "address": {
+        "street_name": "Καβαλιώτου",
+        "street_number": "453",
+        "neighborhood": "Γούβες",
+        "postal_code": "194238",
+        "city": "Λάρισα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Ενθουσιώδης με την τεχνολογία και τα tablets",
+      "private_notes": null,
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Νίκος",
+          "last_name": "Νικολάου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6910122691",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310590785",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "nikos.nikolaoy@email.com",
+          "profession": "Λογιστής/Λογίστρια"
+        },
+        {
+          "first_name": "Σπύρος",
+          "last_name": "Παπαδοπούλου",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6970482814",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "spyros.papadopoyloy@email.com",
+          "profession": "Παιδίατρος",
+          "address": {
+            "street_name": "Νικηφόρου Φωκά",
+            "street_number": "386",
+            "neighborhood": "Καλαμαριά",
+            "postal_code": "595146",
+            "city": "Πάτρα",
+            "country": "Ελλάδα"
+          }
+        }
+      ],
+      "created_at": "2025-09-09T16:58:00Z",
+      "updated_at": "2025-09-11T12:18:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "938acf87-d730-488c-a872-d9051db3428a",
+      "first_name": "Ελένη",
+      "last_name": "Κωνσταντίνου",
+      "preferred_name": "Ελέ",
+      "date_of_birth": "2019-04-02",
+      "gender": "female",
+      "level": "pre-kindergartner",
+      "address": {
+        "street_name": "Κρήτης",
+        "street_number": "485",
+        "neighborhood": "Νέα Σμύρνη",
+        "postal_code": "157182",
+        "city": "Πάτρα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Εξαιρετικός/ή στην επίλυση προβλημάτων, αγαπά γρίφους",
+      "private_notes": null,
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Χριστίνα",
+          "last_name": "Παππάς",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6938346578",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "christina.pappas@email.com",
+          "profession": "Νοσηλεύτρια"
+        }
+      ],
+      "created_at": "2025-09-02T13:01:00Z",
+      "updated_at": "2025-09-22T06:15:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "e4581cb4-434f-448f-b1f1-e2791a0fd731",
+      "first_name": "Μαρία",
+      "last_name": "Οικονόμου",
+      "preferred_name": "Μαρ",
+      "date_of_birth": "2018-04-03",
+      "gender": "female",
+      "level": "pre-kindergartner",
+      "address": {
+        "street_name": "Πατησίων",
+        "street_number": "37",
+        "neighborhood": "Νέα Ιωνία",
+        "postal_code": "254738",
+        "city": "Πάτρα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Εξαιρετικός/ή στην επίλυση προβλημάτων, αγαπά γρίφους",
+      "private_notes": "Χρειάζεται ξεκάθαρες οδηγίες και ρουτίνα",
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Κώστας",
+          "last_name": "Νικολάου",
+          "relation_with_kid": "extended family",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6965667010",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2102833230",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2104191175",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "kostas.nikolaoy@email.com",
+          "profession": "Κοινωνικός Λειτουργός"
+        },
+        {
+          "first_name": "Δήμητρα",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6931781080",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "dimitra.dimitrioy@email.com",
+          "profession": "Μάγειρας/Μαγείρισσα"
+        }
+      ],
+      "created_at": "2025-09-08T15:13:00Z",
+      "updated_at": "2025-09-21T16:23:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "3135be5c-1151-4db8-a199-29da58818db9",
+      "first_name": "Κατερίνα",
+      "last_name": "Σταυρίδης",
+      "preferred_name": "Κατ",
+      "date_of_birth": "2019-05-14",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Νικηφόρου Φωκά",
+        "street_number": "339",
+        "neighborhood": "Γούβες",
+        "postal_code": "193430",
+        "city": "Αθήνα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Λατρεύει τη μουσική και το τραγούδι",
+      "private_notes": "Ήπιο άγχος σε θορυβώδη περιβάλλοντα",
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Μιχάλης",
+          "last_name": "Ιωάννου",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6936193990",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310692683",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "michalis.ioannoy@email.com",
+          "profession": "Βιβλιοθηκονόμος",
+          "address": {
+            "street_name": "Νικηφόρου Φωκά",
+            "street_number": "82",
+            "neighborhood": "Κέντρο",
+            "postal_code": "421219",
+            "city": "Θεσσαλονίκη",
+            "country": "Ελλάδα"
+          }
+        }
+      ],
+      "created_at": "2025-09-15T12:13:00Z",
+      "updated_at": "2025-09-26T19:29:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "079ac0bb-2568-49d5-8b68-ba4551176527",
+      "first_name": "Δήμητρα",
+      "last_name": "Ιωάννου",
+      "preferred_name": null,
+      "date_of_birth": "2018-01-15",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Κρήτης",
+        "street_number": "52",
+        "neighborhood": "Νέα Σμύρνη",
+        "postal_code": "443842",
+        "city": "Βόλος",
+        "country": "Ελλάδα"
+      },
+      "notes": "Υπέροχος/η στην αριθμητική, μεγάλη περιέργεια για αριθμούς",
+      "private_notes": "Χρειάζεται ξεκάθαρες οδηγίες και ρουτίνα",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Νικολέτα",
+          "last_name": "Γεωργίου",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6911824493",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "nikoleta.georgioy@email.com",
+          "profession": "Λογιστής/Λογίστρια",
+          "address": {
+            "street_name": "Ανδρόνικου",
+            "street_number": "315",
+            "neighborhood": "Νέα Ιωνία",
+            "postal_code": "108412",
+            "city": "Λάρισα",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Αντώνης",
+          "last_name": "Ιωάννου",
+          "relation_with_kid": "friend",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6942786801",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310672092",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2107194416",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "antonis.ioannoy@email.com",
+          "profession": "Πυροσβέστης",
+          "address": {
+            "street_name": "Λεωφ. Συγγρού",
+            "street_number": "49",
+            "neighborhood": "Πετράλωνα",
+            "postal_code": "634005",
+            "city": "Πάτρα",
+            "country": "Ελλάδα"
+          }
+        }
+      ],
+      "created_at": "2025-09-03T14:08:00Z",
+      "updated_at": "2025-09-05T23:31:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "efc563c5-c16f-40b5-93f7-b1afa75af99b",
+      "first_name": "Ιωάννα",
+      "last_name": "Νικολάου",
+      "preferred_name": "Ιωά",
+      "date_of_birth": "2018-06-25",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Καβαλιώτου",
+        "street_number": "499",
+        "neighborhood": "Πυλαία",
+        "postal_code": "572322",
+        "city": "Ιωάννινα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Πολύ δημιουργικό παιδί, αγαπά τις καλλιτεχνικές δραστηριότητες",
+      "private_notes": "Χρειάζεται ξεκάθαρες οδηγίες και ρουτίνα",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Γιώργος",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6937543303",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2102164686",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "giorgos.dimitrioy@email.com",
+          "profession": "Λογιστής/Λογίστρια",
+          "address": {
+            "street_name": "Εγνατία",
+            "street_number": "138",
+            "neighborhood": "Κουκάκι",
+            "postal_code": "601607",
+            "city": "Ηράκλειο",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Νίκος",
+          "last_name": "Παππάς",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6985014294",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "nikos.pappas@email.com",
+          "profession": "Μάγειρας/Μαγείρισσα"
+        },
+        {
+          "first_name": "Νίκος",
+          "last_name": "Κωνσταντίνου",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6981693406",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310664607",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310877991",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "nikos.konstantinoy@email.com",
+          "profession": "Νοσηλεύτρια"
+        }
+      ],
+      "created_at": "2025-09-06T14:04:00Z",
+      "updated_at": "2025-09-18T09:24:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "0eac5c4b-589c-43a9-a036-fbaac2e560a3",
+      "first_name": "Δήμητρα",
+      "last_name": "Παππάς",
+      "preferred_name": null,
+      "date_of_birth": "2019-06-13",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Ανδρόνικου",
+        "street_number": "284",
+        "neighborhood": "Κουκάκι",
+        "postal_code": "226629",
+        "city": "Λάρισα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Ενθουσιώδης με την τεχνολογία και τα tablets",
+      "private_notes": null,
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Νικολέτα",
+          "last_name": "Σταυρίδης",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6999577738",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2102422633",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2106623525",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "nikoleta.stayridis@email.com",
+          "profession": "Νοσηλεύτρια"
+        }
+      ],
+      "created_at": "2025-09-11T12:14:00Z",
+      "updated_at": "2025-09-18T16:15:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "d0bc0900-3adf-4de7-9189-2b93c3fa644f",
+      "first_name": "Αγγελική",
+      "last_name": "Χατζής",
+      "preferred_name": "Αγγ",
+      "date_of_birth": "2018-08-14",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Κρήτης",
+        "street_number": "100",
+        "neighborhood": "Πετράλωνα",
+        "postal_code": "416320",
+        "city": "Θεσσαλονίκη",
+        "country": "Ελλάδα"
+      },
+      "notes": "Ενθουσιώδης με την τεχνολογία και τα tablets",
+      "private_notes": "Χρειάζεται ξεκάθαρες οδηγίες και ρουτίνα",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Αντώνης",
+          "last_name": "Ιωάννου",
+          "relation_with_kid": "extended family",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6917278895",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310629298",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2108481188",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "antonis.ioannoy@email.com",
+          "profession": "Παιδίατρος"
+        }
+      ],
+      "created_at": "2025-09-12T15:28:00Z",
+      "updated_at": "2025-09-21T23:21:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "e9506d67-3c8f-4a67-97a2-b092b35050a0",
+      "first_name": "Μιχάλης",
+      "last_name": "Ιωάννου",
+      "preferred_name": "Μιχ",
+      "date_of_birth": "2019-08-03",
+      "gender": "male",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Ανδρόνικου",
+        "street_number": "121",
+        "neighborhood": "Καλαμαριά",
+        "postal_code": "315812",
+        "city": "Πάτρα",
+        "country": "Ελλάδα"
+      },
+      "notes": "Αγαπά τις δραστηριότητες στην αυλή και τις κατασκευές",
+      "private_notes": "ΔΕΠ-Υ — ωφελείται από μικρά διαλείμματα κίνησης",
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Δήμητρα",
+          "last_name": "Νικολάου",
+          "relation_with_kid": "extended family",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6958760366",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2101098919",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310413118",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "dimitra.nikolaoy@email.com",
+          "profession": "Μάγειρας/Μαγείρισσα"
+        },
+        {
+          "first_name": "Κώστας",
+          "last_name": "Παππάς",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6956272980",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310128418",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2108190929",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "kostas.pappas@email.com",
+          "profession": "Κοινωνικός Λειτουργός",
+          "address": {
+            "street_name": "Κρήτης",
+            "street_number": "114",
+            "neighborhood": "Γούβες",
+            "postal_code": "244670",
+            "city": "Ιωάννινα",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Ιωάννα",
+          "last_name": "Παπαδοπούλου",
+          "relation_with_kid": "friend",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6937556464",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2101873851",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "ioanna.papadopoyloy@email.com",
+          "profession": "Βιβλιοθηκονόμος"
+        }
+      ],
+      "created_at": "2025-09-04T18:04:00Z",
+      "updated_at": "2025-09-06T18:19:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "2ee55c9a-1e8b-4d05-82f8-3099684b397a",
+      "first_name": "Νικολέτα",
+      "last_name": "Γεωργίου",
+      "preferred_name": null,
+      "date_of_birth": "2019-11-04",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Εγνατία",
+        "street_number": "239",
+        "neighborhood": "Καλαμαριά",
+        "postal_code": "595299",
+        "city": "Θεσσαλονίκη",
+        "country": "Ελλάδα"
+      },
+      "notes": "Ήσυχος/η και παρατηρητικός/ή, εξαιρετικός/ή ακροατής/τρια",
+      "private_notes": "Οι γονείς βρίσκονται σε διάσταση — χρειάζεται επιπλέον συναισθηματική στήριξη",
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Μιχάλης",
+          "last_name": "Παπαδοπούλου",
+          "relation_with_kid": "friend",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6966319314",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310464069",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310793655",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "michalis.papadopoyloy@email.com",
+          "profession": "Μηχανικός Λογισμικού"
+        }
+      ],
+      "created_at": "2025-09-09T18:21:00Z",
+      "updated_at": "2025-09-11T08:13:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "ca75171e-eead-44de-9958-76d8af3260d9",
+      "first_name": "Κατερίνα",
+      "last_name": "Κωνσταντίνου",
+      "preferred_name": "Κατ",
+      "date_of_birth": "2019-12-05",
+      "gender": "female",
+      "level": "kindergartner",
+      "address": {
+        "street_name": "Τσιμισκή",
+        "street_number": "376",
+        "neighborhood": "Νέα Ιωνία",
+        "postal_code": "514987",
+        "city": "Χανιά",
+        "country": "Ελλάδα"
+      },
+      "notes": "Ενθουσιώδης με την τεχνολογία και τα tablets",
+      "private_notes": null,
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Χριστίνα",
+          "last_name": "Κωνσταντίνου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6907527354",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310835244",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "christina.konstantinoy@email.com",
+          "profession": "Λογιστής/Λογίστρια",
+          "address": {
+            "street_name": "Ερμού",
+            "street_number": "144",
+            "neighborhood": "Γούβες",
+            "postal_code": "257996",
+            "city": "Βόλος",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Σπύρος",
+          "last_name": "Παπαδοπούλου",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6901436349",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310460455",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "spyros.papadopoyloy@email.com",
+          "profession": "Πυροσβέστης",
+          "address": {
+            "street_name": "Ερμού",
+            "street_number": "125",
+            "neighborhood": "Πετράλωνα",
+            "postal_code": "418377",
+            "city": "Χανιά",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Γιώργος",
+          "last_name": "Κωνσταντίνου",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6944313518",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "giorgos.konstantinoy@email.com",
+          "profession": "Κοινωνικός Λειτουργός"
+        }
+      ],
+      "created_at": "2025-09-05T17:48:00Z",
+      "updated_at": "2025-09-23T13:06:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "584bc2d1-13e6-44c5-91a3-2dd1f292c34b",
+      "first_name": "Σοφία",
+      "last_name": "Σταυρίδης",
+      "preferred_name": null,
+      "date_of_birth": "2018-05-01",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Νικηφόρου Φωκά",
+        "street_number": "65",
+        "neighborhood": "Καλαμαριά",
+        "postal_code": "120842",
+        "city": "Χανιά",
+        "country": "Ελλάδα"
+      },
+      "notes": "Υπέροχος/η στην αριθμητική, μεγάλη περιέργεια για αριθμούς",
+      "private_notes": "Ήπιο άγχος σε θορυβώδη περιβάλλοντα",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Νικολέτα",
+          "last_name": "Ιωάννου",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6920471167",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310156213",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2106097514",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "nikoleta.ioannoy@email.com",
+          "profession": "Νοσηλεύτρια"
+        },
+        {
+          "first_name": "Σοφία",
+          "last_name": "Παππάς",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6993867749",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310163156",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "sofia.pappas@email.com",
+          "profession": "Μηχανικός Λογισμικού"
+        },
+        {
+          "first_name": "Κατερίνα",
+          "last_name": "Νικολάου",
+          "relation_with_kid": "friend",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6923281206",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310405407",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2105833597",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "katerina.nikolaoy@email.com",
+          "profession": "Λογιστής/Λογίστρια"
+        }
+      ],
+      "created_at": "2025-09-12T15:04:00Z",
+      "updated_at": "2025-09-20T23:54:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "faa91d67-c455-419d-9eac-7a0f9c032479",
+      "first_name": "Κατερίνα",
+      "last_name": "Οικονόμου",
+      "preferred_name": "Κατ",
+      "date_of_birth": "2018-05-27",
+      "gender": "female",
+      "level": "pre-kindergartner",
+      "address": {
+        "street_name": "Ερμού",
+        "street_number": "31",
+        "neighborhood": "Κουκάκι",
+        "postal_code": "604994",
+        "city": "Χανιά",
+        "country": "Ελλάδα"
+      },
+      "notes": "Υπέροχος/η στην αριθμητική, μεγάλη περιέργεια για αριθμούς",
+      "private_notes": "ΔΕΠ-Υ — ωφελείται από μικρά διαλείμματα κίνησης",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Νικολέτα",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "friend",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6977190659",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "nikoleta.dimitrioy@email.com",
+          "profession": "Νοσηλεύτρια"
+        },
+        {
+          "first_name": "Μιχάλης",
+          "last_name": "Χατζής",
+          "relation_with_kid": "extended family",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6929671756",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310999398",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "michalis.chatzis@email.com",
+          "profession": "Βιβλιοθηκονόμος",
+          "address": {
+            "street_name": "Ανδρόνικου",
+            "street_number": "297",
+            "neighborhood": "Κέντρο",
+            "postal_code": "582787",
+            "city": "Λάρισα",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Κώστας",
+          "last_name": "Ιωάννου",
+          "relation_with_kid": "friend",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6968071545",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310964998",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "kostas.ioannoy@email.com",
+          "profession": "Δάσκαλος/Δασκάλα"
+        }
+      ],
+      "created_at": "2025-09-11T16:29:00Z",
+      "updated_at": "2025-09-25T17:41:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "5fc3c3cf-8001-47da-a78e-7a00b79b9a2e",
+      "first_name": "Θοδωρής",
+      "last_name": "Ιωάννου",
+      "preferred_name": "Θοδ",
+      "date_of_birth": "2018-04-09",
+      "gender": "male",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Τσιμισκή",
+        "street_number": "475",
+        "neighborhood": "Καλαμαριά",
+        "postal_code": "387109",
+        "city": "Ηράκλειο",
+        "country": "Ελλάδα"
+      },
+      "notes": "Ήσυχος/η και παρατηρητικός/ή, εξαιρετικός/ή ακροατής/τρια",
+      "private_notes": "Οι γονείς βρίσκονται σε διάσταση — χρειάζεται επιπλέον συναισθηματική στήριξη",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Μαρία",
+          "last_name": "Παππάς",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6917127484",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310355570",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "maria.pappas@email.com",
+          "profession": "Πυροσβέστης"
+        },
+        {
+          "first_name": "Δήμητρα",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6904499727",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2107328534",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "dimitra.dimitrioy@email.com",
+          "profession": "Βιβλιοθηκονόμος",
+          "address": {
+            "street_name": "Νικηφόρου Φωκά",
+            "street_number": "384",
+            "neighborhood": "Κουκάκι",
+            "postal_code": "651465",
+            "city": "Λάρισα",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Κατερίνα",
+          "last_name": "Νικολάου",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6960576627",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "katerina.nikolaoy@email.com",
+          "profession": "Μεταφράστρια"
+        }
+      ],
+      "created_at": "2025-09-06T09:55:00Z",
+      "updated_at": "2025-09-21T13:28:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "cc2afe50-a17f-4200-a768-00b4c1be6989",
+      "first_name": "Γιώργος",
+      "last_name": "Γεωργίου",
+      "preferred_name": null,
+      "date_of_birth": "2018-02-16",
+      "gender": "male",
+      "level": "kindergartner",
+      "address": {
+        "street_name": "Πατησίων",
+        "street_number": "320",
+        "neighborhood": "Πετράλωνα",
+        "postal_code": "511586",
+        "city": "Βόλος",
+        "country": "Ελλάδα"
+      },
+      "notes": "Εξαιρετικός/ή στην επίλυση προβλημάτων, αγαπά γρίφους",
+      "private_notes": null,
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Θοδωρής",
+          "last_name": "Οικονόμου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6943161172",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "thodoris.oikonomoy@email.com",
+          "profession": "Βιβλιοθηκονόμος"
+        }
+      ],
+      "created_at": "2025-09-13T08:18:00Z",
+      "updated_at": "2025-09-25T19:45:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "f276bb6a-5ebd-427e-a06f-895b54426838",
+      "first_name": "Χριστίνα",
+      "last_name": "Δημητρίου",
+      "preferred_name": "Χρι",
+      "date_of_birth": "2018-03-06",
+      "gender": "female",
+      "level": "pre-kindergartner",
+      "address": {
+        "street_name": "Κρήτης",
+        "street_number": "446",
+        "neighborhood": "Πετράλωνα",
+        "postal_code": "493792",
+        "city": "Ηράκλειο",
+        "country": "Ελλάδα"
+      },
+      "notes": "Εξαιρετικός/ή στην επίλυση προβλημάτων, αγαπά γρίφους",
+      "private_notes": null,
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Παναγιώτης",
+          "last_name": "Σταυρίδης",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6974821759",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310823846",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2106068760",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "panagiotis.stayridis@email.com",
+          "profession": "Μάγειρας/Μαγείρισσα"
+        },
+        {
+          "first_name": "Χρήστος",
+          "last_name": "Οικονόμου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6959440640",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310973294",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310400096",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "christos.oikonomoy@email.com",
+          "profession": "Νοσηλεύτρια"
+        }
+      ],
+      "created_at": "2025-09-10T13:14:00Z",
+      "updated_at": "2025-09-18T08:30:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "04a2b3da-07c3-466d-83ad-4b1c363ca897",
+      "first_name": "Ελένη",
+      "last_name": "Παπαδοπούλου",
+      "preferred_name": null,
+      "date_of_birth": "2019-01-19",
+      "gender": "female",
+      "level": "kindergartner",
+      "address": {
+        "street_name": "Τσιμισκή",
+        "street_number": "47",
+        "neighborhood": "Καλαμαριά",
+        "postal_code": "306232",
+        "city": "Βόλος",
+        "country": "Ελλάδα"
+      },
+      "notes": "Δείχνει ηγετικές ικανότητες και βοηθά τους/τις συμμαθητές/τριες",
+      "private_notes": "Χρειάζεται ξεκάθαρες οδηγίες και ρουτίνα",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Χρήστος",
+          "last_name": "Σταυρίδης",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6960481754",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310213609",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310594379",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "christos.stayridis@email.com",
+          "profession": "Μεταφράστρια",
+          "address": {
+            "street_name": "Ερμού",
+            "street_number": "241",
+            "neighborhood": "Νέα Σμύρνη",
+            "postal_code": "193685",
+            "city": "Θεσσαλονίκη",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Σπύρος",
+          "last_name": "Κωνσταντίνου",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6917461200",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2104939290",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "spyros.konstantinoy@email.com",
+          "profession": "Πυροσβέστης"
+        }
+      ],
+      "created_at": "2025-09-03T14:29:00Z",
+      "updated_at": "2025-09-16T12:16:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "c936fa4f-fe19-45a3-9b6d-b0cb8c1588a5",
+      "first_name": "Θοδωρής",
+      "last_name": "Γεωργίου",
+      "preferred_name": "Θοδ",
+      "date_of_birth": "2018-08-20",
+      "gender": "male",
+      "level": "kindergartner",
+      "address": {
+        "street_name": "Ανδρόνικου",
+        "street_number": "17",
+        "neighborhood": "Χαριλάου",
+        "postal_code": "237735",
+        "city": "Θεσσαλονίκη",
+        "country": "Ελλάδα"
+      },
+      "notes": "Λατρεύει τη μουσική και το τραγούδι",
+      "private_notes": null,
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Νίκος",
+          "last_name": "Παπαδοπούλου",
+          "relation_with_kid": "grandparent",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6917139005",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "nikos.papadopoyloy@email.com",
+          "profession": "Μεταφράστρια"
+        },
+        {
+          "first_name": "Κατερίνα",
+          "last_name": "Οικονόμου",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6933529042",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2103927575",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2101432519",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "katerina.oikonomoy@email.com",
+          "profession": "Δάσκαλος/Δασκάλα"
+        },
+        {
+          "first_name": "Νίκος",
+          "last_name": "Νικολάου",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6924026811",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310638169",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "nikos.nikolaoy@email.com",
+          "profession": "Μηχανικός Λογισμικού"
+        }
+      ],
+      "created_at": "2025-09-08T16:14:00Z",
+      "updated_at": "2025-09-28T18:00:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "bd9e8356-6006-4348-85c9-c0efca06f63f",
+      "first_name": "Σπύρος",
+      "last_name": "Παπαδοπούλου",
+      "preferred_name": null,
+      "date_of_birth": "2019-07-14",
+      "gender": "male",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Ερμού",
+        "street_number": "252",
+        "neighborhood": "Γούβες",
+        "postal_code": "141592",
+        "city": "Θεσσαλονίκη",
+        "country": "Ελλάδα"
+      },
+      "notes": "Ήσυχος/η και παρατηρητικός/ή, εξαιρετικός/ή ακροατής/τρια",
+      "private_notes": "Οι γονείς βρίσκονται σε διάσταση — χρειάζεται επιπλέον συναισθηματική στήριξη",
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Μιχάλης",
+          "last_name": "Παππάς",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6998478961",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310906315",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310325468",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "michalis.pappas@email.com",
+          "profession": "Κοινωνικός Λειτουργός"
+        },
+        {
+          "first_name": "Αγγελική",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "friend",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6971111615",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2106530541",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310530764",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "aggeliki.dimitrioy@email.com",
+          "profession": "Μάγειρας/Μαγείρισσα",
+          "address": {
+            "street_name": "Καβαλιώτου",
+            "street_number": "214",
+            "neighborhood": "Νέα Σμύρνη",
+            "postal_code": "306545",
+            "city": "Πάτρα",
+            "country": "Ελλάδα"
+          }
+        },
+        {
+          "first_name": "Ελένη",
+          "last_name": "Σταυρίδης",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6919832731",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2105673599",
+              "telephone_type": "home"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310946432",
+              "telephone_type": "work"
+            }
+          ],
+          "email": "eleni.stayridis@email.com",
+          "profession": "Πυροσβέστης"
+        }
+      ],
+      "created_at": "2025-09-13T17:39:00Z",
+      "updated_at": "2025-10-01T18:17:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "ac423019-eab8-46dc-80e1-92a47fed67c0",
+      "first_name": "Γιώργος",
+      "last_name": "Γεωργίου",
+      "preferred_name": null,
+      "date_of_birth": "2019-06-12",
+      "gender": "male",
+      "level": "pre-kindergartner",
+      "address": {
+        "street_name": "Τσιμισκή",
+        "street_number": "446",
+        "neighborhood": "Κουκάκι",
+        "postal_code": "466120",
+        "city": "Θεσσαλονίκη",
+        "country": "Ελλάδα"
+      },
+      "notes": "Αγαπά τις δραστηριότητες στην αυλή και τις κατασκευές",
+      "private_notes": "ΔΕΠ-Υ — ωφελείται από μικρά διαλείμματα κίνησης",
+      "special_education": false,
+      "guardians": [
+        {
+          "first_name": "Παναγιώτης",
+          "last_name": "Κωνσταντίνου",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6959910229",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2108434202",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310609253",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "panagiotis.konstantinoy@email.com",
+          "profession": "Κοινωνικός Λειτουργός"
+        },
+        {
+          "first_name": "Κώστας",
+          "last_name": "Σταυρίδης",
+          "relation_with_kid": "father",
+          "authorized_for_pickup": true,
+          "same_address_as_kid": false,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6903690034",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "kostas.stayridis@email.com",
+          "profession": "Λογιστής/Λογίστρια",
+          "address": {
+            "street_name": "Ερμού",
+            "street_number": "178",
+            "neighborhood": "Πετράλωνα",
+            "postal_code": "174978",
+            "city": "Λάρισα",
+            "country": "Ελλάδα"
+          }
+        }
+      ],
+      "created_at": "2025-09-05T13:07:00Z",
+      "updated_at": "2025-09-07T04:54:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    },
+    {
+      "kid_id": "976ec27c-7d94-4378-83b2-dbaffdeae4c6",
+      "first_name": "Αναστασία",
+      "last_name": "Δημητρίου",
+      "preferred_name": "Ανα",
+      "date_of_birth": "2018-09-18",
+      "gender": "female",
+      "level": "kindergartner-repeating",
+      "address": {
+        "street_name": "Πατησίων",
+        "street_number": "37",
+        "neighborhood": "Πετράλωνα",
+        "postal_code": "650607",
+        "city": "Θεσσαλονίκη",
+        "country": "Ελλάδα"
+      },
+      "notes": "Λατρεύει τη μουσική και το τραγούδι",
+      "private_notes": null,
+      "special_education": true,
+      "guardians": [
+        {
+          "first_name": "Μιχάλης",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "sibling",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6941605297",
+              "telephone_type": "mobile"
+            }
+          ],
+          "email": "michalis.dimitrioy@email.com",
+          "profession": "Μηχανικός Λογισμικού"
+        },
+        {
+          "first_name": "Αγγελική",
+          "last_name": "Δημητρίου",
+          "relation_with_kid": "mother",
+          "authorized_for_pickup": false,
+          "same_address_as_kid": true,
+          "telephones": [
+            {
+              "country_code": "+30",
+              "number": "6916453521",
+              "telephone_type": "mobile"
+            },
+            {
+              "country_code": "+30",
+              "number": "2310913934",
+              "telephone_type": "work"
+            },
+            {
+              "country_code": "+30",
+              "number": "2103477824",
+              "telephone_type": "home"
+            }
+          ],
+          "email": "aggeliki.dimitrioy@email.com",
+          "profession": "Μηχανικός Λογισμικού"
+        }
+      ],
+      "created_at": "2025-09-03T12:12:00Z",
+      "updated_at": "2025-09-10T07:21:00Z",
+      "class_id": "c9f5cc7a-5b2b-48f5-b1b8-1ac1dd4c9412",
+      "extended_day_care": false
+    }
+  ]
+}

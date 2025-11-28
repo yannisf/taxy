@@ -63,7 +63,9 @@
       }
     ],
     "created_at": "2024-08-15T10:30:00Z",
-    "updated_at": "2024-09-01T14:22:00Z"
+    "updated_at": "2024-09-01T14:22:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440002",
@@ -166,7 +168,9 @@
       }
     ],
     "created_at": "2024-08-16T09:15:00Z",
-    "updated_at": "2024-09-02T11:45:00Z"
+    "updated_at": "2024-09-02T11:45:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440003",
@@ -240,7 +244,9 @@
       }
     ],
     "created_at": "2024-08-17T13:20:00Z",
-    "updated_at": "2024-09-03T16:30:00Z"
+    "updated_at": "2024-09-03T16:30:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440004",
@@ -290,7 +296,9 @@
       }
     ],
     "created_at": "2024-08-18T08:45:00Z",
-    "updated_at": "2024-09-04T12:15:00Z"
+    "updated_at": "2024-09-04T12:15:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440005",
@@ -385,7 +393,9 @@
       }
     ],
     "created_at": "2024-08-19T15:10:00Z",
-    "updated_at": "2024-09-05T09:20:00Z"
+    "updated_at": "2024-09-05T09:20:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440006",
@@ -451,7 +461,9 @@
       }
     ],
     "created_at": "2024-08-20T11:35:00Z",
-    "updated_at": "2024-09-06T14:50:00Z"
+    "updated_at": "2024-09-06T14:50:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440007",
@@ -546,7 +558,9 @@
       }
     ],
     "created_at": "2024-08-21T12:00:00Z",
-    "updated_at": "2024-09-07T10:30:00Z"
+    "updated_at": "2024-09-07T10:30:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440008",
@@ -617,7 +631,9 @@
       }
     ],
     "created_at": "2024-08-22T14:25:00Z",
-    "updated_at": "2024-09-08T16:45:00Z"
+    "updated_at": "2024-09-08T16:45:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440009",
@@ -691,7 +707,9 @@
       }
     ],
     "created_at": "2024-08-23T09:40:00Z",
-    "updated_at": "2024-09-09T13:25:00Z"
+    "updated_at": "2024-09-09T13:25:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   },
   {
     "kid_id": "550e8400-e29b-41d4-a716-446655440010",
@@ -755,29 +773,31 @@
         "email": "brian.thompson@email.com",
         "profession": "IT Support Specialist"
       },
-        {
-          "first_name": "Emma",
-          "last_name": "Thompson",
-          "relation_with_kid": "sibling",
-          "authorized_for_pickup": false,
-          "same_address_as_kid": true,
-          "telephones": [
-            {
-              "country_code": "+1",
-              "number": "5553456789",
-              "telephone_type": "mobile"
-            },
-            {
-              "country_code": "+1",
-              "number": "5554321087",
-              "telephone_type": "home"
-            }
-          ],
-          "email": "emma.thompson.sister@email.com",
-          "profession": "High School Student"
-        }
+      {
+        "first_name": "Emma",
+        "last_name": "Thompson",
+        "relation_with_kid": "sibling",
+        "authorized_for_pickup": false,
+        "same_address_as_kid": true,
+        "telephones": [
+          {
+            "country_code": "+1",
+            "number": "5553456789",
+            "telephone_type": "mobile"
+          },
+          {
+            "country_code": "+1",
+            "number": "5554321087",
+            "telephone_type": "home"
+          }
+        ],
+        "email": "emma.thompson.sister@email.com",
+        "profession": "High School Student"
+      }
     ],
     "created_at": "2024-08-24T16:15:00Z",
-    "updated_at": "2024-09-10T11:10:00Z"
+    "updated_at": "2024-09-10T11:10:00Z",
+    "class_id": "4223e4b3-544e-4762-afad-04ec9b2a131f",
+    "extended_day_care": false
   }
 ]
