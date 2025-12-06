@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
 import { exportGuardianEmails } from '../../utils/exportUtils';
-import { generateClassCatalogPDF } from '../../utils/pdfUtils';
+import { generateClassCatalogPDF } from '../../utils/pdf';
 
 interface TopBarReportsMenuProps {
   theme: 'light' | 'dark';

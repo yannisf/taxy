@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 import { db } from '../services/database';
 import { validationService } from '../services/validation';
 import type { Kid, Class } from '../types/models';
@@ -83,7 +83,7 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
       const now = new Date().toISOString();
       const validatedKid: Kid = {
         ...kidData,
-        kid_id: kidData.kid_id || uuidv4(), // Generate UUID if missing
+        kid_id: kidData.kid_id || nanoid(), // Generate ID if missing
         class_id: kidData.class_id || exportData.class.class_id, // Use kid's class_id or class ID from export
         created_at: kidData.created_at || now,
         updated_at: now // Always update this during import

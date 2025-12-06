@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import DatePicker from 'react-datepicker';
 import type { Control, FieldErrors } from 'react-hook-form';
 import type { Kid } from '../../../types/models';
 import { useKids } from '../../../contexts/KidsContext';
@@ -149,13 +150,39 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) 
             <Controller
               name="date_of_birth"
               control={control}
-              render={({ field }) => (
-                <Form.Control
-                  {...field}
-                  value={field.value ?? ''}
-                  type="date"
-                />
-              )}
+              render={({ field }) => {
+                const today = new Date();
+
+                // Parse the field value (ISO string) to Date object
+                const selectedDate = field.value ? new Date(field.value) : null;
+
+                // Only set openToDate if there's no selected date (for new kids)
+                // If a date is already selected, the calendar will open to that date automatically
+                const openToDate = !selectedDate
+                  ? new Date(new Date().getFullYear() - 5, 0, 1) // January 1st, current year - 5
+                  : undefined;
+
+                return (
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={(date) => {
+                      // Convert Date to ISO string (YYYY-MM-DD) for storage
+                      field.onChange(date ? date.toISOString().split('T')[0] : '');
+                    }}
+                    onBlur={field.onBlur}
+                    openToDate={openToDate}
+                    maxDate={today}
+                    dateFormat="dd/MM/yyyy"
+                    showYearDropdown
+                    scrollableYearDropdown
+                    yearDropdownItemNumber={100}
+                    placeholderText={t('dateOfBirth')}
+                    className="form-control"
+                    wrapperClassName="d-block"
+                    isClearable
+                  />
+                );
+              }}
             />
           </Form.Group>
         </Col>

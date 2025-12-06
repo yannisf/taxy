@@ -3,7 +3,7 @@ import type { Kid, ClassRecord, ClassExport } from '../types/models';
 import {
   encryptAndCompressJSON,
   validateBrowserSupport,
-} from './cryptoUtils';
+} from './crypto';
 import { downloadFile } from './downloadUtils';
 
 export const exportClassData = async (

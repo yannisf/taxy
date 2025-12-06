@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { nanoid } from 'nanoid';
 
 export interface Address {
   street_name?: string;
@@ -71,23 +71,23 @@ export interface ClassExport {
   kids: Kid[];
 }
 
-// Utility function to create a new kid with default UUID
+// Utility function to create a new kid with default ID
 // Note: class_id is required and must be provided
 export function createKid(partialKid: Omit<Kid, 'kid_id' | 'created_at' | 'updated_at'>): Kid {
   const now = new Date().toISOString();
   return {
-    kid_id: uuidv4(),
+    kid_id: nanoid(),
     created_at: now,
     updated_at: now,
     ...partialKid
   };
 }
 
-// Utility function to create a new class with default UUID
+// Utility function to create a new class with default ID
 export function createClass(partialClass: Omit<Class, 'class_id' | 'created_at' | 'updated_at'>): Class {
   const now = new Date().toISOString();
   return {
-    class_id: uuidv4(),
+    class_id: nanoid(),
     created_at: now,
     updated_at: now,
     ...partialClass

@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
-import { ListGroup, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import React, { useEffect, useState, useMemo } from 'react';
+import { ListGroup, Button, OverlayTrigger, Tooltip, Form, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Plus, ExclamationTriangle } from 'react-bootstrap-icons';
+import { Plus, ExclamationTriangle, X } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 // useKids not needed in LeftPanel anymore; import in TopBar
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
 import type { Kid } from '../../types/models';
 import ClassStatistics from './ClassStatistics';
+import { normalizeString } from '../../utils/nameUtils';
 // Import/Export moved to TopBar
 // ClassModal moved to TopBar
 
@@ -30,6 +31,8 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   // edit/close class moved to TopBar
   // file input handled in TopBar
   const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const isMobile = window.innerWidth < 768;
 
@@ -57,9 +60,23 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
 
   // Import/Export moved to TopBar
 
+  // Filter kids based on search query
+  const filteredKids = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return classKids;
+    }
+
+    const normalizedQuery = normalizeString(searchQuery);
+
+    return classKids.filter(kid => {
+      const displayName = (kid.preferred_name || kid.first_name) + ' ' + kid.last_name;
+      const normalizedName = normalizeString(displayName);
+      return normalizedName.includes(normalizedQuery);
+    });
+  }, [classKids, searchQuery]);
 
   // Kids are already sorted by the useClassKids hook
-  const sortedKids = classKids;
+  const sortedKids = filteredKids;
 
   return (
     <>
@@ -81,24 +98,49 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
         )}
 
         {selectedClass && (
-          <div className="d-flex align-items-center mb-3 gap-1">
-            <h5 className="mb-0">{t('kids')}</h5>
-            <OverlayTrigger
-              placement="top"
-              overlay={<Tooltip id="add-kid-tooltip">{t('addKid')}</Tooltip>}
-            >
-              <Button
-                variant="link"
-                size="sm"
-                className="p-0 add-kid-icon-button"
-                onClick={() => navigate('/kids/add')}
-                aria-label={t('addKid')}
-                title={t('addKid')}
+          <>
+            <div className="d-flex align-items-center mb-2 gap-1">
+              <h5 className="mb-0">{t('kids')}</h5>
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip id="add-kid-tooltip">{t('addKid')}</Tooltip>}
               >
-                <Plus size={18} />
-              </Button>
-            </OverlayTrigger>
-          </div>
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="p-0 add-kid-icon-button"
+                  onClick={() => navigate('/kids/add')}
+                  aria-label={t('addKid')}
+                  title={t('addKid')}
+                >
+                  <Plus size={18} />
+                </Button>
+              </OverlayTrigger>
+            </div>
+
+            {/* Quick Search */}
+            <div className="mb-3">
+              <InputGroup size="sm">
+                <Form.Control
+                  type="text"
+                  placeholder={t('searchKids')}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label={t('searchKids')}
+                />
+                {searchQuery && (
+                  <Button
+                    variant="outline-secondary"
+                    onClick={() => setSearchQuery('')}
+                    aria-label={t('clearSearch')}
+                    title={t('clearSearch')}
+                  >
+                    <X size={16} />
+                  </Button>
+                )}
+              </InputGroup>
+            </div>
+          </>
         )}
         
         <div className="kids-list">
@@ -137,7 +179,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
           ))}
           {sortedKids.length === 0 && selectedClass && (
             <ListGroup.Item variant="light" className="text-center border-0">
-              {t('noKidsInClass')}
+              {searchQuery ? t('noKidsMatchSearch') : t('noKidsInClass')}
             </ListGroup.Item>
           )}
         </ListGroup>

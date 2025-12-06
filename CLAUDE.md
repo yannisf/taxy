@@ -14,6 +14,12 @@ Taxy is a React-based class management system for educational institutions. It m
 - React Router DOM 7.9.3
 - i18next for internationalization
 - Vitest + React Testing Library
+- nanoid for ID generation
+- date-fns for date formatting
+- react-datepicker for date input controls
+- pako for compression (browser compatibility fallback)
+- pdfmake for PDF generation
+- react-error-boundary for error handling
 
 ## Development Commands
 
@@ -66,7 +72,7 @@ The application uses `ClassManagementDatabase` defined in `src/services/database
 - `Telephone`: Phone numbers with type (mobile/home/work/other)
 
 **Important Constraints:**
-- All primary entities use UUIDs (via uuid library)
+- All primary entities use unique IDs generated via nanoid library
 - Timestamps (created_at, updated_at) are automatically managed
 - Kids can have multiple guardians and phone numbers
 - Classes contain arrays of kid_ids (not embedded kids)
@@ -86,8 +92,13 @@ The app uses React Context for state management with three main providers:
 
 **Provider Nesting** (in App.tsx):
 ```
-ThemeProvider > ClassProvider > KidsProvider > Router
+ErrorBoundary > ThemeProvider > ClassProvider > KidsProvider > Router
 ```
+
+**Error Handling:**
+- Global error boundary via `react-error-boundary` library
+- Catches React component errors and displays user-friendly fallback
+- Error fallback component: `src/components/common/ErrorFallback.tsx`
 
 ### Component Organization
 
@@ -139,7 +150,7 @@ The application provides two main reporting features, accessible via the Reports
 
 ### 1. Class Catalog PDF Report
 
-**Function**: `generateClassCatalogPDF()` in `src/utils/pdfUtils.ts`
+**Function**: `generateClassCatalogPDF()` in `src/utils/pdf/catalogGenerator.ts`
 
 **Features:**
 - Generates landscape A4 PDF using pdfmake library
@@ -208,14 +219,48 @@ Jane,Smith,jane.smith@example.com
 ### Timestamp Management
 All database updates automatically set `updated_at`. When creating records, both `created_at` and `updated_at` are set. The database layer handles this automatically.
 
-### UUID Generation
-Use the `createKid()` and `createClass()` utility functions from `src/types/models.ts` to ensure proper UUID and timestamp initialization.
+### ID Generation
+Use the `createKid()` and `createClass()` utility functions from `src/types/models.ts` to ensure proper ID and timestamp initialization. IDs are generated using `nanoid()` for smaller bundle size and better performance compared to UUIDs.
 
 ### Form Handling
 Forms use React Hook Form for validation and state management. See `src/components/kids/KidForm.tsx` for the main student form pattern.
 
 ### Drag & Drop
 Telephone ordering uses @dnd-kit library. See `src/components/common/SortableTelephoneForm.tsx`.
+
+### Logging
+Use the centralized `logger` utility (`src/utils/logger.ts`) instead of `console` methods:
+
+```typescript
+import { logger } from '../utils/logger';
+
+logger.debug('Debug information');  // Only in development
+logger.info('Information');         // Only in development
+logger.warn('Warning');            // Always shown
+logger.error('Error');             // Always shown
+```
+
+The logger automatically suppresses debug and info messages in production builds.
+
+### Error Handling Pattern
+Use the `useAsyncAction` hook (`src/hooks/useAsyncAction.ts`) for consistent async error handling with toast notifications:
+
+```typescript
+import { useAsyncAction } from '../hooks/useAsyncAction';
+
+const executeAction = useAsyncAction();
+
+await executeAction(
+  () => deleteClass(classId),
+  {
+    successMessage: t('classDeleted'),
+    errorMessage: t('failedToDeleteClass'),
+    onSuccess: () => navigate('/kids')
+  }
+);
+```
+
+This eliminates repetitive try/catch blocks and standardizes error/success feedback.
 
 ## Autocomplete Features
 
@@ -294,14 +339,24 @@ Provides autocomplete for all address fields (street name, neighborhood, postal 
 
 The application includes cryptographic utilities for secure data handling when exporting sensitive information.
 
-### Encryption Utilities (`src/utils/cryptoUtils.ts`)
+### Encryption Utilities (`src/utils/crypto/`)
+
+**Module Structure:**
+The crypto utilities are split into focused modules:
+- `errors.ts` - Custom error classes (CryptoError, CompressionError, InvalidPasswordError, CorruptedDataError)
+- `config.ts` - Cryptography configuration constants
+- `encoding.ts` - Base64 encoding/decoding utilities
+- `compression.ts` - Gzip compression/decompression with pako fallback
+- `encryption.ts` - AES-GCM encryption and key derivation
+- `validation.ts` - Browser support validation
+- `index.ts` - Main API exports
 
 **Features:**
 - AES-GCM-256 encryption with PBKDF2 key derivation (100,000 iterations)
-- Gzip compression using native browser Compression Streams API
-- Zero external dependencies (uses Web Crypto API)
+- Gzip compression using native browser Compression Streams API with pako fallback
 - Supports large JSON files (up to 5MB)
 - Comprehensive error handling with custom error types
+- Automatic fallback to pako library for browsers without native compression support
 
 **Main Functions:**
 - `encryptAndCompressJSON(data, password)`: Encrypts and compresses JSON data, returns Base64 string
@@ -325,11 +380,42 @@ The application includes cryptographic utilities for secure data handling when e
 7. Encode to Base64
 
 **Browser Requirements:**
-- Web Crypto API (crypto.subtle)
-- Compression Streams API (CompressionStream/DecompressionStream)
-- TextEncoder/TextDecoder
+- Web Crypto API (crypto.subtle) - Required
+- Compression Streams API (CompressionStream/DecompressionStream) - Optional (falls back to pako)
+- TextEncoder/TextDecoder - Required
 
 **Tests:** `src/test/cryptoUtils.test.ts`
+
+## PDF Generation
+
+The application uses pdfmake for PDF generation with utilities split into focused modules.
+
+### PDF Module Structure (`src/utils/pdf/`)
+
+- `formatters.ts` - Phone number and text formatting utilities
+- `pdfSetup.ts` - PDF initialization and font configuration
+- `catalogGenerator.ts` - Class catalog PDF generation (landscape, Roboto font)
+- `gridGenerator.ts` - Student grid PDF generation (2-column, OpenDyslexic font)
+- `listGenerator.ts` - Student list PDF generation (single-column, OpenDyslexic font)
+- `index.ts` - Public API exports
+
+### Date Formatting
+
+The application uses `date-fns` library for consistent date formatting:
+
+```typescript
+import { format } from 'date-fns';
+import { el, enGB } from 'date-fns/locale';
+
+const locale = currentLanguage === 'el' ? el : enGB;
+const formattedDate = format(new Date(), 'dd/MM/yyyy', { locale });
+```
+
+This provides:
+- Consistent formatting across the application
+- Tree-shakeable imports (only import what you need)
+- Better internationalization support
+- Smaller bundle size compared to manual date manipulation
 
 ## Testing
 
@@ -344,19 +430,38 @@ Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment
 - **Class Context**: The selected class is persisted in localStorage and restored on app load.
 - **Guardian Same Address**: Guardians can share the kid's address (same_address_as_kid flag).
 - **Telephone Sorting**: Telephones are displayed in array order and can be reordered via drag-and-drop.
-- **PDF Generation**: Uses pdfmake library (see `src/utils/pdfUtils.ts`).
+- **PDF Generation**: Uses pdfmake library (see `src/utils/pdf/`).
 
 ## File Locations
 
+### Core Application
+- Main app component: `src/App.tsx`
+- Entry point: `src/main.tsx`
 - Database schema: `src/services/database.ts`
 - Type definitions: `src/types/models.ts`
 - Validation service: `src/services/validation.ts` (uses ajv with JSON schemas from `src/schemas/`)
-- Main app component: `src/App.tsx`
-- Entry point: `src/main.tsx`
-- PDF generation: `src/utils/pdfUtils.ts`
-- Export utilities: `src/utils/exportUtils.ts`
-- Import utilities: `src/utils/importUtils.ts`
+
+### Utilities (Modular Structure)
+- **PDF generation**: `src/utils/pdf/` (modular: catalogGenerator, gridGenerator, listGenerator, formatters, pdfSetup)
+- **Crypto utilities**: `src/utils/crypto/` (modular: encryption, compression, encoding, validation, errors, config)
+- **Other utilities**:
+  - Export utilities: `src/utils/exportUtils.ts`
+  - Import utilities: `src/utils/importUtils.ts`
+  - Name utilities: `src/utils/nameUtils.ts`
+  - Logger: `src/utils/logger.ts`
+  - Date formatting: Using `date-fns` library
+
+### Hooks
+- Async action hook: `src/hooks/useAsyncAction.ts`
+- Modal state hook: `src/hooks/useModalState.ts`
+- Class kids hook: `src/hooks/useClassKids.ts`
+
+### Components
 - Reports menu: `src/components/layout/TopBarReportsMenu.tsx`
-- Name utilities: `src/utils/nameUtils.ts`
 - Autocomplete input: `src/components/common/AutocompleteInput.tsx`
-- Crypto utilities: `src/utils/cryptoUtils.ts`
+- Error fallback: `src/components/common/ErrorFallback.tsx`
+
+### Tests
+- Crypto tests: `src/test/cryptoUtils.test.ts`
+- Name utils tests: `src/test/nameUtils.test.ts`
+- Test setup: `src/test/setup.ts`

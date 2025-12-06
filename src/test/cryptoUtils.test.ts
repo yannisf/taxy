@@ -5,7 +5,7 @@ import {
   validateBrowserSupport,
   InvalidPasswordError,
   CorruptedDataError,
-} from '../utils/cryptoUtils';
+} from '../utils/crypto';
 
 // Mock console to capture output for testing
 const mockConsole = {

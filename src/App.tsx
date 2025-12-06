@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Container, Row, Col } from 'react-bootstrap';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
+import { ErrorBoundary } from 'react-error-boundary';
 
 // Import layout components
 import TopBar from './components/layout/TopBar';
 import LeftPanel from './components/layout/LeftPanel';
+import { ErrorFallback } from './components/common/ErrorFallback';
 
 // Import views
 import KidListView from './components/kids/KidListView';
@@ -57,11 +59,12 @@ const App: React.FC = () => {
   }, [sidebarOpen]);
 
   return (
-    <ThemeProvider>
-      <ClassProvider>
-        <KidsProvider>
-          <Router>
-          <div className="App d-flex flex-column min-vh-100">
+    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => window.location.reload()}>
+      <ThemeProvider>
+        <ClassProvider>
+          <KidsProvider>
+            <Router>
+            <div className="App d-flex flex-column min-vh-100">
             <TopBar onSidebarToggle={toggleSidebar} onSidebarClose={closeSidebar} />
             <Container fluid className="flex-grow-1 content-container">
               <Row className="h-100 gx-2">
@@ -108,10 +111,11 @@ const App: React.FC = () => {
             draggable
             pauseOnHover
           />
-          </Router>
-        </KidsProvider>
-      </ClassProvider>
-    </ThemeProvider>
+            </Router>
+          </KidsProvider>
+        </ClassProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 

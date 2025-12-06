@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
-import { generateStudentGridPDF, generateStudentListPDF } from '../../utils/pdfUtils';
+import { generateStudentGridPDF, generateStudentListPDF } from '../../utils/pdf';
 
 interface TopBarCardsMenuProps {
   theme: 'light' | 'dark';

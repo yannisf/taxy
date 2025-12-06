@@ -61,9 +61,9 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     }
   });
 
-  const handleGuardiansChange = useCallback((updatedGuardians: Guardian[]) => {
+  const handleGuardiansChange = (updatedGuardians: Guardian[]) => {
     setGuardians(updatedGuardians);
-  }, []);
+  };
 
   const handleCancel = () => {
     if (onCancel) {

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import type { ReactNode } from 'react';
 import { db } from '../services/database';
 import type { Class } from '../types/models';
+import { createClass as createClassModel } from '../types/models';
 
 interface ClassContextType {
   classes: Class[];
@@ -33,7 +34,7 @@ export const ClassProvider: React.FC<ClassProviderProps> = ({ children }) => {
       setLoading(true);
       const fetchedClasses = await db.getClasses();
       setClasses(fetchedClasses);
-      
+
       // Check if selected class still exists
       if (selectedClass && !fetchedClasses.find(c => c.class_id === selectedClass.class_id)) {
         setSelectedClass(null);
@@ -44,7 +45,7 @@ export const ClassProvider: React.FC<ClassProviderProps> = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [selectedClass?.class_id]);
+  }, [selectedClass]);
 
   const selectClass = useCallback(async (classId: string) => {
     try {
@@ -65,8 +66,7 @@ export const ClassProvider: React.FC<ClassProviderProps> = ({ children }) => {
 
   const createClass = useCallback(async (classData: Omit<Class, 'class_id' | 'created_at' | 'updated_at' | 'kid_ids'>) => {
     try {
-      const { createClass } = await import('../types/models');
-      const newClass = createClass(classData);
+      const newClass = createClassModel(classData);
       await db.addClass(newClass);
       await refreshClasses();
       return newClass;
