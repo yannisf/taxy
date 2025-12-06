@@ -30,9 +30,9 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
   const { t } = useTranslation();
 
   return (
-    <Card.Header className="d-flex justify-content-between align-items-center">
-      <h2>{displayName}</h2>
-      <div className="d-flex align-items-center gap-2">
+    <Card.Header className="d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <h2 className="mb-0">{displayName}</h2>
+      <div className="d-flex align-items-center gap-2 flex-shrink-0">
         {/* Navigation Controls */}
         <KidDetailsNavigationControls
           onPrevious={onPrevious}
