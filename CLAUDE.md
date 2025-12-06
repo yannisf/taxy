@@ -21,6 +21,83 @@ Taxy is a React-based class management system for educational institutions. It m
 - pdfmake for PDF generation
 - react-error-boundary for error handling
 
+## Backend Server
+
+The project includes an optional Python backend server (`webserver/`) that serves the UI and provides a filesystem-based key-value store with revision management.
+
+**Backend Stack:**
+- Python 3.12+
+- Flask 3.1.2 (web framework)
+- uv (Python package manager)
+- Single-threaded architecture (no concurrency)
+
+### Backend Features
+
+- **UI Serving**: Serves the built React UI from `/` with client-side routing support
+- **Blob Storage API**: Filesystem-based KV store with automatic revision management
+- **File Size Validation**: Rejects uploads larger than 1MB
+- **Revision Management**: Automatically keeps last 2 revisions per UUID
+- **No Concurrency**: Single-threaded by design (`threaded=False`)
+
+### API Endpoints
+
+**PUT /api/\<uuid\>** - Save blob with revision management
+- Request: Binary blob data (max 1MB)
+- Response: 201 Created with revision details, or 413 if too large
+- Behavior: Creates timestamped revision, automatically deletes older revisions beyond limit
+
+**GET /api/\<uuid\>** - Retrieve latest blob
+- Response: 200 OK with blob data, or 404 if not found
+- Content-Type: `application/octet-stream`
+
+**GET /api/\<uuid\>/previous** - Retrieve previous revision
+- Response: 200 OK with previous blob data, or 404 if no previous revision exists
+- Content-Type: `application/octet-stream`
+
+### Storage Format
+
+Blobs are stored in `webserver/data/` with naming pattern: `<uuid>_<timestamp>.blob`
+
+Example:
+```
+abc123def_20251206191530.blob  (latest)
+abc123def_20251206185422.blob  (previous)
+```
+
+### Backend Development Commands
+
+```bash
+# From webserver/ directory
+uv sync                  # Install dependencies
+uv run python main.py    # Run server at http://localhost:5000
+
+# Docker deployment
+docker build -t taxy-backend ./webserver
+docker run -p 5000:5000 \
+  -v $(pwd)/webserver/data:/app/data \
+  -v $(pwd)/dist:/app/dist:ro \
+  taxy-backend
+```
+
+**Docker Volumes:**
+- `/app/data`: Persistent blob storage (read-write)
+- `/app/dist`: UI build directory (read-only)
+
+### Backend Configuration
+
+Key constants in `webserver/main.py`:
+- `MAX_FILE_SIZE`: 1MB (1 * 1024 * 1024 bytes)
+- `MAX_REVISIONS`: 2
+- `DATA_DIR`: `data/`
+- `PORT`: 5000
+
+### Backend File Locations
+
+- Server implementation: `webserver/main.py`
+- Dependencies: `webserver/pyproject.toml`
+- Docker configuration: `webserver/Dockerfile`
+- Documentation: `webserver/README.md`
+
 ## Development Commands
 
 ```bash
