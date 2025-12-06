@@ -32,7 +32,7 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
   return (
     <Card.Header className="d-flex flex-wrap justify-content-between align-items-center gap-3">
       <h2 className="mb-0">{displayName}</h2>
-      <div className="d-flex align-items-center gap-2 flex-shrink-0">
+      <div className="d-flex align-items-center gap-1 flex-shrink-0">
         {/* Navigation Controls */}
         <KidDetailsNavigationControls
           onPrevious={onPrevious}
@@ -54,7 +54,7 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
           }
         >
           <InfoCircle
-            size={24}
+            size={20}
             className="text-primary"
             style={{ cursor: 'pointer' }}
           />
@@ -66,7 +66,7 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
           overlay={<Tooltip>{t('editDetails')} ({t('editModeShortcut')})</Tooltip>}
         >
           <PencilSquare
-            size={24}
+            size={20}
             className="text-primary"
             style={{ cursor: 'pointer' }}
             onClick={onEdit}
@@ -79,7 +79,7 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
           overlay={<Tooltip>{t('delete')}</Tooltip>}
         >
           <XLg
-            size={24}
+            size={20}
             className="text-danger"
             style={{ cursor: 'pointer' }}
             onClick={onDelete}

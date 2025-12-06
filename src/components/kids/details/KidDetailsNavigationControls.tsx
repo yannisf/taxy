@@ -28,7 +28,7 @@ const KidDetailsNavigationControls: React.FC<KidDetailsNavigationControlsProps> 
         <Button
           variant="link"
           size="sm"
-          className="p-1 text-decoration-none"
+          className="p-0 text-decoration-none"
           onClick={onPrevious}
           disabled={!hasPrevious}
           style={{
@@ -36,7 +36,7 @@ const KidDetailsNavigationControls: React.FC<KidDetailsNavigationControlsProps> 
             opacity: hasPrevious ? 1 : 0.5
           }}
         >
-          <ChevronLeft size={24} className="text-primary" />
+          <ChevronLeft size={20} className="text-primary" />
         </Button>
       </OverlayTrigger>
 
@@ -48,7 +48,7 @@ const KidDetailsNavigationControls: React.FC<KidDetailsNavigationControlsProps> 
         <Button
           variant="link"
           size="sm"
-          className="p-1 text-decoration-none"
+          className="p-0 text-decoration-none"
           onClick={onNext}
           disabled={!hasNext}
           style={{
@@ -56,7 +56,7 @@ const KidDetailsNavigationControls: React.FC<KidDetailsNavigationControlsProps> 
             opacity: hasNext ? 1 : 0.5
           }}
         >
-          <ChevronRight size={24} className="text-primary" />
+          <ChevronRight size={20} className="text-primary" />
         </Button>
       </OverlayTrigger>
     </>
