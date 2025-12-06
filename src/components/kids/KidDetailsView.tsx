@@ -88,7 +88,8 @@ const KidDetailsView: React.FC = () => {
   useKeyboardNavigation([
     { key: 'ArrowLeft', handler: handlePrevious },
     { key: 'ArrowRight', handler: handleNext },
-    { key: 'e', handler: handleEditClick },
+    { key: ['e', 'ε'], handler: handleEditClick },
+    { key: ['d', 'δ'], handler: deleteModal.open },
   ]);
 
   const getDisplayName = () => {

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 export interface KeyboardHandler {
-  key: string;
+  key: string | string[];
   handler: () => void;
   skipOnInputFocused?: boolean;
 }
@@ -9,6 +9,7 @@ export interface KeyboardHandler {
 /**
  * Custom hook for handling keyboard navigation
  * Prevents navigation when input/textarea elements are focused
+ * Supports multiple keys per handler (e.g., ['e', 'ε'] for edit in English and Greek)
  */
 export function useKeyboardNavigation(handlers: KeyboardHandler[]): void {
   useEffect(() => {
@@ -22,7 +23,11 @@ export function useKeyboardNavigation(handlers: KeyboardHandler[]): void {
         const shouldSkip = handler.skipOnInputFocused !== false && isInputFocused;
         if (shouldSkip) continue;
 
-        if (event.key.toLowerCase() === handler.key.toLowerCase()) {
+        // Support both single key and array of keys
+        const keys = Array.isArray(handler.key) ? handler.key : [handler.key];
+        const matchesKey = keys.some(k => event.key.toLowerCase() === k.toLowerCase());
+
+        if (matchesKey) {
           event.preventDefault();
           handler.handler();
           return; // Stop after first match

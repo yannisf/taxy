@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../contexts/ClassContext';
 import { useClassKids } from '../../hooks/useClassKids';
+import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { formatClassDisplay } from '../../utils/classUtils';
 
 const KidListView: React.FC = () => {
@@ -21,6 +22,18 @@ const KidListView: React.FC = () => {
   // Determine the current state
   const hasNoClasses = classes.length === 0;
   const hasNoSelectedClass = !selectedClass && classes.length > 0;
+
+  // Keyboard navigation - only allow 'n' shortcut when a class is selected
+  useKeyboardNavigation([
+    {
+      key: ['n', 'ν'],
+      handler: () => {
+        if (selectedClass) {
+          handleAddKid();
+        }
+      }
+    },
+  ]);
 
   return (
     <Container className="mt-3">
