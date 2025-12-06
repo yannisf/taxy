@@ -40,10 +40,10 @@ export function extractUniqueFirstNames(kids: Kid[]): string[] {
 /**
  * Filters names based on a search query
  * Performs case-insensitive and accent-insensitive matching
- * Requires minimum 2 characters to filter
+ * Requires minimum 1 character to filter
  */
 export function filterNamesByQuery(names: string[], query: string): string[] {
-  if (!query || query.length < 2) {
+  if (!query || query.length < 1) {
     return [];
   }
 

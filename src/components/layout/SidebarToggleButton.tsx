@@ -12,7 +12,7 @@ const SidebarToggleButton: React.FC<SidebarToggleButtonProps> = ({ onClick }) =>
 
   return (
     <Button
-      className="d-sm-none sidebar-toggle-button"
+      className="d-md-none sidebar-toggle-button"
       onClick={onClick}
       aria-label={t('toggleSidebar')}
       aria-expanded={false}

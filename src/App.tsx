@@ -36,7 +36,7 @@ const App: React.FC = () => {
   // Auto-close sidebar when resizing from mobile to desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 576 && sidebarOpen) {
+      if (window.innerWidth >= 768 && sidebarOpen) {
         setSidebarOpen(false);
       }
     };
@@ -66,7 +66,7 @@ const App: React.FC = () => {
             <Container fluid className="flex-grow-1 content-container">
               <Row className="h-100 gx-2">
                 {/* Left Panel - Hidden on mobile, 3 cols on desktop */}
-                <Col xs={12} sm={3} className={`left-panel-col ${sidebarOpen ? 'mobile-open' : ''}`}>
+                <Col xs={12} md={3} className={`left-panel-col ${sidebarOpen ? 'mobile-open' : ''}`}>
                   <LeftPanel
                     isOpen={sidebarOpen}
                     onClose={closeSidebar}
@@ -74,7 +74,7 @@ const App: React.FC = () => {
                   />
                 </Col>
                 {/* Main Content - Full width on mobile, 9 cols on desktop */}
-                <Col xs={12} sm={9} className="main-content-col">
+                <Col xs={12} md={9} className="main-content-col">
                   <Routes>
                     <Route path="/" element={<Navigate to="/kids" replace />} />
                     <Route path="/kids" element={<KidListView />} />
@@ -89,7 +89,7 @@ const App: React.FC = () => {
             {/* Backdrop - only on mobile when sidebar is open */}
             {sidebarOpen && (
               <div
-                className="sidebar-backdrop show d-sm-none"
+                className="sidebar-backdrop show d-md-none"
                 onClick={closeSidebar}
                 role="button"
                 tabIndex={-1}

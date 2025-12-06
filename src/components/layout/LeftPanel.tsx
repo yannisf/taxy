@@ -31,7 +31,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
   // file input handled in TopBar
   const navigate = useNavigate();
 
-  const isMobile = window.innerWidth < 576;
+  const isMobile = window.innerWidth < 768;
 
   const handleKidClick = (kid: Kid) => {
     navigate(`/kids/${kid.kid_id}`);

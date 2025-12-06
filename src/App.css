@@ -354,8 +354,8 @@
 
 /* Responsive Left Panel - Mobile Sidebar */
 
-/* Mobile Sidebar Styles (< 576px) */
-@media (max-width: 575.98px) {
+/* Mobile Sidebar Styles (< 768px) */
+@media (max-width: 767.98px) {
   /* Remove container padding on mobile */
   .content-container {
     padding-left: 0 !important;
@@ -437,8 +437,8 @@
   pointer-events: auto;
 }
 
-/* Desktop Styles (≥ 576px) - Keep current behavior */
-@media (min-width: 576px) {
+/* Desktop Styles (≥ 768px) - Keep current behavior */
+@media (min-width: 768px) {
   .left-panel-col {
     /* Reset mobile styles */
     position: relative;
