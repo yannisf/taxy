@@ -138,6 +138,8 @@
   "guardianDetails": "Guardian Details",
   "profession": "Profession",
   "relationWithKid": "Relation with Kid",
+  "selectRelation": "Select relation",
+  "relationRequired": "Please select a relation",
   "authorizedForPickup": "Authorized for Pickup",
   "sameAddressAsKid": "Same Address as Kid",
   "enterGuardianFirstName": "Enter guardian's first name",

@@ -138,6 +138,8 @@
   "guardianDetails": "Στοιχεία Κηδεμόνα",
   "profession": "Επάγγελμα",
   "relationWithKid": "Σχέση με το Παιδί",
+  "selectRelation": "Επιλέξτε σχέση",
+  "relationRequired": "Παρακαλώ επιλέξτε σχέση",
   "authorizedForPickup": "Εξουσιοδοτημένος για Παραλαβή",
   "sameAddressAsKid": "Ίδια Διεύθυνση με το Παιδί",
   "enterGuardianFirstName": "Εισάγετε όνομα κηδεμόνα",

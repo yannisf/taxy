@@ -42,7 +42,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     defaultValues: guardian || {
       first_name: '',
       last_name: '',
-      relation_with_kid: 'mother',
+      relation_with_kid: '' as Guardian['relation_with_kid'],
       authorized_for_pickup: false,
       same_address_as_kid: true,
       telephones: [],

@@ -69,12 +69,14 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
       <Row>
         <Col>
           <Form.Group className="mb-3">
-            <Form.Label>{t('relationWithKid')}</Form.Label>
+            <Form.Label>{t('relationWithKid')} <span style={{color: 'red'}}>{t('required')}</span></Form.Label>
             <Controller
               name="relation_with_kid"
               control={control}
+              rules={{ required: t('relationRequired') }}
               render={({ field }) => (
-                <Form.Select {...field}>
+                <Form.Select {...field} value={field.value || ''} isInvalid={!!errors.relation_with_kid}>
+                  <option value="" disabled>{t('selectRelation')}</option>
                   <option value="father">{t('relationFather')}</option>
                   <option value="mother">{t('relationMother')}</option>
                   <option value="sibling">{t('relationSibling')}</option>
@@ -84,6 +86,11 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
                 </Form.Select>
               )}
             />
+            {errors.relation_with_kid && (
+              <Form.Control.Feedback type="invalid">
+                {errors.relation_with_kid.message}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
         </Col>
         <Col>
