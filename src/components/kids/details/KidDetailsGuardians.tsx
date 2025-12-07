@@ -19,9 +19,7 @@ const KidDetailsGuardians: React.FC<KidDetailsGuardiansProps> = ({ guardians }) 
       </Card.Header>
       <Card.Body>
         {guardians.length === 0 ? (
-          <Alert variant="secondary" className="mb-0">
-            {t('noGuardiansForKid')}
-          </Alert>
+          <Alert variant="secondary" className="mb-0">{t('noGuardiansForKid')}</Alert>
         ) : (
           <Row>
             {guardians.map((guardian, index) => (

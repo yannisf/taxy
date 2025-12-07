@@ -47,9 +47,9 @@ const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = ''
       .filter(Boolean)
       .join(' ');
     if (cityPostal) parts.push(cityPostal);
-    
-    // Country
-    if (address.country) {
+
+    // Country (hide "Ελλάδα" as it's the default)
+    if (address.country && address.country !== 'Ελλάδα') {
       parts.push(address.country);
     }
     

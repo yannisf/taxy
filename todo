@@ -1,0 +1,11 @@
+
+- When adding a new kid and clicking on save kid, the newly added kid should be displayed in the view screen.
+
+- 'n' and/or 'ν' should allow to create a new kid when a class is in context.
+
+- remove log messages when generating any pdf, loading fonts etc
+
+- revert back to uuid. I want uuid4
+
+- Guardians/Profession should be autocompletable with suggestions from the 1st typed character
+- Guardians/First Name should be autocompletable with suggestions from the 1st typed character. It should use all first names as source, either from guardians or kids.

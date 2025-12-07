@@ -50,7 +50,7 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
 
         {guardian.email && (
           <div className="mb-1">
-            <small className="text-muted">
+            <small className="text-muted text-nowrap">
               📧 {guardian.email}
             </small>
           </div>
@@ -58,7 +58,7 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
 
         {guardian.profession && (
           <div className="mb-2">
-            <small className="text-muted">
+            <small className="text-muted text-nowrap">
               💼 {guardian.profession}
             </small>
           </div>

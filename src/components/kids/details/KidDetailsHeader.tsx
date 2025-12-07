@@ -34,12 +34,7 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
       <h2 className="mb-0">{displayName}</h2>
       <div className="d-flex align-items-center gap-2 flex-shrink-0">
         {/* Navigation Controls */}
-        <KidDetailsNavigationControls
-          onPrevious={onPrevious}
-          onNext={onNext}
-          hasPrevious={hasPrevious}
-          hasNext={hasNext}
-        />
+        <KidDetailsNavigationControls onPrevious={onPrevious} onNext={onNext} hasPrevious={hasPrevious} hasNext={hasNext} />
 
         {/* Info Icon */}
         <OverlayTrigger
@@ -53,37 +48,17 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
             </Tooltip>
           }
         >
-          <InfoCircle
-            size={20}
-            className="text-primary"
-            style={{ cursor: 'pointer' }}
-          />
+          <InfoCircle size={20} className="text-primary" style={{ cursor: 'pointer' }} />
         </OverlayTrigger>
 
         {/* Edit Icon */}
-        <OverlayTrigger
-          placement="bottom"
-          overlay={<Tooltip>{t('editDetails')} ({t('editModeShortcut')})</Tooltip>}
-        >
-          <PencilSquare
-            size={20}
-            className="text-primary"
-            style={{ cursor: 'pointer' }}
-            onClick={onEdit}
-          />
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('editDetails')} ({t('editModeShortcut')})</Tooltip>}>
+          <PencilSquare size={20} className="text-primary" style={{ cursor: 'pointer' }} onClick={onEdit}/>
         </OverlayTrigger>
 
-        {/* Delete Icon */}
-        <OverlayTrigger
-          placement="bottom"
-          overlay={<Tooltip>{t('delete')}</Tooltip>}
-        >
-          <XLg
-            size={20}
-            className="text-danger"
-            style={{ cursor: 'pointer' }}
-            onClick={onDelete}
-          />
+        {/* Delete Icon - with extra spacing */}
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('delete')} ({t('deleteModeShortcut')})</Tooltip>} >
+          <XLg size={20} className="text-danger ms-2" style={{ cursor: 'pointer' }} onClick={onDelete} />
         </OverlayTrigger>
       </div>
     </Card.Header>

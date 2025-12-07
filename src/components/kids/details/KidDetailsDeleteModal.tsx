@@ -32,12 +32,8 @@ const KidDetailsDeleteModal: React.FC<KidDetailsDeleteModalProps> = ({
         {t('actionCannotBeUndone')}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
-          {t('cancel')}
-        </Button>
-        <Button variant="danger" onClick={onConfirm}>
-          {t('delete')}
-        </Button>
+        <Button variant="secondary" onClick={onHide}> {t('cancel')} </Button>
+        <Button variant="danger" onClick={onConfirm}> {t('delete')} </Button>
       </Modal.Footer>
     </Modal>
   );

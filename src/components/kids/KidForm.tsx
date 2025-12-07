@@ -1,5 +1,5 @@
 // React & Core Libraries
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,11 +18,15 @@ import { useClass } from '../../contexts/ClassContext';
 // Utils
 import { withTimeout } from '../../utils/asyncUtils';
 
+// Hooks
+import { useUnsavedChangesWarning } from '../../hooks/useUnsavedChangesWarning';
+
 // Section Components
 import BasicInfoSection from './sections/BasicInfoSection';
 import AdditionalInfoSection from './sections/AdditionalInfoSection';
 import AddressSection from './sections/AddressSection';
 import GuardiansSection from './sections/GuardiansSection';
+import UnsavedChangesModal from '../common/UnsavedChangesModal';
 
 type KidFormProps = {
   initialData?: Kid;
@@ -33,6 +37,8 @@ type KidFormProps = {
 export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, onCancel }) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [guardians, setGuardians] = useState<Guardian[]>(initialData?.guardians || []);
+  const [guardiansChanged, setGuardiansChanged] = useState(false);
+  const bypassBlockerRef = useRef(false);
   const navigate = useNavigate();
   const { kidId } = useParams<{ kidId: string }>();
   const { refreshKids } = useKids();
@@ -41,7 +47,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     register,
     reset
   } = useForm<Kid>({
@@ -61,11 +67,26 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     }
   });
 
+  // Track if guardians have changed
+  useEffect(() => {
+    const initialGuardians = initialData?.guardians || [];
+    const hasChanged = JSON.stringify(guardians) !== JSON.stringify(initialGuardians);
+    setGuardiansChanged(hasChanged);
+  }, [guardians, initialData]);
+
+  // Block navigation if there are unsaved changes (checked synchronously via function)
+  const blocker = useUnsavedChangesWarning(() => {
+    return !bypassBlockerRef.current && (isDirty || guardiansChanged);
+  });
+
   const handleGuardiansChange = (updatedGuardians: Guardian[]) => {
     setGuardians(updatedGuardians);
   };
 
   const handleCancel = () => {
+    // Bypass blocker for explicit cancel action
+    bypassBlockerRef.current = true;
+
     if (onCancel) {
       onCancel();
     } else if (kidId) {
@@ -134,6 +155,9 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       // Reset form, refresh kids list, and notify parent
       reset();
       await refreshKids(); // Refresh the kids list in the context
+
+      // Bypass blocker for navigation after successful save
+      bypassBlockerRef.current = true;
       onSubmitSuccess();
     } catch (error) {
       console.error('Kid insertion error:', error);
@@ -169,6 +193,13 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
           </Button>
         </div>
       </Form>
+
+      {/* Unsaved changes warning modal */}
+      <UnsavedChangesModal
+        show={blocker.state === 'blocked'}
+        onDiscard={() => blocker.proceed?.()}
+        onCancel={() => blocker.reset?.()}
+      />
     </Container>
   );
 };
