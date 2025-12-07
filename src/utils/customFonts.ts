@@ -2,6 +2,8 @@
  * Custom fonts configuration for pdfmake with OpenDyslexic and Greek support
  */
 
+import { logger } from './logger';
+
 // Unused for now - reserved for future use
 // interface FontDefinition {
 //   [key: string]: string;
@@ -22,7 +24,7 @@ async function fetchFontAsArrayBuffer(fontPath: string): Promise<ArrayBuffer> {
     }
     return await response.arrayBuffer();
   } catch (error) {
-    console.warn(`Could not load font ${fontPath}:`, error);
+    logger.debug(`Could not load font ${fontPath}:`, error);
     throw error;
   }
 }
@@ -75,23 +77,23 @@ export async function initializePDFMakeFonts(pdfMake: any): Promise<boolean> {
   try {
     for (const [fontName, fontPath] of Object.entries(fonts)) {
       try {
-        console.log(`Loading font: ${fontName} from ${fontPath}`);
+        logger.debug(`Loading font: ${fontName} from ${fontPath}`);
         const arrayBuffer = await fetchFontAsArrayBuffer(fontPath);
         const fontData = arrayBufferToBase64(arrayBuffer);
         pdfMake.vfs[fontName] = fontData;
         loadedFonts++;
-        console.log(`Successfully loaded font: ${fontName}`);
+        logger.debug(`Successfully loaded font: ${fontName}`);
       } catch (fontError) {
-        console.warn(`Failed to load font ${fontName}:`, fontError);
+        logger.debug(`Failed to load font ${fontName}:`, fontError);
       }
     }
   } catch (error) {
-    console.warn('Error during font loading:', error);
+    logger.debug('Error during font loading:', error);
   }
 
   // Only register custom fonts if all fonts loaded successfully
   if (loadedFonts === Object.keys(fonts).length) {
-    console.log('All OpenDyslexic fonts loaded successfully');
+    logger.debug('All OpenDyslexic fonts loaded successfully');
 
     // Ensure default fonts are available as fallback
     if (!pdfMake.fonts) {
@@ -119,7 +121,7 @@ export async function initializePDFMakeFonts(pdfMake: any): Promise<boolean> {
     customFontsLoaded = true;
     return true;
   } else {
-    console.warn(`Only ${loadedFonts}/${Object.keys(fonts).length} fonts loaded. Falling back to default fonts.`);
+    logger.debug(`Only ${loadedFonts}/${Object.keys(fonts).length} fonts loaded. Falling back to default fonts.`);
 
     // Set up default Roboto fonts from pdfmake's VFS
     if (!pdfMake.fonts) {

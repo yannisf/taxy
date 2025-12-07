@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Badge } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { Clipboard, ClipboardCheck } from 'react-bootstrap-icons';
 import type { Guardian } from '../../types/models';
 import AddressDisplay from '../common/AddressDisplay';
 import TelephoneDisplay from '../common/TelephoneDisplay';
@@ -11,6 +12,7 @@ interface GuardianCardProps {
 
 const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
   const { t } = useTranslation();
+  const [emailCopied, setEmailCopied] = useState(false);
 
   // Helper function to get the relation translation key
   const getRelationKey = (relation: string) => {
@@ -23,6 +25,46 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
       'friend': 'relationFriend'
     };
     return relationMap[relation] || relation;
+  };
+
+  // Copy email to clipboard
+  const handleCopyEmail = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!guardian.email) return;
+
+    try {
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(guardian.email);
+        setEmailCopied(true);
+        setTimeout(() => setEmailCopied(false), 2000);
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = guardian.email;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand('copy');
+          setEmailCopied(true);
+          setTimeout(() => setEmailCopied(false), 2000);
+        } catch (err) {
+          console.error('Fallback copy failed:', err);
+          alert('Could not copy email to clipboard');
+        }
+
+        document.body.removeChild(textArea);
+      }
+    } catch (err) {
+      console.error('Failed to copy email:', err);
+      alert('Could not copy email to clipboard');
+    }
   };
 
   return (
@@ -48,19 +90,46 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
           )}
         </div>
 
-        {guardian.email && (
-          <div className="mb-1">
-            <small className="text-muted text-nowrap">
-              📧 {guardian.email}
-            </small>
-          </div>
-        )}
-
         {guardian.profession && (
           <div className="mb-2">
             <small className="text-muted text-nowrap">
               💼 {guardian.profession}
             </small>
+          </div>
+        )}
+
+        {guardian.email && (
+          <div className="mb-1 d-flex align-items-center gap-1">
+            <small className="text-muted">
+              📧{' '}
+              <a
+                href={`mailto:${guardian.email}`}
+                className="text-decoration-none"
+                style={{
+                  color: 'inherit',
+                  cursor: 'pointer',
+                  borderBottom: '1px dotted currentColor'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.borderBottom = '1px solid currentColor'}
+                onMouseLeave={(e) => e.currentTarget.style.borderBottom = '1px dotted currentColor'}
+              >
+                {guardian.email}
+              </a>
+            </small>
+            <button
+              type="button"
+              onClick={handleCopyEmail}
+              className="btn btn-link p-0 border-0"
+              style={{ fontSize: '0.875rem', lineHeight: 1, minWidth: '20px' }}
+              title={emailCopied ? t('copied') : t('copyEmail')}
+              aria-label={emailCopied ? t('copied') : t('copyEmail')}
+            >
+              {emailCopied ? (
+                <ClipboardCheck size={14} className="text-success" />
+              ) : (
+                <Clipboard size={14} className="text-muted" />
+              )}
+            </button>
           </div>
         )}
 

@@ -38,7 +38,7 @@ const KidEditView: React.FC = () => {
     fetchKid();
   }, [kidId]);
 
-  const handleSubmitSuccess = () => {
+  const handleSubmitSuccess = (_newKidId?: string) => {
     // Navigate back to the kid's detail view after successful edit
     if (kidId) {
       navigate(`/kids/${kidId}`);

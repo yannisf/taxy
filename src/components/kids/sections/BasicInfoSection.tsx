@@ -41,6 +41,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) 
                     suggestions={filteredSuggestions}
                     placeholder={t('enterFirstName')}
                     isInvalid={!!errors.first_name}
+                    autoFocus={true}
                   />
                 );
               }}

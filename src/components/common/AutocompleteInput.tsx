@@ -11,6 +11,7 @@ interface AutocompleteInputProps {
   isInvalid?: boolean;
   minChars?: number;
   className?: string;
+  autoFocus?: boolean;
 }
 
 export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
@@ -21,7 +22,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   placeholder,
   isInvalid,
   minChars = 2,
-  className
+  className,
+  autoFocus
 }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
@@ -114,6 +116,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         isInvalid={isInvalid}
         className={className}
         autoComplete="off"
+        autoFocus={autoFocus}
       />
       {showSuggestions && suggestions.length > 0 && (
         <ul className="autocomplete-suggestions">

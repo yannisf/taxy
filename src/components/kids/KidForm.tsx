@@ -30,7 +30,7 @@ import UnsavedChangesModal from '../common/UnsavedChangesModal';
 
 type KidFormProps = {
   initialData?: Kid;
-  onSubmitSuccess: () => void;
+  onSubmitSuccess: (kidId?: string) => void;
   onCancel?: () => void;
 };
 
@@ -49,7 +49,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     handleSubmit,
     formState: { errors, isDirty },
     register,
-    reset
+    reset,
+    watch
   } = useForm<Kid>({
       defaultValues: initialData || {
       first_name: '',
@@ -74,9 +75,27 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     setGuardiansChanged(hasChanged);
   }, [guardians, initialData]);
 
+  // Check if form has actual user input (for add mode)
+  const hasActualInput = () => {
+    // If we're editing an existing kid, use isDirty
+    if (initialData) {
+      return isDirty || guardiansChanged;
+    }
+
+    // For add mode, check if any meaningful fields have been filled
+    const formValues = watch();
+    const hasName = formValues.first_name || formValues.last_name;
+    const hasGender = formValues.gender !== undefined;
+    const hasLevel = formValues.level !== undefined;
+    const hasGuardians = guardians.length > 0;
+    const hasNotes = formValues.notes || formValues.private_notes;
+
+    return !!(hasName || hasGender || hasLevel || hasGuardians || hasNotes);
+  };
+
   // Block navigation if there are unsaved changes (checked synchronously via function)
   const blocker = useUnsavedChangesWarning(() => {
-    return !bypassBlockerRef.current && (isDirty || guardiansChanged);
+    return !bypassBlockerRef.current && hasActualInput();
   });
 
   const handleGuardiansChange = (updatedGuardians: Guardian[]) => {
@@ -127,6 +146,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       }
 
       // Save to database with timeout
+      let newKidId: string | undefined;
+
       if (initialData) {
         // Update existing kid
         const updates = { ...data, guardians };
@@ -150,6 +171,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
           class_id: selectedClass.class_id
         });
         await withTimeout(db.addKid(kidToSave), 5000, 'Insertion timed out');
+        newKidId = kidToSave.kid_id;
       }
 
       // Reset form, refresh kids list, and notify parent
@@ -158,7 +180,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
 
       // Bypass blocker for navigation after successful save
       bypassBlockerRef.current = true;
-      onSubmitSuccess();
+      onSubmitSuccess(newKidId);
     } catch (error) {
       console.error('Kid insertion error:', error);
       setServerError(error instanceof Error ? error.message : t('error'));

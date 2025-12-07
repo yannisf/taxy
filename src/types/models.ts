@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface Address {
   street_name?: string;
@@ -76,7 +76,7 @@ export interface ClassExport {
 export function createKid(partialKid: Omit<Kid, 'kid_id' | 'created_at' | 'updated_at'>): Kid {
   const now = new Date().toISOString();
   return {
-    kid_id: nanoid(),
+    kid_id: uuidv4(),
     created_at: now,
     updated_at: now,
     ...partialKid
@@ -87,7 +87,7 @@ export function createKid(partialKid: Omit<Kid, 'kid_id' | 'created_at' | 'updat
 export function createClass(partialClass: Omit<Class, 'class_id' | 'created_at' | 'updated_at'>): Class {
   const now = new Date().toISOString();
   return {
-    class_id: nanoid(),
+    class_id: uuidv4(),
     created_at: now,
     updated_at: now,
     ...partialClass

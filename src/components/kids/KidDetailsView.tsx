@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useClassKids } from '../../hooks/useClassKids';
 import { useKids } from '../../contexts/KidsContext';
+import { useClass } from '../../contexts/ClassContext';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { useModalState } from '../../hooks/useModalState';
 import KidDetailsHeader from './details/KidDetailsHeader';
@@ -20,6 +21,7 @@ const KidDetailsView: React.FC = () => {
   const deleteModal = useModalState();
   const { t } = useTranslation();
   const { refreshKids } = useKids();
+  const { selectedClass } = useClass();
   const classKids = useClassKids();
 
   useEffect(() => {
@@ -71,6 +73,12 @@ const KidDetailsView: React.FC = () => {
     }
   };
 
+  const handleAddKid = () => {
+    if (selectedClass) {
+      navigate('/kids/add');
+    }
+  };
+
   const confirmDelete = async () => {
     if (kid) {
       try {
@@ -90,6 +98,7 @@ const KidDetailsView: React.FC = () => {
     { key: 'ArrowRight', handler: handleNext },
     { key: ['e', 'ε'], handler: handleEditClick },
     { key: ['d', 'δ'], handler: deleteModal.open },
+    { key: ['n', 'ν'], handler: handleAddKid },
   ]);
 
   const getDisplayName = () => {

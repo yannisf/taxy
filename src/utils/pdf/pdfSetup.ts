@@ -48,7 +48,7 @@ export async function getCardsFontConfig() {
   const fontFamily = getDefaultFontFamily();
 
   if (!fontsLoaded) {
-    logger.warn('Custom fonts failed to load. Using default Roboto font.');
+    logger.debug('Custom fonts failed to load. Using default Roboto font.');
   }
 
   return { pdfMake, fontFamily, fontsLoaded };

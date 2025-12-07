@@ -25,6 +25,8 @@
   "firstName": "First Name",
   "lastName": "Last Name",
   "email": "Email",
+  "copyEmail": "Copy email",
+  "copied": "Copied!",
   "phone": "Phone",
   "address": "Address",
   "notes": "Notes",

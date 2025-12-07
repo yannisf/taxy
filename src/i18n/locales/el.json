@@ -25,6 +25,8 @@
   "firstName": "Όνομα",
   "lastName": "Επώνυμο",
   "email": "Email",
+  "copyEmail": "Αντιγραφή email",
+  "copied": "Αντιγράφηκε!",
   "phone": "Τηλέφωνο",
   "address": "Διεύθυνση",
   "notes": "Σημειώσεις",
