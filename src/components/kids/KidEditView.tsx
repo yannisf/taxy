@@ -4,6 +4,7 @@ import { Container, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
+import { logger } from '../../utils/logger';
 import KidForm from './KidForm';
 import type { Kid } from '../../types/models';
 
@@ -27,7 +28,7 @@ const KidEditView: React.FC = () => {
             setError(t('kidNotFound'));
           }
         } catch (err) {
-          console.error('Error fetching kid:', err);
+          logger.error('Error fetching kid:', err);
           setError(t('error'));
         } finally {
           setLoading(false);
@@ -36,7 +37,7 @@ const KidEditView: React.FC = () => {
     };
 
     fetchKid();
-  }, [kidId]);
+  }, [kidId, t]);
 
   const handleSubmitSuccess = (_newKidId?: string) => {
     // Navigate back to the kid's detail view after successful edit

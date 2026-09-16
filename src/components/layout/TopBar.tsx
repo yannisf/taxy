@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useClass } from '../../contexts/ClassContext';
+import { useTheme } from '../../hooks/useTheme';
+import { useClass } from '../../hooks/useClass';
 import TopBarLogo from './TopBarLogo';
 import TopBarClassMenu from './TopBarClassMenu';
 import TopBarDataMenu from './TopBarDataMenu';

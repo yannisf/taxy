@@ -3,9 +3,10 @@ import { Dropdown } from 'react-bootstrap';
 import { FilePdf, ChevronDown } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useClass } from '../../contexts/ClassContext';
+import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
 import { generateStudentGridPDF, generateStudentListPDF } from '../../utils/pdf';
+import { logger } from '../../utils/logger';
 
 interface TopBarCardsMenuProps {
   theme: 'light' | 'dark';
@@ -30,7 +31,7 @@ const TopBarCardsMenu: React.FC<TopBarCardsMenuProps> = ({ theme }) => {
       await generateStudentGridPDF(selectedClass, classKids, t);
       toast.success(t('studentGridGenerated'));
     } catch (error) {
-      console.error('Student grid generation failed:', error);
+      logger.error('Student grid generation failed:', error);
       toast.error(t('failedToGenerateStudentGrid'));
     } finally {
       setIsGeneratingGrid(false);
@@ -48,7 +49,7 @@ const TopBarCardsMenu: React.FC<TopBarCardsMenuProps> = ({ theme }) => {
       await generateStudentListPDF(selectedClass, classKids, t);
       toast.success(t('studentListGenerated'));
     } catch (error) {
-      console.error('Student list generation failed:', error);
+      logger.error('Student list generation failed:', error);
       toast.error(t('failedToGenerateStudentList'));
     } finally {
       setIsGeneratingList(false);

@@ -3,14 +3,15 @@ import { Dropdown } from 'react-bootstrap';
 import { Download, Upload, ChevronDown } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useClass } from '../../contexts/ClassContext';
+import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
-import { useKids } from '../../contexts/KidsContext';
+import { useKids } from '../../hooks/useKids';
 import { useModalState, useDropdownState } from '../../hooks/useModalState';
 import { exportClassData } from '../../utils/exportUtils';
 import { validateImportFile, performImport, type ImportValidationResult } from '../../utils/importUtils';
 import ExportModal, { type ExportOptions } from '../classes/ExportModal';
 import ImportConfirmModal from '../classes/ImportConfirmModal';
+import { logger } from '../../utils/logger';
 
 interface TopBarDataMenuProps {
   theme: 'light' | 'dark';
@@ -101,14 +102,14 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
 
       if (!validationResult.valid) {
         toast.error(t('invalidImportFile'));
-        console.error('Import validation errors:', validationResult.errors);
+        logger.error('Import validation errors:', validationResult.errors);
         return;
       }
 
       setImportValidationResult(validationResult);
       importModal.open();
     } catch (error) {
-      console.error('Import validation failed:', error);
+      logger.error('Import validation failed:', error);
       toast.error(t('failedToValidateImportFile'));
     } finally {
       importModal.setLoading(false);
@@ -143,7 +144,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
         toast.error(t('importFailed'));
       }
     } catch (error) {
-      console.error('Import failed:', error);
+      logger.error('Import failed:', error);
       toast.error(t('importFailedUnexpected'));
     } finally {
       importModal.setLoading(false);

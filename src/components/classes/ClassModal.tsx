@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useClass } from '../../contexts/ClassContext';
+import { useClass } from '../../hooks/useClass';
+import { logger } from '../../utils/logger';
 import {
   extractUniqueSchoolNames,
   extractUniqueClassNames,
@@ -85,7 +86,7 @@ const ClassModal: React.FC<ClassModalProps> = ({
       await onSubmit(formData);
       handleClose();
     } catch (error) {
-      console.error('Error creating class:', error);
+      logger.error('Error creating class:', error);
       setError(error instanceof Error ? error.message : t('failedToCreateClass'));
     }
   };

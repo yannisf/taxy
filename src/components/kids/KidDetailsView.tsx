@@ -4,8 +4,8 @@ import { Container, Card } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../services/database';
 import { useClassKids } from '../../hooks/useClassKids';
-import { useKids } from '../../contexts/KidsContext';
-import { useClass } from '../../contexts/ClassContext';
+import { useKids } from '../../hooks/useKids';
+import { useClass } from '../../hooks/useClass';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { useModalState } from '../../hooks/useModalState';
 import KidDetailsHeader from './details/KidDetailsHeader';
@@ -13,6 +13,7 @@ import KidDetailsPersonalInfo from './details/KidDetailsPersonalInfo';
 import KidDetailsGuardians from './details/KidDetailsGuardians';
 import KidDetailsDeleteModal from './details/KidDetailsDeleteModal';
 import type { Kid } from '../../types/models';
+import { logger } from '../../utils/logger';
 
 const KidDetailsView: React.FC = () => {
   const { kidId } = useParams<{ kidId: string }>();
@@ -87,7 +88,7 @@ const KidDetailsView: React.FC = () => {
         deleteModal.close();
         navigate('/kids');
       } catch (error) {
-        console.error('Error deleting kid:', error);
+        logger.error('Error deleting kid:', error);
       }
     }
   };

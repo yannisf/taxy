@@ -4,7 +4,7 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { Control, FieldErrors } from 'react-hook-form';
 import type { Address } from '../../types/models';
-import { useKids } from '../../contexts/KidsContext';
+import { useKids } from '../../hooks/useKids';
 import {
   extractUniqueStreetNames,
   extractUniqueNeighborhoods,

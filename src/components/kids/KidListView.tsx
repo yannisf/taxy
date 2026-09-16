@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useClass } from '../../contexts/ClassContext';
+import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
 import { formatClassDisplay } from '../../utils/classUtils';

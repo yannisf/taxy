@@ -12,11 +12,12 @@ import type { Kid, Guardian } from '../../types/models';
 // Services & Contexts
 import { validationService } from '../../services/validation';
 import { db } from '../../services/database';
-import { useKids } from '../../contexts/KidsContext';
-import { useClass } from '../../contexts/ClassContext';
+import { useKids } from '../../hooks/useKids';
+import { useClass } from '../../hooks/useClass';
 
 // Utils
 import { withTimeout } from '../../utils/asyncUtils';
+import { logger } from '../../utils/logger';
 
 // Hooks
 import { useUnsavedChangesWarning } from '../../hooks/useUnsavedChangesWarning';
@@ -182,7 +183,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       bypassBlockerRef.current = true;
       onSubmitSuccess(newKidId);
     } catch (error) {
-      console.error('Kid insertion error:', error);
+      logger.error('Kid insertion error:', error);
       setServerError(error instanceof Error ? error.message : t('error'));
     }
   }, [guardians, initialData, refreshKids, onSubmitSuccess, reset, selectedClass, t]);

@@ -1,6 +1,7 @@
 import Dexie from 'dexie';
 import type { Kid, Class, ClassRecord, ClassExport } from '../types/models';
 import type { ImportStatistics } from '../utils/importUtils';
+import { logger } from '../utils/logger';
 
 export class ClassManagementDatabase extends Dexie {
   kids: Dexie.Table<Kid, string>;
@@ -56,7 +57,7 @@ export class ClassManagementDatabase extends Dexie {
         for (const kidId of kidIds) {
           if (kidToClassMap.has(kidId)) {
             kidsInMultipleClasses.add(kidId);
-            console.warn(`Migration v4: Kid ${kidId} found in multiple classes. Using first occurrence.`);
+            logger.warn(`Migration v4: Kid ${kidId} found in multiple classes. Using first occurrence.`);
           } else {
             kidToClassMap.set(kidId, classObj.class_id);
           }

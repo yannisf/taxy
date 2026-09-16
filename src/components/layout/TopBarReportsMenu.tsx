@@ -3,10 +3,11 @@ import { Dropdown } from 'react-bootstrap';
 import { FilePdf, Envelope, ChevronDown } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useClass } from '../../contexts/ClassContext';
+import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
 import { exportGuardianEmails } from '../../utils/exportUtils';
 import { generateClassCatalogPDF } from '../../utils/pdf';
+import { logger } from '../../utils/logger';
 
 interface TopBarReportsMenuProps {
   theme: 'light' | 'dark';
@@ -31,7 +32,7 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
       await generateClassCatalogPDF(selectedClass, classKids, t);
       toast.success(t('catalogGenerated'));
     } catch (error) {
-      console.error('Catalog generation failed:', error);
+      logger.error('Catalog generation failed:', error);
       toast.error(t('failedToGenerateCatalog'));
     } finally {
       setIsGeneratingCatalog(false);
@@ -49,7 +50,7 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
       const result = await exportGuardianEmails(classKids, selectedClass.class_name, selectedClass.school_name);
       toast.success(t('guardianEmailsExported', { count: result.count }));
     } catch (error) {
-      console.error('Guardian emails export failed:', error);
+      logger.error('Guardian emails export failed:', error);
       if (error instanceof Error && error.message === 'No guardians with email addresses found') {
         toast.error(t('noGuardianEmailsFound'));
       } else {

@@ -15,17 +15,14 @@ const resources = {
   },
 };
 
-// Debug logging
-console.log('i18n resources:', resources);
-
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
     fallbackLng: 'en',
-    debug: true,
-    
+    debug: import.meta.env.DEV,
+
     interpolation: {
       escapeValue: false, // React already does escaping
     },

@@ -1,15 +1,10 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { db } from '../services/database';
+import { logger } from '../utils/logger';
+import { KidsContext } from '../hooks/useKids';
+import type { KidsContextType } from '../hooks/useKids';
 import type { Kid } from '../types/models';
-
-interface KidsContextType {
-  kids: Kid[];
-  refreshKids: () => Promise<void>;
-  loading: boolean;
-}
-
-const KidsContext = createContext<KidsContextType | undefined>(undefined);
 
 interface KidsProviderProps {
   children: ReactNode;
@@ -25,7 +20,7 @@ export const KidsProvider: React.FC<KidsProviderProps> = ({ children }) => {
       const fetchedKids = await db.getKids();
       setKids(fetchedKids);
     } catch (error) {
-      console.error('Error fetching kids:', error);
+      logger.error('Error fetching kids:', error);
     } finally {
       setLoading(false);
     }
@@ -36,23 +31,15 @@ export const KidsProvider: React.FC<KidsProviderProps> = ({ children }) => {
     refreshKids();
   }, [refreshKids]);
 
-  const value = {
+  const value = useMemo<KidsContextType>(() => ({
     kids,
     refreshKids,
     loading
-  };
+  }), [kids, refreshKids, loading]);
 
   return (
     <KidsContext.Provider value={value}>
       {children}
     </KidsContext.Provider>
   );
-};
-
-export const useKids = () => {
-  const context = useContext(KidsContext);
-  if (context === undefined) {
-    throw new Error('useKids must be used within a KidsProvider');
-  }
-  return context;
 };

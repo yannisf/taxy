@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { db } from '../services/database';
-import { useKids } from '../contexts/KidsContext';
-import { useClass } from '../contexts/ClassContext';
+import { useKids } from './useKids';
+import { useClass } from './useClass';
 import type { Kid } from '../types/models';
+import { logger } from '../utils/logger';
 
 /**
  * Custom hook to get kids filtered by the currently selected class
@@ -33,7 +34,7 @@ export const useClassKids = (): Kid[] => {
           
           setClassKids(sortedKids);
         } catch (error) {
-          console.error('Error filtering kids by class:', error);
+          logger.error('Error filtering kids by class:', error);
           setClassKids([]);
         }
       } else {

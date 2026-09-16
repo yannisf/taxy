@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, ExclamationTriangle, X } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 // useKids not needed in LeftPanel anymore; import in TopBar
-import { useClass } from '../../contexts/ClassContext';
+import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
 import type { Kid } from '../../types/models';
 import ClassStatistics from './ClassStatistics';

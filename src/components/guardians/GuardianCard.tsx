@@ -3,6 +3,7 @@ import { Card, Badge } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Clipboard, ClipboardCheck } from 'react-bootstrap-icons';
 import type { Guardian } from '../../types/models';
+import { logger } from '../../utils/logger';
 import AddressDisplay from '../common/AddressDisplay';
 import TelephoneDisplay from '../common/TelephoneDisplay';
 
@@ -55,14 +56,14 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
           setEmailCopied(true);
           setTimeout(() => setEmailCopied(false), 2000);
         } catch (err) {
-          console.error('Fallback copy failed:', err);
+          logger.error('Fallback copy failed:', err);
           alert('Could not copy email to clipboard');
         }
 
         document.body.removeChild(textArea);
       }
     } catch (err) {
-      console.error('Failed to copy email:', err);
+      logger.error('Failed to copy email:', err);
       alert('Could not copy email to clipboard');
     }
   };

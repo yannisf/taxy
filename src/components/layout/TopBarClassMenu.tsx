@@ -4,10 +4,11 @@ import { PlusCircle, PencilSquare, BoxArrowLeft, ChevronDown, Trash } from 'reac
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useClass } from '../../contexts/ClassContext';
+import { useClass } from '../../hooks/useClass';
 import { useModalState, useDropdownState } from '../../hooks/useModalState';
 import ClassModal from '../classes/ClassModal';
 import DeleteClassModal from '../classes/DeleteClassModal';
+import { logger } from '../../utils/logger';
 
 interface TopBarClassMenuProps {
   theme: 'light' | 'dark';
@@ -54,7 +55,7 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
       // Automatically select the newly created class
       await selectClass(newClass.class_id);
     } catch (error) {
-      console.error('Error creating class:', error);
+      logger.error('Error creating class:', error);
       toast.error(t('failedToCreateClass'));
       throw error; // Re-throw to let the modal handle it
     } finally {
@@ -78,7 +79,7 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
       toast.success(t('classUpdated'));
       editModal.close();
     } catch (error) {
-      console.error('Error updating class:', error);
+      logger.error('Error updating class:', error);
       toast.error(t('unexpectedError'));
       throw error;
     } finally {
@@ -119,7 +120,7 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
       deleteModal.close();
       navigate('/kids');
     } catch (error) {
-      console.error('Error deleting class:', error);
+      logger.error('Error deleting class:', error);
       toast.error(t('failedToDeleteClass'));
     } finally {
       deleteModal.setLoading(false);
@@ -148,7 +149,7 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
       deleteWithKidsModal.close();
       navigate('/kids');
     } catch (error) {
-      console.error('Error deleting class with kids:', error);
+      logger.error('Error deleting class with kids:', error);
       toast.error(t('failedToDeleteClass'));
     } finally {
       deleteWithKidsModal.setLoading(false);

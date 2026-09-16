@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { MoonStars, Sun } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../hooks/useTheme';
 import LanguageSelector from '../common/LanguageSelector';
 
 const TopBarSettings: React.FC = () => {

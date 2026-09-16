@@ -5,6 +5,7 @@ import {
   validateBrowserSupport,
 } from './crypto';
 import { downloadFile } from './downloadUtils';
+import { logger } from './logger';
 
 export const exportClassData = async (
   classId?: string,
@@ -44,7 +45,7 @@ export const exportClassData = async (
         blob = new Blob([encryptedData], { type: 'text/plain' });
         fileExtension = 'json.enc';
       } catch (error) {
-        console.error('Encryption failed:', error);
+        logger.error('Encryption failed:', error);
         throw error; // Re-throw to be caught by handler
       }
     } else {
@@ -79,7 +80,7 @@ export const exportClassData = async (
     downloadFile(blob, filename);
     return true;
   } catch (error) {
-    console.error('Error exporting class data:', error);
+    logger.error('Error exporting class data:', error);
     throw error;
   }
 };
@@ -133,7 +134,7 @@ export const exportGuardianEmails = async (classKids: Kid[], className: string, 
       count: uniqueGuardians.length
     };
   } catch (error) {
-    console.error('Error exporting guardian emails:', error);
+    logger.error('Error exporting guardian emails:', error);
     throw error;
   }
 };
