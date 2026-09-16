@@ -111,7 +111,7 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
       }
     };
 
-  } catch (error) {
+  } catch {
     return {
       valid: false,
       errors: ['failedToProcessFile']

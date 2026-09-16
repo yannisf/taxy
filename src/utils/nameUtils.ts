@@ -43,7 +43,7 @@ export function extractUniqueFirstNames(kids: Kid[]): string[] {
  * Requires minimum 1 character to filter
  */
 export function filterNamesByQuery(names: string[], query: string): string[] {
-  if (!query || query.length < 1) {
+  if (!query || query.length < 2) {
     return [];
   }
 
