@@ -51,6 +51,20 @@ export const createEmptyTelephone = (): Omit<Telephone, 'country_code' | 'number
 });
 
 /**
+ * Groups digits into a XXX XXX XXXX pattern for readability
+ */
+export const formatPhoneNumberGrouped = (number: string): string => {
+  const digits = number.replace(/\D/g, '');
+
+  if (digits.length <= 3) {
+    return digits;
+  } else if (digits.length <= 6) {
+    return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+  }
+  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
+};
+
+/**
  * Validates telephone number format
  */
 export const validateTelephoneNumber = (number: string): boolean => {

@@ -28,12 +28,6 @@ const GuardianAddressSection: React.FC<GuardianAddressSectionProps> = ({
     return addressString ? `${t('guardianAddress')}: ${addressString}` : t('guardianAddress');
   }, [guardian?.address, t]);
 
-  // Address accordion expanded state
-  const addressExpanded = useMemo(() => {
-    const addressString = formatAddressString(guardian?.address);
-    return !addressString;
-  }, [guardian?.address]);
-
   if (sameAddressAsKid) {
     return (
       <div className="mb-3 p-3 bg-body-secondary rounded">
@@ -45,7 +39,7 @@ const GuardianAddressSection: React.FC<GuardianAddressSectionProps> = ({
   }
 
   return (
-    <Accordion className="mb-3" defaultActiveKey={addressExpanded ? "0" : undefined}>
+    <Accordion className="mb-3">
       <Accordion.Item eventKey="0">
         <Accordion.Header>{addressTitle}</Accordion.Header>
         <Accordion.Body>

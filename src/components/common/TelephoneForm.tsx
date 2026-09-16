@@ -5,7 +5,7 @@ import { X } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import type { Control, FieldErrors } from 'react-hook-form';
 import type { Telephone } from '../../types/models';
-import { validateTelephoneNumber, validateCountryCode, getTelephoneTypeIcon } from '../../utils/telephoneUtils';
+import { validateTelephoneNumber, validateCountryCode, getTelephoneTypeIcon, formatPhoneNumberGrouped } from '../../utils/telephoneUtils';
 
 interface TelephoneFormProps {
   control: Control<Record<string, unknown>>;
@@ -77,10 +77,13 @@ const TelephoneForm: React.FC<TelephoneFormProps> = ({
                 }}
                 render={({ field }) => (
                   <Form.Control
-                    {...field}
-                    value={field.value ?? ''}
+                    name={field.name}
+                    ref={field.ref}
+                    onBlur={field.onBlur}
+                    value={formatPhoneNumberGrouped(field.value ?? '')}
+                    onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
                     type="text"
-                    placeholder={t('enterTelephoneNumber')}
+                    placeholder="___ ___ ____"
                     disabled={disabled}
                     isInvalid={!!errors?.number}
                   />

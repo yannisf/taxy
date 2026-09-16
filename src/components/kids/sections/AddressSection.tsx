@@ -17,10 +17,9 @@ const AddressSection: React.FC<AddressSectionProps> = ({ control, errors, initia
 
   const addressString = formatAddressString(initialAddress);
   const addressTitle = addressString ? `${t('address')}: ${addressString}` : t('address');
-  const addressExpanded = !addressString; // Expanded if no address, collapsed if address exists
 
   return (
-    <Accordion className="mb-4" defaultActiveKey={addressExpanded ? "0" : undefined}>
+    <Accordion className="mb-4">
       <Accordion.Item eventKey="0">
         <Accordion.Header>{addressTitle}</Accordion.Header>
         <Accordion.Body>

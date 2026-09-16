@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import type { Telephone } from '../../types/models';
-import { getTelephoneTypeIcon } from '../../utils/telephoneUtils';
+import { getTelephoneTypeIcon, formatPhoneNumberGrouped } from '../../utils/telephoneUtils';
 
 interface TelephoneDisplayProps {
   telephone: Telephone;
@@ -35,25 +35,10 @@ const TelephoneDisplay: React.FC<TelephoneDisplayProps> = ({
   const typeIcon = getTelephoneTypeIcon(telephone.telephone_type);
   const typeLabel = t(getTelephoneTypeKey(telephone.telephone_type));
 
-  // Format phone number with pattern: XXX XXX XXXX
-  const formatPhoneNumber = (number: string): string => {
-    // Remove any existing spaces or special characters except digits
-    const digits = number.replace(/\D/g, '');
-
-    // Format as: first 3 digits, next 3 digits, remaining digits
-    if (digits.length <= 3) {
-      return digits;
-    } else if (digits.length <= 6) {
-      return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-    } else {
-      return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
-    }
-  };
-
   // Format phone number: hide +30 country code for display
   const formattedNumber = telephone.country_code === '+30'
-    ? formatPhoneNumber(telephone.number)
-    : `${telephone.country_code} ${formatPhoneNumber(telephone.number)}`;
+    ? formatPhoneNumberGrouped(telephone.number)
+    : `${telephone.country_code} ${formatPhoneNumberGrouped(telephone.number)}`;
 
   // Create tel: link (always include country code, no spaces)
   const telLink = `tel:${telephone.country_code}${telephone.number.replace(/\D/g, '')}`;
