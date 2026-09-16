@@ -115,9 +115,9 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
               render={({ field }) => (
                 <Form.Check
                   type="checkbox"
-                  label={t('authorizedForPickup')}
-                  checked={field.value}
-                  onChange={field.onChange}
+                  label={t('notAuthorizedForPickup')}
+                  checked={!field.value}
+                  onChange={(e) => field.onChange(!e.target.checked)}
                 />
               )}
             />

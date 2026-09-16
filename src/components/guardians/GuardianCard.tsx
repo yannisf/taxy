@@ -89,9 +89,9 @@ const GuardianCardComponent: React.FC<GuardianCardProps> = ({ guardian }) => {
         </Card.Subtitle>
         
         <div className="mb-2">
-          {guardian.authorized_for_pickup && (
-            <Badge bg="success" className="me-1">
-              {t('pickupAuthorizedBadge')}
+          {!guardian.authorized_for_pickup && (
+            <Badge bg="danger" className="me-1">
+              {t('pickupNotAuthorizedBadge')}
             </Badge>
           )}
           {guardian.same_address_as_kid && (
