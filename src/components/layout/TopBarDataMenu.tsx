@@ -9,7 +9,7 @@ import { useKids } from '../../hooks/useKids';
 import { useModalState, useDropdownState } from '../../hooks/useModalState';
 import { exportClassData } from '../../utils/exportUtils';
 import { validateImportFile, performImport, type ImportValidationResult } from '../../utils/importUtils';
-import ExportModal, { type ExportOptions } from '../classes/ExportModal';
+import ExportModal from '../classes/ExportModal';
 import ImportConfirmModal from '../classes/ImportConfirmModal';
 import { logger } from '../../utils/logger';
 
@@ -39,42 +39,17 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
     dropdown.close();
   };
 
-  const handleConfirmExport = async (options: ExportOptions) => {
+  const handleConfirmExport = async () => {
     if (!selectedClass) return;
 
     exportModal.setLoading(true);
     try {
-      await exportClassData(selectedClass.class_id, options);
-
-      // Clear password from options object immediately after use
-      if (options.password) {
-        options.password = '';
-      }
-
-      toast.success(
-        options.encrypt
-          ? t('encryptedClassDataExported')
-          : t('classDataExported')
-      );
+      await exportClassData(selectedClass.class_id);
+      toast.success(t('classDataExported'));
       exportModal.close();
     } catch (error) {
-      // Clear password even on error
-      if (options.password) {
-        options.password = '';
-      }
-
-      // Specific error messages based on error type
-      if (error instanceof Error) {
-        if (error.name === 'CryptoError' || error.name === 'CompressionError') {
-          toast.error(t('encryptionFailed'));
-        } else if (error.name === 'InvalidPasswordError') {
-          toast.error(t('invalidPassword'));
-        } else {
-          toast.error(t('failedToExportClassData'));
-        }
-      } else {
-        toast.error(t('failedToExportClassData'));
-      }
+      logger.error('Export failed:', error);
+      toast.error(t('failedToExportClassData'));
     } finally {
       exportModal.setLoading(false);
     }

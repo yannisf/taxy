@@ -17,7 +17,6 @@ Taxy is a React-based class management system for educational institutions. It m
 - nanoid for ID generation
 - date-fns for date formatting
 - react-datepicker for date input controls
-- pako for compression (browser compatibility fallback)
 - pdfmake for PDF generation
 - react-error-boundary for error handling
 
@@ -335,57 +334,6 @@ Provides autocomplete for all address fields (street name, neighborhood, postal 
 
 **Tests:** `src/test/nameUtils.test.ts` (22 tests covering all extraction and filtering functions)
 
-## Data Security & Encryption
-
-The application includes cryptographic utilities for secure data handling when exporting sensitive information.
-
-### Encryption Utilities (`src/utils/crypto/`)
-
-**Module Structure:**
-The crypto utilities are split into focused modules:
-- `errors.ts` - Custom error classes (CryptoError, CompressionError, InvalidPasswordError, CorruptedDataError)
-- `config.ts` - Cryptography configuration constants
-- `encoding.ts` - Base64 encoding/decoding utilities
-- `compression.ts` - Gzip compression/decompression with pako fallback
-- `encryption.ts` - AES-GCM encryption and key derivation
-- `validation.ts` - Browser support validation
-- `index.ts` - Main API exports
-
-**Features:**
-- AES-GCM-256 encryption with PBKDF2 key derivation (100,000 iterations)
-- Gzip compression using native browser Compression Streams API with pako fallback
-- Supports large JSON files (up to 5MB)
-- Comprehensive error handling with custom error types
-- Automatic fallback to pako library for browsers without native compression support
-
-**Main Functions:**
-- `encryptAndCompressJSON(data, password)`: Encrypts and compresses JSON data, returns Base64 string
-- `decryptAndDecompressJSON(encryptedData, password)`: Decrypts and decompresses encrypted data
-- `validateBrowserSupport()`: Checks if browser supports required crypto APIs
-- `clearSensitiveData(data)`: Best-effort memory clearing for sensitive data
-
-**Custom Error Types:**
-- `CryptoError`: General encryption/decryption errors
-- `CompressionError`: Compression/decompression failures
-- `InvalidPasswordError`: Wrong password or authentication failure
-- `CorruptedDataError`: Invalid or corrupted encrypted data
-
-**Process Flow:**
-1. JSON → String → UTF-8 bytes
-2. Gzip compression
-3. Generate random salt (16 bytes) and IV (12 bytes)
-4. Derive AES-256 key using PBKDF2
-5. Encrypt with AES-GCM
-6. Combine: salt + IV + encrypted data
-7. Encode to Base64
-
-**Browser Requirements:**
-- Web Crypto API (crypto.subtle) - Required
-- Compression Streams API (CompressionStream/DecompressionStream) - Optional (falls back to pako)
-- TextEncoder/TextDecoder - Required
-
-**Tests:** `src/test/cryptoUtils.test.ts`
-
 ## PDF Generation
 
 The application uses pdfmake for PDF generation with utilities split into focused modules.
@@ -443,7 +391,6 @@ Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment
 
 ### Utilities (Modular Structure)
 - **PDF generation**: `src/utils/pdf/` (modular: catalogGenerator, gridGenerator, listGenerator, formatters, pdfSetup)
-- **Crypto utilities**: `src/utils/crypto/` (modular: encryption, compression, encoding, validation, errors, config)
 - **Other utilities**:
   - Export utilities: `src/utils/exportUtils.ts`
   - Import utilities: `src/utils/importUtils.ts`
@@ -462,6 +409,5 @@ Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment
 - Error fallback: `src/components/common/ErrorFallback.tsx`
 
 ### Tests
-- Crypto tests: `src/test/cryptoUtils.test.ts`
 - Name utils tests: `src/test/nameUtils.test.ts`
 - Test setup: `src/test/setup.ts`

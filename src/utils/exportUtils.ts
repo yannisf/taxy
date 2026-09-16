@@ -1,16 +1,9 @@
 import { db } from '../services/database';
 import type { Kid, ClassRecord, ClassExport } from '../types/models';
-import {
-  encryptAndCompressJSON,
-  validateBrowserSupport,
-} from './crypto';
 import { downloadFile } from './downloadUtils';
 import { logger } from './logger';
 
-export const exportClassData = async (
-  classId?: string,
-  options?: { encrypt: boolean; password?: string }
-) => {
+export const exportClassData = async (classId?: string) => {
   try {
     let classData: ClassRecord | ClassExport;
 
@@ -22,38 +15,9 @@ export const exportClassData = async (
       classData = await db.exportData();
     }
 
-    let blob: Blob;
-    let fileExtension: string;
-
-    if (options?.encrypt && options?.password) {
-      // Encryption path
-      try {
-        // Validate browser support first
-        const browserSupport = validateBrowserSupport();
-        if (!browserSupport.supported) {
-          throw new Error(
-            `Browser does not support required features: ${browserSupport.missing.join(', ')}`
-          );
-        }
-
-        // Encrypt and compress
-        const encryptedData = await encryptAndCompressJSON(
-          classData,
-          options.password
-        );
-
-        blob = new Blob([encryptedData], { type: 'text/plain' });
-        fileExtension = 'json.enc';
-      } catch (error) {
-        logger.error('Encryption failed:', error);
-        throw error; // Re-throw to be caught by handler
-      }
-    } else {
-      // Standard unencrypted export
-      const jsonString = JSON.stringify(classData, null, 2);
-      blob = new Blob([jsonString], { type: 'application/json' });
-      fileExtension = 'json';
-    }
+    const jsonString = JSON.stringify(classData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const fileExtension = 'json';
 
     // Generate filename with current date and class info
     const now = new Date();
