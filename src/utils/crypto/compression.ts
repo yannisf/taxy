@@ -2,7 +2,7 @@
  * Data compression and decompression utilities
  */
 
-import pako from 'pako';
+import { gzip, ungzip } from 'pako';
 import { CompressionError } from './errors';
 import { CONFIG } from './config';
 import { logger } from '../logger';
@@ -97,7 +97,7 @@ export async function compressData(data: Uint8Array): Promise<Uint8Array> {
 
     // Fallback to pako for browsers without CompressionStream support
     logger.info('Using pako for compression (native CompressionStream not available)');
-    return pako.gzip(data);
+    return gzip(data);
   } catch (error) {
     throw new CompressionError(`Failed to compress data: ${error instanceof Error ? error.message : String(error)}`);
   }
@@ -115,7 +115,7 @@ export async function decompressData(compressedData: Uint8Array): Promise<Uint8A
 
     // Fallback to pako for browsers without DecompressionStream support
     logger.info('Using pako for decompression (native DecompressionStream not available)');
-    return pako.ungzip(compressedData);
+    return ungzip(compressedData);
   } catch (error) {
     throw new CompressionError(`Failed to decompress data: ${error instanceof Error ? error.message : String(error)}`);
   }

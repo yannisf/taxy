@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import DatePicker from 'react-datepicker';
 import type { Control, FieldErrors } from 'react-hook-form';
 import type { Kid } from '../../../types/models';
-import { useKids } from '../../../contexts/KidsContext';
+import { useKids } from '../../../hooks/useKids';
 import { extractUniqueFirstNames, filterNamesByQuery } from '../../../utils/nameUtils';
 import AutocompleteInput from '../../common/AutocompleteInput';
 
@@ -166,7 +166,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) 
                 return (
                   <DatePicker
                     selected={selectedDate}
-                    onChange={(date) => {
+                    onChange={(date: Date | null) => {
                       // Convert Date to ISO string (YYYY-MM-DD) for storage
                       field.onChange(date ? date.toISOString().split('T')[0] : '');
                     }}

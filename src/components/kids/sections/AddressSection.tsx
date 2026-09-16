@@ -25,7 +25,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({ control, errors, initia
         <Accordion.Header>{addressTitle}</Accordion.Header>
         <Accordion.Body>
           <AddressForm
-            control={control}
+            control={control as any}
             errors={errors.address}
           />
         </Accordion.Body>
