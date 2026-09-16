@@ -7,7 +7,7 @@ const TopBarLogo: React.FC = () => {
 
   return (
     <Navbar.Brand className="d-flex align-items-center px-3">
-      <img src="/favicon.svg" alt="Taxy Logo" style={{ paddingRight: '0.75rem' }}/>{' '}
+      <img src="/favicon.svg" alt="Entaxy Logo" style={{ paddingRight: '0.75rem' }}/>{' '}
       <span className='fs-5'>{t('appName')}</span>
     </Navbar.Brand>
   );

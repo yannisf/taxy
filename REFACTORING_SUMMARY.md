@@ -1,6 +1,6 @@
 # Code Refactoring Summary
 
-This document outlines the refactoring improvements made to reduce verbosity, eliminate duplication, and improve code readability across the Taxy application.
+This document outlines the refactoring improvements made to reduce verbosity, eliminate duplication, and improve code readability across the Entaxy application.
 
 ## Overview
 

@@ -1,6 +1,6 @@
 # Test Data Files
 
-This directory contains test data files for the Taxy class management system. All files have been updated to be compatible with the new database schema (v4+) which includes the `class_id` property.
+This directory contains test data files for the Entaxy class management system. All files have been updated to be compatible with the new database schema (v4+) which includes the `class_id` property.
 
 ## Files Overview
 
@@ -70,7 +70,7 @@ All test data includes:
 ## Import Instructions
 
 ### Importing Kid Array Files
-1. Open Taxy application
+1. Open Entaxy application
 2. Select or create a class in the left panel
 3. Go to Data Menu → Import Students
 4. Select `test-kids-data-en-10.json` or `test-kids-data-el-23.json`
@@ -80,7 +80,7 @@ All test data includes:
 The kids will be added to the selected class (class_id will be updated to the target class).
 
 ### Importing Class Export Files
-1. Open Taxy application
+1. Open Entaxy application
 2. Go to Data Menu → Import Students
 3. Select `test-class-export-en-10.json` or `test-class-export-el-23.json`
 4. The class metadata will be read and kids imported to the appropriate class

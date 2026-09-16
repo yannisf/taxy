@@ -1,6 +1,8 @@
-# Taxy
+# Entaxy
 
 A comprehensive React-based class management system for educational institutions to manage students, guardians, and class information with multilingual support.
+
+> The app is branded **Entaxy** (from Greek "εν" + "τάξη" — "within class/order"), but the GitHub repository is still named `taxy` — hence `cd taxy` below. Rename the repo separately if you want the two to match.
 
 ## 📋 Table of Contents
 
