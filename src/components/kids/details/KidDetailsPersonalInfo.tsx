@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 import { CheckLg } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import AddressDisplay from '../../common/AddressDisplay';
+import AddressDisplay, { hasAddressData } from '../../common/AddressDisplay';
 import { formatDateDisplay } from '../../../utils/dateUtils';
 import type { Kid } from '../../../types/models';
 
@@ -20,7 +20,9 @@ const KidDetailsPersonalInfo: React.FC<KidDetailsPersonalInfoProps> = ({ kid }) 
       {kid.preferred_name && (
         <p><strong>{t('preferredName')}:</strong> {kid.preferred_name}</p>
       )}
-      <p><strong>{t('dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
+      {kid.date_of_birth && (
+        <p><strong>{t('dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
+      )}
       <p><strong>{t('gender')}:</strong> {t(`gender${kid.gender === 'male' ? 'Boy' : kid.gender === 'female' ? 'Girl' : 'Other'}`)}</p>
       <p><strong>{t('level')}:</strong> {t(`level${kid.level === 'pre-kindergartner' ? 'PreKindergarten' : kid.level === 'kindergartner' ? 'Kindergarten' : 'KindergartenRepeating'}`)}</p>
       {kid.extended_day_care && (
@@ -31,7 +33,9 @@ const KidDetailsPersonalInfo: React.FC<KidDetailsPersonalInfoProps> = ({ kid }) 
       )}
 
       {/* Address */}
-      <p><strong>{t('address')}:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
+      {hasAddressData(kid.address) && (
+        <p><strong>{t('address')}:</strong> <AddressDisplay address={kid.address} className="d-inline" /></p>
+      )}
 
       {/* Notes */}
       {kid.notes && (

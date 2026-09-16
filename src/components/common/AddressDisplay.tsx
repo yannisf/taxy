@@ -4,21 +4,18 @@ import type { Address } from '../../types/models';
 interface AddressDisplayProps {
   address?: Address | null;
   className?: string;
+  hideWhenEmpty?: boolean;
 }
 
-const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = '' }) => {
-  if (!address) {
-    return (
-      <span className={`text-muted ${className}`}>
-        No address provided
-      </span>
-    );
-  }
+export const hasAddressData = (address?: Address | null): boolean =>
+  !!address && Object.values(address).some(value => value && value.trim() !== '');
 
-  // Check if any address field has a value
-  const hasAddressData = Object.values(address).some(value => value && value.trim() !== '');
-  
-  if (!hasAddressData) {
+const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = '', hideWhenEmpty = false }) => {
+  if (!hasAddressData(address)) {
+    if (hideWhenEmpty) {
+      return null;
+    }
+
     return (
       <span className={`text-muted ${className}`}>
         No address provided
