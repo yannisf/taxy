@@ -133,7 +133,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
             {!isNew && guardian && (
               <span
                 role="button"
-                tabIndex={0}
+                tabIndex={-1}
                 className="p-2 me-3 text-danger border border-danger rounded"
                 style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}
                 title={t('deleteGuardian')}
