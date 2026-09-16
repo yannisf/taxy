@@ -25,15 +25,17 @@ This is a modern web application built with React 19, TypeScript, and Vite for m
 ### Key Technologies
 
 - **Frontend**: React 19 + TypeScript
-- **Build Tool**: Vite 7.1.7
-- **UI Framework**: Bootstrap 5.3.8 + React Bootstrap 2.10.10
-- **Database**: Dexie 4.2.0 (IndexedDB wrapper)
-- **Routing**: React Router DOM 7.9.3
-- **Forms**: React Hook Form 7.64.0
-- **Testing**: Vitest 3.2.4 + React Testing Library
-- **Internationalization**: i18next 25.5.3
+- **Build Tool**: Vite 8
+- **UI Framework**: Bootstrap 5.3 + React Bootstrap 2.10
+- **Database**: Dexie 4.4 (IndexedDB wrapper)
+- **Routing**: React Router DOM 7.18
+- **Forms**: React Hook Form 7.88
+- **Testing**: Vitest 5 + React Testing Library
+- **Internationalization**: i18next 26
 - **Icons**: React Bootstrap Icons
-- **PDF Generation**: PDFMake 0.2.20
+- **PDF Generation**: PDFMake 0.3
+
+Exact versions live in `package.json` — the list above is a snapshot and will drift as dependencies are updated; treat `package.json` as the source of truth.
 
 ## ✨ Features
 
@@ -54,10 +56,11 @@ Before installing and running this application, ensure you have the following in
 
 ### Required Software
 
-- **Node.js**: Version 18.0.0 or higher
+- **Node.js**: `^20.19.0` or `>=22.12.0` (required by Vite 8 — see the `engines` field in `package.json`)
   ```bash
-  node --version  # Should be 18.0.0+
+  node --version
   ```
+  A `.nvmrc` is included, so if you use [nvm](https://github.com/nvm-sh/nvm), just run `nvm use` (or `nvm install` on first setup).
 
 - **npm**: Version 8.0.0 or higher (comes with Node.js)
   ```bash
@@ -77,7 +80,7 @@ Before installing and running this application, ensure you have the following in
 
 ```bash
 git clone <repository-url>
-cd classapp
+cd taxy
 ```
 
 ### 2. Install Dependencies
@@ -287,8 +290,7 @@ Remove build outputs and temporary files:
 rm -rf dist
 
 # Remove TypeScript build info
-rm -rf tsconfig.tsbuildinfo
-rm -rf src/**/*.tsbuildinfo
+rm -rf node_modules/.tmp
 ```
 
 ### Clean Dependencies
@@ -344,7 +346,7 @@ rm -rf node_modules/.tmp
 ## 📁 Project Structure
 
 ```
-classapp/
+taxy/
 ├── public/                 # Static assets
 ├── src/
 │   ├── assets/            # Application assets
@@ -421,12 +423,7 @@ Vitest settings in `vitest.config.ts`:
 
 ### Environment Variables
 
-Create `.env.local` for local environment variables:
-```bash
-# Development settings
-VITE_API_URL=http://localhost:3000
-VITE_DEBUG=true
-```
+The app doesn't currently read any `VITE_*` environment variables — all data lives in the browser's IndexedDB and there's no backend to configure. If you need one later, Vite loads `.env.local` (or `.env.development.local` / `.env.production.local`) automatically; see the [Vite env docs](https://vite.dev/guide/env-and-mode.html).
 
 ## 🔧 Troubleshooting
 
@@ -512,7 +509,7 @@ Error: Build failed with X errors
 1. **Fork and Clone**
    ```bash
    git clone <your-fork-url>
-   cd classapp
+   cd taxy
    ```
 
 2. **Create Feature Branch**
