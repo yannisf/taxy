@@ -4,7 +4,6 @@ import { Download, Upload, ChevronDown } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../hooks/useClass';
-import { useClassKids } from '../../hooks/useClassKids';
 import { useKids } from '../../hooks/useKids';
 import { useModalState, useDropdownState } from '../../hooks/useModalState';
 import { exportClassData } from '../../utils/exportUtils';
@@ -20,7 +19,6 @@ interface TopBarDataMenuProps {
 const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
   const { t } = useTranslation();
   const { selectedClass, selectClass, refreshClasses } = useClass();
-  const classKids = useClassKids();
   const { refreshKids } = useKids();
 
   const dropdown = useDropdownState();
@@ -157,7 +155,7 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
           </Dropdown.Item>
           <Dropdown.Item
             onClick={handleExport}
-            disabled={!selectedClass || exportModal.isLoading || classKids.length === 0}
+            disabled={!selectedClass || exportModal.isLoading}
           >
             <span className="d-flex align-items-center gap-2"><Download /> {t('exportClass')}</span>
           </Dropdown.Item>
