@@ -25,19 +25,22 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <AppLayout />,
-    children: [
-      { index: true, element: <Navigate to="/kids" replace /> },
-      { path: 'kids', element: <KidListView /> },
-      { path: 'kids/add', element: <KidAddView /> },
-      { path: 'kids/:kidId', element: <KidDetailsView /> },
-      { path: 'kids/:kidId/edit', element: <KidEditView /> },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <AppLayout />,
+      children: [
+        { index: true, element: <Navigate to="/kids" replace /> },
+        { path: 'kids', element: <KidListView /> },
+        { path: 'kids/add', element: <KidAddView /> },
+        { path: 'kids/:kidId', element: <KidDetailsView /> },
+        { path: 'kids/:kidId/edit', element: <KidEditView /> },
+      ],
+    },
+  ],
+  { basename: import.meta.env.BASE_URL }
+);
 
 const App: React.FC = () => {
   return (
