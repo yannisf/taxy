@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Address } from '../../types/models';
+import { hasAddressData } from '../../utils/addressUtils';
 
 interface AddressDisplayProps {
   address?: Address | null;
@@ -7,11 +8,8 @@ interface AddressDisplayProps {
   hideWhenEmpty?: boolean;
 }
 
-export const hasAddressData = (address?: Address | null): boolean =>
-  !!address && Object.values(address).some(value => value && value.trim() !== '');
-
 const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = '', hideWhenEmpty = false }) => {
-  if (!hasAddressData(address)) {
+  if (!address || !hasAddressData(address)) {
     if (hideWhenEmpty) {
       return null;
     }

@@ -2,7 +2,8 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 import { CheckLg } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
-import AddressDisplay, { hasAddressData } from '../../common/AddressDisplay';
+import AddressDisplay from '../../common/AddressDisplay';
+import { hasAddressData } from '../../../utils/addressUtils';
 import { formatDateDisplay } from '../../../utils/dateUtils';
 import type { Kid } from '../../../types/models';
 

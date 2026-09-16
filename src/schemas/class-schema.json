@@ -92,10 +92,19 @@
           "enum": [
             "father",
             "mother",
-            "sibling",
-            "grandparent",
+            "brother",
+            "sister",
+            "grandfather",
+            "grandmother",
+            "uncle",
+            "aunt",
+            "godfather",
+            "godmother",
+            "caregiver",
             "extended family",
-            "friend"
+            "friend",
+            "sibling",
+            "grandparent"
           ]
         },
         "authorized_for_pickup": {

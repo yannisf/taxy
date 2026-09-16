@@ -79,10 +79,24 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
                   <option value="" disabled>{t('selectRelation')}</option>
                   <option value="father">{t('relationFather')}</option>
                   <option value="mother">{t('relationMother')}</option>
-                  <option value="sibling">{t('relationSibling')}</option>
-                  <option value="grandparent">{t('relationGrandparent')}</option>
+                  <option value="brother">{t('relationBrother')}</option>
+                  <option value="sister">{t('relationSister')}</option>
+                  <option value="grandfather">{t('relationGrandfather')}</option>
+                  <option value="grandmother">{t('relationGrandmother')}</option>
+                  <option value="uncle">{t('relationUncle')}</option>
+                  <option value="aunt">{t('relationAunt')}</option>
+                  <option value="godfather">{t('relationGodfather')}</option>
+                  <option value="godmother">{t('relationGodmother')}</option>
+                  <option value="caregiver">{t('relationCaregiver')}</option>
                   <option value="extended family">{t('relationExtendedFamily')}</option>
                   <option value="friend">{t('relationFriend')}</option>
+                  {/* Legacy values: only shown when already selected, so editing an existing guardian doesn't silently clear it. Pick a specific relation to replace it. */}
+                  {field.value === 'sibling' && (
+                    <option value="sibling">{t('relationSibling')}</option>
+                  )}
+                  {field.value === 'grandparent' && (
+                    <option value="grandparent">{t('relationGrandparent')}</option>
+                  )}
                 </Form.Select>
               )}
             />

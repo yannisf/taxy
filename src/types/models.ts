@@ -18,7 +18,9 @@ export interface Telephone {
 export interface Guardian {
   first_name: string;
   last_name: string;
-  relation_with_kid: 'father' | 'mother' | 'sibling' | 'grandparent' | 'extended family' | 'friend';
+  relation_with_kid: 'father' | 'mother' | 'brother' | 'sister' | 'grandfather' | 'grandmother' | 'uncle' | 'aunt' | 'godfather' | 'godmother' | 'caregiver' | 'extended family' | 'friend'
+    // Legacy values kept for backward compatibility with existing records; no longer offered when adding/editing a guardian.
+    | 'sibling' | 'grandparent';
   authorized_for_pickup?: boolean;
   same_address_as_kid?: boolean;
   telephones?: Telephone[];

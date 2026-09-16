@@ -1,19 +1,19 @@
 import type { Address } from '../types/models';
 
 /**
+ * Checks whether an address object has at least one non-empty field
+ */
+export function hasAddressData(address?: Address | null): boolean {
+  return !!address && Object.values(address).some(value => value && value.trim() !== '');
+}
+
+/**
  * Formats an address object into a readable string
  * @param address - The address object to format
  * @returns Formatted address string or empty string if no address data
  */
 export function formatAddressString(address?: Address | null): string {
-  if (!address) {
-    return '';
-  }
-
-  // Check if any address field has a value
-  const hasAddressData = Object.values(address).some(value => value && value.trim() !== '');
-  
-  if (!hasAddressData) {
+  if (!address || !hasAddressData(address)) {
     return '';
   }
 

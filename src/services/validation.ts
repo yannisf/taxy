@@ -68,7 +68,8 @@ export class ValidationService {
         last_name: { type: 'string', minLength: 1 },
         relation_with_kid: { 
           type: 'string', 
-          enum: ['father', 'mother', 'sibling', 'grandparent', 'extended family', 'friend'] 
+          // 'sibling' and 'grandparent' are legacy values kept for backward compatibility with existing records.
+          enum: ['father', 'mother', 'brother', 'sister', 'grandfather', 'grandmother', 'uncle', 'aunt', 'godfather', 'godmother', 'caregiver', 'extended family', 'friend', 'sibling', 'grandparent']
         }
       },
             required: ['first_name', 'last_name', 'relation_with_kid']

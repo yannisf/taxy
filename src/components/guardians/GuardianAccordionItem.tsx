@@ -91,10 +91,20 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     const relationMap: Record<string, string> = {
       'father': 'relationFather',
       'mother': 'relationMother',
-      'sibling': 'relationSibling',
-      'grandparent': 'relationGrandparent',
+      'brother': 'relationBrother',
+      'sister': 'relationSister',
+      'grandfather': 'relationGrandfather',
+      'grandmother': 'relationGrandmother',
+      'uncle': 'relationUncle',
+      'aunt': 'relationAunt',
+      'godfather': 'relationGodfather',
+      'godmother': 'relationGodmother',
+      'caregiver': 'relationCaregiver',
       'extended family': 'relationExtendedFamily',
-      'friend': 'relationFriend'
+      'friend': 'relationFriend',
+      // Legacy values kept for backward compatibility with existing records.
+      'sibling': 'relationSibling',
+      'grandparent': 'relationGrandparent'
     };
     return relationMap[relation] || relation;
   };
