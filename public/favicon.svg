@@ -8,11 +8,11 @@
   </g>
   <g transform="translate(92,142) rotate(7)">
     <rect x="-42" y="-42" width="84" height="84" rx="16" fill="#FF8B6B"/>
-    <!-- E (shifted into the visible sliver not covered by the front block) -->
-    <rect x="-34" y="10" width="6" height="24" rx="2.5" fill="#5A3E1B"/>
-    <rect x="-34" y="10" width="20" height="6" rx="2.5" fill="#5A3E1B"/>
-    <rect x="-34" y="19" width="15" height="6" rx="2.5" fill="#5A3E1B"/>
-    <rect x="-34" y="28" width="20" height="6" rx="2.5" fill="#5A3E1B"/>
+    <!-- E -->
+    <rect x="-23" y="-27" width="14" height="54" rx="4" fill="#5A3E1B"/>
+    <rect x="-23" y="-27" width="46" height="14" rx="4" fill="#5A3E1B"/>
+    <rect x="-23" y="-7" width="34" height="14" rx="4" fill="#5A3E1B"/>
+    <rect x="-23" y="13" width="46" height="14" rx="4" fill="#5A3E1B"/>
   </g>
   <rect x="76" y="56" width="92" height="92" rx="18" fill="#FFC845"/>
   <!-- T -->
