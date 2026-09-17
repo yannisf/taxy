@@ -2,9 +2,12 @@
  * PDF initialization and setup utilities
  */
 
+import { registerIEPSansFont, IEP_SANS_FONT_FAMILY } from './iepFonts';
+
 export interface PDFMakeInstance {
   createPdf: (docDefinition: any) => any;
-  vfs: any;
+  addVirtualFileSystem: (vfs: Record<string, string>) => void;
+  fonts: any;
 }
 
 /**
@@ -18,21 +21,31 @@ export async function initializePDFMake(): Promise<PDFMakeInstance> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfMake = (pdfMakeModule as any).default || pdfMakeModule;
 
-  // Initialize default fonts
+  // Register the default (Roboto) fonts baked into pdfmake
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pdfMake.vfs = (pdfFontsModule as any).default || pdfFontsModule;
+  pdfMake.addVirtualFileSystem((pdfFontsModule as any).default || pdfFontsModule);
 
   return pdfMake;
 }
 
 /**
- * Gets font configuration for PDF generation (Roboto)
+ * Gets font configuration for catalog PDFs (Roboto)
  */
-export async function getPDFFontConfig() {
+export async function getCatalogFontConfig() {
   const pdfMake = await initializePDFMake();
   const fontFamily = 'Roboto';
 
   return { pdfMake, fontFamily };
+}
+
+/**
+ * Gets font configuration for student card PDFs (IEP Sans)
+ */
+export async function getCardsFontConfig() {
+  const pdfMake = await initializePDFMake();
+  registerIEPSansFont(pdfMake);
+
+  return { pdfMake, fontFamily: IEP_SANS_FONT_FAMILY };
 }
 
 /**

@@ -6,13 +6,14 @@ import type { TDocumentDefinitions, Content } from 'pdfmake/interfaces';
 import type { Kid, Class } from '../../types/models';
 import type { TFunction } from 'i18next';
 import { logger } from '../logger';
-import { getPDFFontConfig, createPDFFilename } from './pdfSetup';
+import { getCardsFontConfig, createPDFFilename } from './pdfSetup';
 
 /**
  * Generates and downloads a student name grid PDF (2 columns)
+ * Uses IEP Sans font for readability
  */
 export async function generateStudentGridPDF(classRecord: Class, kids: Kid[], _t: TFunction): Promise<void> {
-  const { pdfMake, fontFamily } = await getPDFFontConfig();
+  const { pdfMake, fontFamily } = await getCardsFontConfig();
 
   const fileName = createPDFFilename(
     classRecord.school_name,

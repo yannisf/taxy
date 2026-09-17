@@ -343,8 +343,9 @@ The application uses pdfmake for PDF generation with utilities split into focuse
 - `formatters.ts` - Phone number and text formatting utilities
 - `pdfSetup.ts` - PDF initialization and font configuration
 - `catalogGenerator.ts` - Class catalog PDF generation (landscape, Roboto font)
-- `gridGenerator.ts` - Student grid PDF generation (2-column, Roboto font)
-- `listGenerator.ts` - Student list PDF generation (single-column, Roboto font)
+- `gridGenerator.ts` - Student grid PDF generation (2-column, IEP Sans font)
+- `listGenerator.ts` - Student list PDF generation (single-column, IEP Sans font)
+- `iepFonts.ts` - IEP Sans font registration for pdfmake (base64 data in `iepFontsData.ts`)
 - `index.ts` - Public API exports
 
 ### Date Formatting
