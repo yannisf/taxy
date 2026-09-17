@@ -38,13 +38,15 @@ export function createGuardianTextArray(guardians: Guardian[], t: TFunction): Co
     });
 
     // Relation as a gray badge (non-breaking spaces act as horizontal padding)
-    const relationKey = `pdfRelation${guardian.relation_with_kid.charAt(0).toUpperCase() + guardian.relation_with_kid.slice(1).replace(/\s+/g, '')}`;
+    // 'extended family' -> 'pdfRelationExtendedFamily'
+    const relationKey = `pdfRelation${guardian.relation_with_kid.split(/\s+/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')}`;
     const relationText = t(relationKey, { defaultValue: guardian.relation_with_kid.toUpperCase() });
     textArray.push({
       text: `\u00A0${relationText}\u00A0`,
       fontSize: 5,
       bold: true,
-      color: '#212529',
+      color: '#000000',
+      characterSpacing: 0.3,
       background: '#dee2e6'
     });
 
