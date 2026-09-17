@@ -10,7 +10,7 @@ import { el, enGB } from 'date-fns/locale';
 import i18n from '../../i18n';
 import { logger } from '../logger';
 import { createGuardianTextArray } from './formatters';
-import { getCatalogFontConfig, createPDFFilename } from './pdfSetup';
+import { getPDFFontConfig, createPDFFilename } from './pdfSetup';
 
 /**
  * Creates the table data for the catalog PDF
@@ -60,7 +60,7 @@ function createCatalogTableData(kids: Kid[], t: TFunction): TableCell[][] {
  * Uses Roboto font for professional appearance
  */
 export async function generateClassCatalogPDF(classRecord: Class, kids: Kid[], t: TFunction): Promise<void> {
-  const { pdfMake, fontFamily } = await getCatalogFontConfig();
+  const { pdfMake, fontFamily } = await getPDFFontConfig();
 
   // Get current locale from i18n
   const currentLanguage = i18n.language || 'en';

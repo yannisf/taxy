@@ -2,9 +2,6 @@
  * PDF initialization and setup utilities
  */
 
-import { initializePDFMakeFonts, getDefaultFontFamily } from '../customFonts';
-import { logger } from '../logger';
-
 export interface PDFMakeInstance {
   createPdf: (docDefinition: any) => any;
   vfs: any;
@@ -29,29 +26,13 @@ export async function initializePDFMake(): Promise<PDFMakeInstance> {
 }
 
 /**
- * Gets font configuration for catalog PDFs (Roboto)
+ * Gets font configuration for PDF generation (Roboto)
  */
-export async function getCatalogFontConfig() {
+export async function getPDFFontConfig() {
   const pdfMake = await initializePDFMake();
-  await initializePDFMakeFonts(pdfMake);
-  const fontFamily = 'Roboto'; // Catalog always uses Roboto font
+  const fontFamily = 'Roboto';
 
   return { pdfMake, fontFamily };
-}
-
-/**
- * Gets font configuration for student cards PDFs (OpenDyslexic or fallback)
- */
-export async function getCardsFontConfig() {
-  const pdfMake = await initializePDFMake();
-  const fontsLoaded = await initializePDFMakeFonts(pdfMake);
-  const fontFamily = getDefaultFontFamily();
-
-  if (!fontsLoaded) {
-    logger.debug('Custom fonts failed to load. Using default Roboto font.');
-  }
-
-  return { pdfMake, fontFamily, fontsLoaded };
 }
 
 /**

@@ -6,15 +6,14 @@ import type { TDocumentDefinitions, Content } from 'pdfmake/interfaces';
 import type { Kid, Class } from '../../types/models';
 import type { TFunction } from 'i18next';
 import { logger } from '../logger';
-import { getCardsFontConfig, createPDFFilename } from './pdfSetup';
+import { getPDFFontConfig, createPDFFilename } from './pdfSetup';
 
 /**
  * Generates and downloads a single-column student list PDF
  * One student per row with full name
- * Uses OpenDyslexic font for better readability
  */
 export async function generateStudentListPDF(classRecord: Class, kids: Kid[], _t: TFunction): Promise<void> {
-  const { pdfMake, fontFamily } = await getCardsFontConfig();
+  const { pdfMake, fontFamily } = await getPDFFontConfig();
 
   const fileName = createPDFFilename(
     classRecord.school_name,
