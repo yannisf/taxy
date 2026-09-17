@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { ListGroup, Button, OverlayTrigger, Tooltip, Form, InputGroup } from 'react-bootstrap';
+import { ListGroup, Button, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Plus, ExclamationTriangle, X } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
@@ -119,26 +119,26 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             </div>
 
             {/* Quick Search */}
-            <div className="mb-3">
-              <InputGroup size="sm">
-                <Form.Control
-                  type="text"
-                  placeholder={t('searchKids')}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  aria-label={t('searchKids')}
-                />
-                {searchQuery && (
-                  <Button
-                    variant="outline-secondary"
-                    onClick={() => setSearchQuery('')}
-                    aria-label={t('clearSearch')}
-                    title={t('clearSearch')}
-                  >
-                    <X size={16} />
-                  </Button>
-                )}
-              </InputGroup>
+            <div className="mb-3 kids-search-wrapper">
+              <Form.Control
+                type="text"
+                className={searchQuery ? 'kids-search-input has-clear' : 'kids-search-input'}
+                placeholder={t('searchKids')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label={t('searchKids')}
+              />
+              {searchQuery && (
+                <Button
+                  variant="link"
+                  className="kids-search-clear"
+                  onClick={() => setSearchQuery('')}
+                  aria-label={t('clearSearch')}
+                  title={t('clearSearch')}
+                >
+                  <X size={22} />
+                </Button>
+              )}
             </div>
           </>
         )}

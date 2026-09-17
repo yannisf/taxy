@@ -317,6 +317,34 @@
   border-bottom-color: rgba(255,255,255,0.06);
 }
 
+/* Quick search filter with an inline clear (x) button inside the textbox */
+.kids-search-wrapper {
+  position: relative;
+}
+
+.kids-search-input.has-clear {
+  padding-right: 2.5rem;
+}
+
+.kids-search-clear {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 2rem;
+  line-height: 1;
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.kids-search-clear:hover,
+.kids-search-clear:focus {
+  color: var(--bs-body-color);
+}
+
 .kids-list {
   flex: 1 1 auto;
   min-height: 0;
