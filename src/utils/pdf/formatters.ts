@@ -37,15 +37,15 @@ export function createGuardianTextArray(guardians: Guardian[], t: TFunction): Co
       fontSize: 8
     });
 
-    // Relation as a black/white badge (non-breaking spaces act as horizontal padding)
+    // Relation as a gray badge (non-breaking spaces act as horizontal padding)
     const relationKey = `pdfRelation${guardian.relation_with_kid.charAt(0).toUpperCase() + guardian.relation_with_kid.slice(1).replace(/\s+/g, '')}`;
     const relationText = t(relationKey, { defaultValue: guardian.relation_with_kid.toUpperCase() });
     textArray.push({
       text: `\u00A0${relationText}\u00A0`,
-      fontSize: 6,
+      fontSize: 5,
       bold: true,
-      color: '#ffffff',
-      background: '#000000'
+      color: '#212529',
+      background: '#dee2e6'
     });
 
     // Phone numbers
