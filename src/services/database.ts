@@ -247,57 +247,6 @@ export class ClassManagementDatabase extends Dexie {
     };
   }
 
-  async importData(data: ClassRecord) {
-    return this.transaction('rw', this.kids, async () => {
-      // Clear existing data
-      await this.kids.clear();
-
-      // Import new data
-      for (const kid of data.kids) {
-        await this.addKid(kid);
-      }
-    });
-  }
-
-  // Merge kids with transaction support for import functionality
-  async mergeKids(kidsToMerge: Kid[]): Promise<ImportStatistics> {
-    return this.transaction('rw', this.kids, async () => {
-      const existingKids = await this.getKids();
-      const existingIds = new Set(existingKids.map(kid => kid.kid_id));
-      
-      let newKids = 0;
-      let updatedKids = 0;
-      
-      // Process each kid in the import
-      for (const kid of kidsToMerge) {
-        if (existingIds.has(kid.kid_id)) {
-          // Update existing kid - preserve original created_at
-          const existingKid = existingKids.find(k => k.kid_id === kid.kid_id);
-          const updatedKid = {
-            ...kid,
-            created_at: existingKid?.created_at || kid.created_at,
-            updated_at: new Date().toISOString()
-          };
-          await this.kids.put(updatedKid);
-          updatedKids++;
-        } else {
-          // Add new kid
-          await this.addKid(kid);
-          newKids++;
-        }
-      }
-      
-      // Calculate unchanged kids
-      const importIds = new Set(kidsToMerge.map(kid => kid.kid_id));
-      const unchangedKids = existingKids.filter(kid => !importIds.has(kid.kid_id)).length;
-      
-      return {
-        totalImported: newKids + updatedKids,
-        totalInClass: newKids + updatedKids + unchangedKids
-      };
-    });
-  }
-
   // Merge kids to a specific class with transaction support for import functionality
   // Imports all kids from the file, overriding any existing kids with the same kid_id
   async mergeKidsToClass(classId: string, kidsToMerge: Kid[]): Promise<ImportStatistics> {

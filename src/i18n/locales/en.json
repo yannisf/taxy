@@ -310,6 +310,7 @@
   "exportGuardianEmailsTooltip": "Export guardian emails as CSV",
   "closeClassTooltip": "Close class and return to selection",
   "confirmImportDialog": "Confirm Import",
+  "importMergeWarning": "This class already exists. Kids in the import file will be added or updated; existing kids in this class that aren't in the file will be left unchanged.",
   "importSummaryDialog": "Import Summary",
   "newKidsWillBeAddedDialog": "new kids will be added",
   "existingKidsWillBeUpdated": "existing kids will be updated",

@@ -8,6 +8,7 @@ import type { Kid, ClassExport } from '../types/models';
 vi.mock('../services/database', () => ({
   db: {
     mergeKidsToClass: vi.fn(),
+    getClassById: vi.fn(),
   },
 }));
 
@@ -31,6 +32,9 @@ describe('importUtils', () => {
       valid: true,
       errors: null,
     });
+
+    // Default: the class in the import file doesn't already exist
+    (db.getClassById as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -95,6 +99,53 @@ describe('importUtils', () => {
         class_id: 'test-class-id', // Should have class_id set
         kid_id: 'mocked-uuid-1234', // UUID should be generated
       });
+      expect(result.targetClassExists).toBe(false);
+
+      global.FileReader = originalFileReader;
+    });
+
+    it('should flag targetClassExists when the class_id in the file already exists', async () => {
+      const classExport: ClassExport = {
+        class: {
+          class_id: 'existing-class-id',
+          school_name: 'Test School',
+          class_name: 'Test Class',
+          school_year: '2024-2025',
+          created_at: '2024-01-01T00:00:00Z',
+          updated_at: '2024-01-01T00:00:00Z',
+        },
+        kids: [],
+      };
+
+      (db.getClassById as ReturnType<typeof vi.fn>).mockResolvedValue({
+        class_id: 'existing-class-id',
+        school_name: 'Test School',
+        class_name: 'Test Class',
+        school_year: '2024-2025',
+        created_at: '2024-01-01T00:00:00Z',
+        updated_at: '2024-01-01T00:00:00Z',
+      });
+
+      const file = createMockFile(JSON.stringify(classExport));
+
+      const originalFileReader = global.FileReader;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      global.FileReader = class MockFileReader {
+        onload: ((ev: ProgressEvent<FileReader>) => void) | null = null;
+
+        readAsText(): void {
+          setTimeout(() => {
+            const event = { target: { result: JSON.stringify(classExport) } } as ProgressEvent<FileReader>;
+            this.onload?.(event);
+          }, 0);
+        }
+      } as any;
+
+      const result = await validateImportFile(file);
+
+      expect(result.valid).toBe(true);
+      expect(db.getClassById).toHaveBeenCalledWith('existing-class-id');
+      expect(result.targetClassExists).toBe(true);
 
       global.FileReader = originalFileReader;
     });

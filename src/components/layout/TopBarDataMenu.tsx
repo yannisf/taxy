@@ -172,7 +172,6 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
         onConfirm={handleConfirmImport}
         loading={importModal.isLoading}
         validationResult={importValidationResult}
-        className={selectedClass?.class_name}
       />
 
       {/* Export Modal */}

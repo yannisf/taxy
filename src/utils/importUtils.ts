@@ -13,6 +13,10 @@ export interface ImportValidationResult {
   errors: string[];
   validatedKids?: Kid[];
   classData?: Omit<Class, 'class_id' | 'created_at' | 'updated_at'> & { class_id: string };
+  // Whether the class_id in the import file already exists in the database -
+  // i.e. this import will merge into (and potentially overwrite) real data,
+  // rather than create a brand new class.
+  targetClassExists?: boolean;
 }
 
 export interface ImportResult {
@@ -99,6 +103,8 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
       };
     }
 
+    const existingClass = await db.getClassById(exportData.class.class_id);
+
     return {
       valid: true,
       errors: [],
@@ -108,7 +114,8 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
         school_name: exportData.class.school_name,
         class_name: exportData.class.class_name,
         school_year: exportData.class.school_year
-      }
+      },
+      targetClassExists: !!existingClass
     };
 
   } catch {

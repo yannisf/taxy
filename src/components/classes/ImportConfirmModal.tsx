@@ -9,7 +9,6 @@ interface ImportConfirmModalProps {
   onConfirm: () => void;
   loading: boolean;
   validationResult: ImportValidationResult | null;
-  className?: string; // Current class name (if importing to existing class)
 }
 
 const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
@@ -17,13 +16,13 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
   onHide,
   onConfirm,
   loading,
-  validationResult,
-  className
+  validationResult
 }) => {
   const { t } = useTranslation();
 
-  // Determine if this class already exists (class is in context)
-  const classExists = !!className;
+  // Whether the class_id in the import file already exists in the database -
+  // i.e. whether this import will merge into real, existing data.
+  const classExists = !!validationResult?.targetClassExists;
   const displaySchoolName = validationResult?.classData?.school_name;
   const displayClassName = validationResult?.classData?.class_name;
   const displaySchoolYear = validationResult?.classData?.school_year;
@@ -31,7 +30,7 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
   // Format: "School Name - Class Name (Year)"
   const classDisplay = displaySchoolName && displayClassName
     ? `${displaySchoolName} - ${displayClassName}${displaySchoolYear ? ` (${displaySchoolYear})` : ''}`
-    : className || displayClassName;
+    : displayClassName;
 
   return (
     <Modal show={show} onHide={onHide} size="lg">
@@ -49,7 +48,7 @@ const ImportConfirmModal: React.FC<ImportConfirmModalProps> = ({
         </Alert>
         {classExists && (
           <p className="text-warning">
-            <strong>Warning:</strong> All existing kids in this class will be replaced with the imported data.
+            <strong>{t('warning')}:</strong> {t('importMergeWarning')}
           </p>
         )}
       </Modal.Body>

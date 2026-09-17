@@ -310,6 +310,7 @@
   "exportGuardianEmailsTooltip": "Εξαγωγή email κηδεμόνων ως CSV",
   "closeClassTooltip": "Κλείσιμο τάξης και επιστροφή στην επιλογή",
   "confirmImportDialog": "Επιβεβαίωση Εισαγωγής",
+  "importMergeWarning": "Αυτό το τμήμα υπάρχει ήδη. Τα παιδιά στο αρχείο εισαγωγής θα προστεθούν ή θα ενημερωθούν· τα υπάρχοντα παιδιά του τμήματος που δεν περιλαμβάνονται στο αρχείο θα παραμείνουν αμετάβλητα.",
   "importSummaryDialog": "Περίληψη Εισαγωγής",
   "newKidsWillBeAddedDialog": "νέα παιδιά θα προστεθούν",
   "existingKidsWillBeUpdated": "υπάρχοντα παιδιά θα ενημερωθούν",
