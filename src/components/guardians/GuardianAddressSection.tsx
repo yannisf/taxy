@@ -1,34 +1,27 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Accordion } from 'react-bootstrap';
-import type { Control, FieldErrors, UseFormWatch } from 'react-hook-form';
+import type { Control, FieldErrors, FieldValues } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { Guardian } from '../../types/models';
+import type { Guardian, Kid } from '../../types/models';
 import { formatAddressString } from '../../utils/addressUtils';
 import AddressForm from '../common/AddressForm';
 
 interface GuardianAddressSectionProps {
-  control: Control<Guardian>;
-  errors: FieldErrors<Guardian>;
-  watch: UseFormWatch<Guardian>;
-  guardian?: Guardian;
+  control: Control<Kid>;
+  errors?: FieldErrors<Guardian>;
+  index: number;
+  guardian: Guardian;
 }
 
 const GuardianAddressSection: React.FC<GuardianAddressSectionProps> = ({
   control,
   errors,
-  watch,
+  index,
   guardian
 }) => {
   const { t } = useTranslation();
-  const sameAddressAsKid = watch('same_address_as_kid');
 
-  // Memoized address title
-  const addressTitle = useMemo(() => {
-    const addressString = formatAddressString(guardian?.address);
-    return addressString ? `${t('guardianAddress')}: ${addressString}` : t('guardianAddress');
-  }, [guardian?.address, t]);
-
-  if (sameAddressAsKid) {
+  if (guardian.same_address_as_kid) {
     return (
       <div className="mb-3 p-3 bg-body-secondary rounded">
         <small className="text-muted">
@@ -38,14 +31,19 @@ const GuardianAddressSection: React.FC<GuardianAddressSectionProps> = ({
     );
   }
 
+  const addressString = formatAddressString(guardian.address);
+
   return (
     <Accordion className="mb-3">
       <Accordion.Item eventKey="0">
-        <Accordion.Header>{addressTitle}</Accordion.Header>
+        <Accordion.Header>
+          {addressString ? `${t('guardianAddress')}: ${addressString}` : t('guardianAddress')}
+        </Accordion.Header>
         <Accordion.Body>
           <AddressForm
-            control={control as any}
-            errors={errors.address}
+            control={control as unknown as Control<FieldValues>}
+            errors={errors?.address}
+            fieldPrefix={`guardians.${index}.address`}
           />
         </Accordion.Body>
       </Accordion.Item>

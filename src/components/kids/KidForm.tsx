@@ -1,5 +1,5 @@
 // React & Core Libraries
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 // Types & Models
 import { createKid } from '../../types/models';
-import type { Kid, Guardian } from '../../types/models';
+import type { Kid } from '../../types/models';
 
 // Services & Contexts
 import { validationService } from '../../services/validation';
@@ -27,7 +27,6 @@ import BasicInfoSection from './sections/BasicInfoSection';
 import AdditionalInfoSection from './sections/AdditionalInfoSection';
 import AddressSection from './sections/AddressSection';
 import GuardiansSection from './sections/GuardiansSection';
-import type { GuardiansSectionHandle } from './sections/GuardiansSection';
 import UnsavedChangesModal from '../common/UnsavedChangesModal';
 
 type KidFormProps = {
@@ -38,14 +37,7 @@ type KidFormProps = {
 
 export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, onCancel }) => {
   const [serverError, setServerError] = useState<string | null>(null);
-  const [guardians, setGuardians] = useState<Guardian[]>(initialData?.guardians || []);
-  const [guardiansChanged, setGuardiansChanged] = useState(false);
   const bypassBlockerRef = useRef(false);
-  const guardiansSectionRef = useRef<GuardiansSectionHandle>(null);
-  // Mirrors `guardians` synchronously so a flush immediately followed by a
-  // submit (both within the same handler) reads the latest value instead of
-  // a stale render closure while the setGuardians update is still pending.
-  const guardiansRef = useRef<Guardian[]>(initialData?.guardians || []);
   const navigate = useNavigate();
   const { kidId } = useParams<{ kidId: string }>();
   const { refreshKids } = useKids();
@@ -75,18 +67,13 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     }
   });
 
-  // Track if guardians have changed
-  useEffect(() => {
-    const initialGuardians = initialData?.guardians || [];
-    const hasChanged = JSON.stringify(guardians) !== JSON.stringify(initialGuardians);
-    setGuardiansChanged(hasChanged);
-  }, [guardians, initialData]);
-
-  // Check if form has actual user input (for add mode)
+  // Check if form has actual user input (for add mode). Guardians are part
+  // of this same form (via useFieldArray in GuardiansSection), so `isDirty`
+  // already reflects guardian edits - no separate tracking needed.
   const hasActualInput = () => {
     // If we're editing an existing kid, use isDirty
     if (initialData) {
-      return isDirty || guardiansChanged;
+      return isDirty;
     }
 
     // For add mode, check if any meaningful fields have been filled
@@ -94,7 +81,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     const hasName = formValues.first_name || formValues.last_name;
     const hasGender = formValues.gender !== undefined;
     const hasLevel = formValues.level !== undefined;
-    const hasGuardians = guardians.length > 0;
+    const hasGuardians = (formValues.guardians?.length ?? 0) > 0;
     const hasNotes = formValues.notes || formValues.private_notes;
 
     return !!(hasName || hasGender || hasLevel || hasGuardians || hasNotes);
@@ -104,26 +91,6 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
   const blocker = useUnsavedChangesWarning(() => {
     return !bypassBlockerRef.current && hasActualInput();
   });
-
-  const handleGuardiansChange = (updatedGuardians: Guardian[]) => {
-    guardiansRef.current = updatedGuardians;
-    setGuardians(updatedGuardians);
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Commit any pending edits left on any guardian (open, collapsed, or an
-    // in-progress "new guardian" draft) before saving the kid, since each
-    // guardian lives in its own nested form and isn't otherwise reflected in
-    // the guardians array until explicitly flushed.
-    const guardianEditValid = await guardiansSectionRef.current?.flushActiveGuardian();
-    if (guardianEditValid === false) {
-      return;
-    }
-
-    await handleSubmit(onSubmit)();
-  };
 
   const handleCancel = () => {
     // Bypass blocker for explicit cancel action
@@ -163,10 +130,6 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
         return;
       }
 
-      // Use the guardians from state instead of form data
-      const currentGuardians = guardiansRef.current;
-      data.guardians = currentGuardians;
-
       // Validate kid data
       const validationResult = validationService.validateKid(data);
       
@@ -184,8 +147,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
 
       if (initialData) {
         // Update existing kid
-        const updates = { ...data, guardians: currentGuardians };
-        await withTimeout(db.updateKid(initialData.kid_id, updates), 5000, 'Update timed out');
+        await withTimeout(db.updateKid(initialData.kid_id, data), 5000, 'Update timed out');
       } else {
         // Create new kid
         if (!selectedClass) {
@@ -228,18 +190,14 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
           {serverError}
         </Alert>
       )}
-      <Form onSubmit={handleFormSubmit} onKeyDown={handleFormKeyDown}>
+      <Form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleFormKeyDown}>
         <BasicInfoSection control={control} errors={errors} />
 
         <AdditionalInfoSection register={register} />
 
         <AddressSection control={control} errors={errors} initialAddress={initialData?.address} />
 
-        <GuardiansSection
-          ref={guardiansSectionRef}
-          initialGuardians={initialData?.guardians}
-          onChange={handleGuardiansChange}
-        />
+        <GuardiansSection control={control} errors={errors} />
 
         <div className="d-flex gap-2">
           <Button variant="primary" type="submit">

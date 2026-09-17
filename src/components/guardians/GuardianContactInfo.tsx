@@ -3,14 +3,15 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
 import type { Control, FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { Guardian } from '../../types/models';
+import type { Guardian, Kid } from '../../types/models';
 
 interface GuardianContactInfoProps {
-  control: Control<Guardian>;
-  errors: FieldErrors<Guardian>;
+  control: Control<Kid>;
+  errors?: FieldErrors<Guardian>;
+  index: number;
 }
 
-const GuardianContactInfo: React.FC<GuardianContactInfoProps> = ({ control, errors }) => {
+const GuardianContactInfo: React.FC<GuardianContactInfoProps> = ({ control, errors, index }) => {
   const { t } = useTranslation();
 
   return (
@@ -19,7 +20,7 @@ const GuardianContactInfo: React.FC<GuardianContactInfoProps> = ({ control, erro
         <Form.Group className="mb-3">
           <Form.Label>{t('email')}</Form.Label>
           <Controller
-            name="email"
+            name={`guardians.${index}.email`}
             control={control}
             render={({ field }) => (
               <Form.Control
@@ -27,11 +28,11 @@ const GuardianContactInfo: React.FC<GuardianContactInfoProps> = ({ control, erro
                 value={field.value ?? ''}
                 type="email"
                 placeholder={t('enterEmail')}
-                isInvalid={!!errors.email}
+                isInvalid={!!errors?.email}
               />
             )}
           />
-          {errors.email && (
+          {errors?.email && (
             <Form.Control.Feedback type="invalid">
               {errors.email.message}
             </Form.Control.Feedback>
@@ -42,7 +43,7 @@ const GuardianContactInfo: React.FC<GuardianContactInfoProps> = ({ control, erro
         <Form.Group className="mb-3">
           <Form.Label>{t('profession')}</Form.Label>
           <Controller
-            name="profession"
+            name={`guardians.${index}.profession`}
             control={control}
             render={({ field }) => (
               <Form.Control
@@ -50,11 +51,11 @@ const GuardianContactInfo: React.FC<GuardianContactInfoProps> = ({ control, erro
                 value={field.value ?? ''}
                 type="text"
                 placeholder={t('enterProfession')}
-                isInvalid={!!errors.profession}
+                isInvalid={!!errors?.profession}
               />
             )}
           />
-          {errors.profession && (
+          {errors?.profession && (
             <Form.Control.Feedback type="invalid">
               {errors.profession.message}
             </Form.Control.Feedback>

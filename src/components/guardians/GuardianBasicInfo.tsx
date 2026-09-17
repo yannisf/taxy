@@ -3,14 +3,15 @@ import { Form, Row, Col } from 'react-bootstrap';
 import { Controller } from 'react-hook-form';
 import type { Control, FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { Guardian } from '../../types/models';
+import type { Guardian, Kid } from '../../types/models';
 
 interface GuardianBasicInfoProps {
-  control: Control<Guardian>;
-  errors: FieldErrors<Guardian>;
+  control: Control<Kid>;
+  errors?: FieldErrors<Guardian>;
+  index: number;
 }
 
-const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }) => {
+const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors, index }) => {
   const { t } = useTranslation();
 
   return (
@@ -20,7 +21,7 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
           <Form.Group className="mb-3">
             <Form.Label>{t('firstName')}</Form.Label>
             <Controller
-              name="first_name"
+              name={`guardians.${index}.first_name`}
               control={control}
               rules={{ required: t('firstNameRequired') }}
               render={({ field }) => (
@@ -29,11 +30,11 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
                   value={field.value ?? ''}
                   type="text"
                   placeholder={t('enterGuardianFirstName')}
-                  isInvalid={!!errors.first_name}
+                  isInvalid={!!errors?.first_name}
                 />
               )}
             />
-            {errors.first_name && (
+            {errors?.first_name && (
               <Form.Control.Feedback type="invalid">
                 {errors.first_name.message}
               </Form.Control.Feedback>
@@ -44,7 +45,7 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
           <Form.Group className="mb-3">
             <Form.Label>{t('lastName')}</Form.Label>
             <Controller
-              name="last_name"
+              name={`guardians.${index}.last_name`}
               control={control}
               rules={{ required: t('lastNameRequired') }}
               render={({ field }) => (
@@ -53,11 +54,11 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
                   value={field.value ?? ''}
                   type="text"
                   placeholder={t('enterGuardianLastName')}
-                  isInvalid={!!errors.last_name}
+                  isInvalid={!!errors?.last_name}
                 />
               )}
             />
-            {errors.last_name && (
+            {errors?.last_name && (
               <Form.Control.Feedback type="invalid">
                 {errors.last_name.message}
               </Form.Control.Feedback>
@@ -71,11 +72,11 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
           <Form.Group className="mb-3">
             <Form.Label>{t('relationWithKid')} <span style={{color: 'red'}}>{t('required')}</span></Form.Label>
             <Controller
-              name="relation_with_kid"
+              name={`guardians.${index}.relation_with_kid`}
               control={control}
               rules={{ required: t('relationRequired') }}
               render={({ field }) => (
-                <Form.Select {...field} value={field.value || ''} isInvalid={!!errors.relation_with_kid}>
+                <Form.Select {...field} value={field.value || ''} isInvalid={!!errors?.relation_with_kid}>
                   <option value="" disabled>{t('selectRelation')}</option>
                   <option value="father">{t('relationFather')}</option>
                   <option value="mother">{t('relationMother')}</option>
@@ -100,7 +101,7 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
                 </Form.Select>
               )}
             />
-            {errors.relation_with_kid && (
+            {errors?.relation_with_kid && (
               <Form.Control.Feedback type="invalid">
                 {errors.relation_with_kid.message}
               </Form.Control.Feedback>
@@ -110,7 +111,7 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
         <Col>
           <Form.Group className="mb-3">
             <Controller
-              name="authorized_for_pickup"
+              name={`guardians.${index}.authorized_for_pickup`}
               control={control}
               render={({ field }) => (
                 <Form.Check
@@ -122,7 +123,7 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors }
               )}
             />
             <Controller
-              name="same_address_as_kid"
+              name={`guardians.${index}.same_address_as_kid`}
               control={control}
               render={({ field }) => (
                 <Form.Check

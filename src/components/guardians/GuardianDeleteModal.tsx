@@ -17,6 +17,7 @@ const GuardianDeleteModal: React.FC<GuardianDeleteModalProps> = ({
   onCancel
 }) => {
   const { t } = useTranslation();
+  const name = `${guardian?.first_name ?? ''} ${guardian?.last_name ?? ''}`.trim() || t('unnamedGuardian');
 
   return (
     <Modal show={show} onHide={onCancel}>
@@ -24,9 +25,7 @@ const GuardianDeleteModal: React.FC<GuardianDeleteModalProps> = ({
         <Modal.Title>{t('confirmDelete')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {t('confirmDeleteGuardian', {
-          name: `${guardian?.first_name} ${guardian?.last_name}`
-        })}
+        {t('confirmDeleteGuardian', { name })}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onCancel}>

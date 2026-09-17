@@ -5,13 +5,11 @@ import { useTranslation } from 'react-i18next';
 interface GuardiansSectionHeaderProps {
   guardianCount: number;
   onAddGuardian: () => void;
-  isAddingGuardian: boolean;
 }
 
 const GuardiansSectionHeader: React.FC<GuardiansSectionHeaderProps> = ({
   guardianCount,
-  onAddGuardian,
-  isAddingGuardian
+  onAddGuardian
 }) => {
   const { t } = useTranslation();
 
@@ -24,7 +22,6 @@ const GuardiansSectionHeader: React.FC<GuardiansSectionHeaderProps> = ({
         variant="outline-primary"
         size="sm"
         onClick={onAddGuardian}
-        disabled={isAddingGuardian}
       >
         + {t('addGuardian')}
       </Button>
