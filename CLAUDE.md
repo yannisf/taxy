@@ -34,7 +34,7 @@ npm run test:ui         # Run tests with UI interface
 # Code Quality
 npm run lint            # Run ESLint
 npm run lint -- --fix   # Auto-fix linting issues
-npx tsc --noEmit        # Type check without emitting files
+npx tsc -b               # Type check without emitting files (root tsconfig.json only has project references, so plain `tsc --noEmit` silently checks nothing — always use `-b`)
 
 # Build & Preview
 npm run build           # Build for production (outputs to dist/)
