@@ -118,14 +118,7 @@ const GuardianAccordionItemComponent = forwardRef<GuardianAccordionItemHandle, G
     if (target.closest('.modal')) return;
     if (target.tagName !== 'INPUT' && target.tagName !== 'SELECT') return;
 
-    if (e.key === 'Enter' && isNew) {
-      // This guardian isn't part of the kid's guardians array yet: letting
-      // Enter bubble up would submit the kid form natively and silently
-      // discard this in-progress draft. Finalize the draft instead.
-      e.preventDefault();
-      e.stopPropagation();
-      handleSubmit(onSubmit)();
-    } else if (e.key === 'Escape') {
+    if (e.key === 'Escape') {
       e.preventDefault();
       e.stopPropagation();
       if (isNew) {
@@ -135,10 +128,11 @@ const GuardianAccordionItemComponent = forwardRef<GuardianAccordionItemHandle, G
         onRequestCollapse?.();
       }
     }
-    // Enter on an existing guardian's fields is intentionally left alone:
-    // it bubbles up and submits the kid form natively, which already
-    // flushes this guardian's pending edits.
-  }, [isNew, handleSubmit, onSubmit, onCancel, reset, onRequestCollapse]);
+    // Enter is intentionally left alone for both new and existing guardians:
+    // it bubbles up and submits the kid form natively, which flushes this
+    // guardian's pending edits (finalizing a new draft, or committing an
+    // existing guardian's changes) before saving the kid.
+  }, [isNew, onCancel, reset, onRequestCollapse]);
 
   // Helper function to get the relation translation key
   const getRelationKey = (relation: string) => {

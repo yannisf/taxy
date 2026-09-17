@@ -113,9 +113,10 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Commit any pending edits on the currently open guardian before saving
-    // the kid, since it lives in its own nested form and isn't otherwise
-    // reflected in the guardians array until explicitly flushed.
+    // Commit any pending edits left on any guardian (open, collapsed, or an
+    // in-progress "new guardian" draft) before saving the kid, since each
+    // guardian lives in its own nested form and isn't otherwise reflected in
+    // the guardians array until explicitly flushed.
     const guardianEditValid = await guardiansSectionRef.current?.flushActiveGuardian();
     if (guardianEditValid === false) {
       return;

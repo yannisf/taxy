@@ -12,8 +12,9 @@ interface GuardiansSectionProps {
 }
 
 export interface GuardiansSectionHandle {
-  // Commits any pending edits on the currently open guardian. Returns false
-  // (without committing) if that guardian has unsaved invalid data.
+  // Commits any pending edits on every guardian item (open or collapsed),
+  // including an in-progress "new guardian" draft. Returns false (without
+  // committing the kid) if any guardian has unsaved invalid data.
   flushActiveGuardian: () => Promise<boolean>;
 }
 
@@ -22,40 +23,73 @@ const GuardiansSection = forwardRef<GuardiansSectionHandle, GuardiansSectionProp
   const [guardians, setGuardians] = useState<Guardian[]>(initialGuardians || []);
   const [showNewGuardian, setShowNewGuardian] = useState(false);
   const [activeKey, setActiveKey] = useState<string | null>(null);
-  const activeItemRef = useRef<GuardianAccordionItemHandle | null>(null);
+  // Mirrors `guardians` synchronously. A submit can flush two or more dirty
+  // guardians back-to-back (e.g. one edited, then another); React batches
+  // those setGuardians calls, so a second commit computed from the `guardians`
+  // closure would still see the pre-flush array and clobber the first commit.
+  // Reading/writing this ref instead keeps each commit building on the last.
+  const guardiansRef = useRef<Guardian[]>(initialGuardians || []);
+  // Every guardian item (not just the currently open one) is kept mounted by
+  // the accordion, so every item gets a persistent ref here. This lets a
+  // submit flush edits left dirty on a guardian the user already navigated
+  // away from, not just whichever one happens to be open.
+  const itemRefs = useRef<Map<string, GuardianAccordionItemHandle>>(new Map());
+  const refSetters = useRef<Map<string, (handle: GuardianAccordionItemHandle | null) => void>>(new Map());
+
+  const getItemRefSetter = (eventKey: string) => {
+    let setter = refSetters.current.get(eventKey);
+    if (!setter) {
+      setter = (handle: GuardianAccordionItemHandle | null) => {
+        if (handle) {
+          itemRefs.current.set(eventKey, handle);
+        } else {
+          itemRefs.current.delete(eventKey);
+        }
+      };
+      refSetters.current.set(eventKey, setter);
+    }
+    return setter;
+  };
 
   useImperativeHandle(ref, () => ({
     flushActiveGuardian: async () => {
-      // The "new guardian" draft is intentionally left out: it isn't part of
-      // the guardians list until explicitly added, same as before.
-      if (!activeKey || activeKey === 'new-guardian' || !activeItemRef.current) {
-        return true;
+      for (const [eventKey, handle] of itemRefs.current) {
+        const succeeded = await handle.commitIfDirty();
+        if (!succeeded) {
+          // Surface the validation error even if the user navigated away to
+          // another guardian (or collapsed the accordion) since it happened.
+          setActiveKey(eventKey);
+          return false;
+        }
       }
-      return activeItemRef.current.commitIfDirty();
+      return true;
     }
   }));
 
   const guardianCount = guardians.length;
 
-  const handleSaveGuardian = (index: number, updatedGuardian: Guardian) => {
-    const newGuardians = [...guardians];
-    newGuardians[index] = updatedGuardian;
+  const commitGuardians = (newGuardians: Guardian[]) => {
+    guardiansRef.current = newGuardians;
     setGuardians(newGuardians);
     onChange(newGuardians);
+  };
+
+  const handleSaveGuardian = (index: number, updatedGuardian: Guardian) => {
+    const newGuardians = [...guardiansRef.current];
+    newGuardians[index] = updatedGuardian;
+    commitGuardians(newGuardians);
     setActiveKey(null);
   };
 
   const handleDeleteGuardian = (guardian: Guardian) => {
-    const newGuardians = guardians.filter(g => g !== guardian);
-    setGuardians(newGuardians);
-    onChange(newGuardians);
+    const newGuardians = guardiansRef.current.filter(g => g !== guardian);
+    commitGuardians(newGuardians);
     setActiveKey(null);
   };
 
   const handleSaveNewGuardian = (newGuardian: Guardian) => {
-    const newGuardians = [...guardians, newGuardian];
-    setGuardians(newGuardians);
-    onChange(newGuardians);
+    const newGuardians = [...guardiansRef.current, newGuardian];
+    commitGuardians(newGuardians);
     setShowNewGuardian(false);
     setActiveKey(null);
   };
@@ -88,7 +122,7 @@ const GuardiansSection = forwardRef<GuardiansSectionHandle, GuardiansSectionProp
             return (
               <GuardianAccordionItem
                 key={index}
-                ref={activeKey === eventKey ? activeItemRef : undefined}
+                ref={getItemRefSetter(eventKey)}
                 guardian={guardian}
                 eventKey={eventKey}
                 onSave={(updatedGuardian) => handleSaveGuardian(index, updatedGuardian)}
@@ -100,6 +134,7 @@ const GuardiansSection = forwardRef<GuardiansSectionHandle, GuardiansSectionProp
 
           {showNewGuardian && (
             <GuardianAccordionItem
+              ref={getItemRefSetter('new-guardian')}
               isNew
               eventKey="new-guardian"
               onSave={handleSaveNewGuardian}
