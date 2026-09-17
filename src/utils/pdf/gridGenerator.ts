@@ -29,7 +29,7 @@ export async function generateStudentGridPDF(classRecord: Class, kids: Kid[], _t
     const leftCell = {
       text: leftName,
       style: 'gridCell',
-      fontSize: leftName.length > 10 ? 22 : 28 // 20% smaller for long names
+      fontSize: leftName.length > 10 ? 24 : 30 // smaller for long names
     };
 
     const rightCell = i + 1 < kids.length ? (() => {
@@ -37,7 +37,7 @@ export async function generateStudentGridPDF(classRecord: Class, kids: Kid[], _t
       return {
         text: rightName,
         style: 'gridCell',
-        fontSize: rightName.length > 10 ? 22 : 28 // 20% smaller for long names
+        fontSize: rightName.length > 10 ? 24 : 30 // smaller for long names
       };
     })() : { text: '', style: 'gridCell' };
 
@@ -60,16 +60,18 @@ export async function generateStudentGridPDF(classRecord: Class, kids: Kid[], _t
           hLineWidth: function() { return 1; },
           vLineWidth: function() { return 1; },
           hLineColor: function() { return '#000000'; },
-          vLineColor: function() { return '#000000'; }
+          vLineColor: function() { return '#000000'; },
+          paddingLeft: function() { return 0; },
+          paddingRight: function() { return 0; }
         }
       }
     ],
 
     styles: {
       gridCell: {
-        fontSize: 28, // 100% bigger (doubled from original 14)
+        fontSize: 30,
         alignment: 'center',
-        margin: [20, 30, 20, 30],
+        margin: [0, 30, 0, 30],
         font: fontFamily
       }
     },

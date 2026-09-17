@@ -30,7 +30,7 @@ export async function generateStudentListPDF(classRecord: Class, kids: Kid[], _t
     const cell = {
       text: fullName,
       style: 'listCell',
-      fontSize: fullName.length >= 18 ? 26 : 40 // 26pt for names >=18 chars, 40pt for shorter names
+      fontSize: fullName.length >= 18 ? 34 : 40 // 34pt for names >=18 chars, 40pt for shorter names
     };
 
     listBody.push([cell]);
