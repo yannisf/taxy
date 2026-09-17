@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
+import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Accordion } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../../types/models';
