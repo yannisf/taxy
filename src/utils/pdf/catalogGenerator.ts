@@ -2,7 +2,7 @@
  * Class catalog PDF generator
  */
 
-import type { TDocumentDefinitions, Content } from 'pdfmake/interfaces';
+import type { TDocumentDefinitions, TableCell } from 'pdfmake/interfaces';
 import type { Kid, Class } from '../../types/models';
 import type { TFunction } from 'i18next';
 import { format } from 'date-fns';
@@ -15,12 +15,12 @@ import { getCatalogFontConfig, createPDFFilename } from './pdfSetup';
 /**
  * Creates the table data for the catalog PDF
  */
-function createCatalogTableData(kids: Kid[], t: TFunction): Content[][] {
-  const tableData: Content[][] = [];
+function createCatalogTableData(kids: Kid[], t: TFunction): TableCell[][] {
+  const tableData: TableCell[][] = [];
 
   // Header row
   tableData.push([
-    { text: t('pdfNumber'), style: 'tableHeader' },
+    { text: t('pdfNumber'), style: 'tableHeader', margin: [3, 8, 3, 8], alignment: 'center' },
     { text: t('pdfStudentName'), style: 'tableHeader' },
     { text: t('pdfGuardianInformation'), style: 'tableHeader' },
     { text: t('pdfNotes'), style: 'tableHeader' }
@@ -33,19 +33,19 @@ function createCatalogTableData(kids: Kid[], t: TFunction): Content[][] {
     if (kid.guardians.length === 0) {
       // Kid with no guardians
       tableData.push([
-        { text: (index + 1).toString(), style: 'tableCell' },
-        { text: kidName, style: 'tableCell' },
-        { text: t('pdfNoGuardians'), style: 'tableCell', italics: true, color: '#666666' },
+        { text: (index + 1).toString(), style: 'numberCell', verticalAlignment: 'middle' },
+        { text: kidName, style: 'nameCell', verticalAlignment: 'middle' },
+        { text: t('pdfNoGuardians'), style: 'guardianCell', italics: true, color: '#666666' },
         { text: notes, style: 'tableCell', fontSize: 8 }
       ]);
     } else {
       // Kid with guardians - each guardian on a separate line
       tableData.push([
-        { text: (index + 1).toString(), style: 'tableCell' },
-        { text: kidName, style: 'tableCell' },
+        { text: (index + 1).toString(), style: 'numberCell', verticalAlignment: 'middle' },
+        { text: kidName, style: 'nameCell', verticalAlignment: 'middle' },
         {
           text: createGuardianTextArray(kid.guardians, t),
-          style: 'tableCell'
+          style: 'guardianCell'
         },
         { text: notes, style: 'tableCell', fontSize: 8 }
       ]);
@@ -81,7 +81,7 @@ export async function generateClassCatalogPDF(classRecord: Class, kids: Kid[], t
   const documentDefinition: TDocumentDefinitions = {
     pageSize: 'A4',
     pageOrientation: 'landscape',
-    pageMargins: [40, 60, 40, 40],
+    pageMargins: [40, 46, 40, 40],
 
     header: {
       columns: [
@@ -98,14 +98,14 @@ export async function generateClassCatalogPDF(classRecord: Class, kids: Kid[], t
           alignment: 'right'
         }
       ],
-      margin: [40, 20, 40, 20]
+      margin: [40, 20, 40, 0]
     },
 
     content: [
       {
         table: {
           headerRows: 1,
-          widths: [30, 100, '*', 130],
+          widths: ['auto', 100, '*', 130],
           body: createCatalogTableData(kids, t),
           dontBreakRows: true
         },
@@ -148,6 +148,24 @@ export async function generateClassCatalogPDF(classRecord: Class, kids: Kid[], t
         fontSize: 10,
         margin: [8, 3, 8, 3],
         lineHeight: 1.2,
+        font: fontFamily
+      },
+      numberCell: {
+        fontSize: 10,
+        margin: [3, 2, 3, 2],
+        alignment: 'center',
+        font: fontFamily
+      },
+      nameCell: {
+        fontSize: 10,
+        margin: [8, 3, 8, 3],
+        alignment: 'left',
+        font: fontFamily
+      },
+      guardianCell: {
+        fontSize: 8,
+        margin: [8, 1, 8, 1],
+        lineHeight: 1.1,
         font: fontFamily
       }
     },

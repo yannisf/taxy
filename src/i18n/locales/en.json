@@ -295,7 +295,7 @@
   "importClass": "Import Class (upload)",
   "importExport": "Data",
   "exportGuardianEmails": "Guardian Emails (csv)",
-  "generateCatalog": "Contancts Catalog (pdf)",
+  "generateCatalog": "Contacts Catalog (pdf)",
   "generateStudentGrid": "Generate Student Grid",
   "studentGridGenerated": "Student grid generated successfully!",
   "failedToGenerateStudentGrid": "Failed to generate student grid",

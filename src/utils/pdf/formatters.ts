@@ -28,22 +28,24 @@ export function createGuardianTextArray(guardians: Guardian[], t: TFunction): Co
 
   guardians.forEach((guardian, guardianIndex) => {
     if (guardianIndex > 0) {
-      textArray.push({ text: '\n', fontSize: 10 });
+      textArray.push({ text: '\n', fontSize: 8 });
     }
 
-    // Guardian name (normal size)
+    // Guardian name
     textArray.push({
       text: `${guardian.first_name} ${guardian.last_name} `,
-      fontSize: 10
+      fontSize: 8
     });
 
-    // Relation (xx-small bold, no space before)
+    // Relation as a black/white badge (non-breaking spaces act as horizontal padding)
     const relationKey = `pdfRelation${guardian.relation_with_kid.charAt(0).toUpperCase() + guardian.relation_with_kid.slice(1).replace(/\s+/g, '')}`;
     const relationText = t(relationKey, { defaultValue: guardian.relation_with_kid.toUpperCase() });
     textArray.push({
-      text: relationText,
-      fontSize: 7,
-      bold: true
+      text: `\u00A0${relationText}\u00A0`,
+      fontSize: 6,
+      bold: true,
+      color: '#ffffff',
+      background: '#000000'
     });
 
     // Phone numbers
@@ -53,12 +55,12 @@ export function createGuardianTextArray(guardians: Guardian[], t: TFunction): Co
         .map(formatPhoneForPDF);
       textArray.push({
         text: ` | ${phoneTexts.join(' | ')}`,
-        fontSize: 10
+        fontSize: 8
       });
     } else {
       textArray.push({
         text: ' |',
-        fontSize: 10
+        fontSize: 8
       });
     }
   });
