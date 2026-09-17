@@ -106,13 +106,29 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
   };
 
   const handleFormKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    if (e.key !== 'Escape' || e.defaultPrevented) return;
     const target = e.target as HTMLElement;
-    // Skip modals (they handle their own Escape) and the date picker (its
-    // Escape closes the calendar popup, not the whole form).
-    if (target.closest('.modal, .react-datepicker-wrapper')) return;
-    e.preventDefault();
-    handleCancel();
+    // Modals are portaled but their key events still bubble here through the
+    // React tree; they handle their own keys.
+    if (target.closest('.modal')) return;
+
+    if (e.key === 'Enter') {
+      // Ctrl/Cmd+Enter saves from any element in the form, even one that
+      // already handled Enter itself (e.g. autocomplete, date picker).
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        e.currentTarget.requestSubmit();
+      } else if (target.tagName === 'INPUT') {
+        // Plain Enter never saves: suppress the browser's implicit submit.
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // The date picker's Escape closes its calendar popup, not the whole form.
+    if (e.key === 'Escape' && !e.defaultPrevented && !target.closest('.react-datepicker-wrapper')) {
+      e.preventDefault();
+      handleCancel();
+    }
   };
 
   const onSubmit = useCallback(async (data: Kid) => {

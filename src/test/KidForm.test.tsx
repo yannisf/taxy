@@ -172,21 +172,47 @@ describe('KidForm guardian editing (full integration)', () => {
     expect(updates.guardians[0].first_name).toBe('Bob');
   });
 
-  it('pressing Enter in a guardian field saves the kid', async () => {
+  it('plain Enter in a text field does not save the kid', async () => {
     const user = userEvent.setup();
-    const kid = makeKid();
-    const onSubmitSuccess = vi.fn();
+    renderKidForm(makeKid(), vi.fn());
 
-    renderKidForm(kid, onSubmitSuccess);
+    await user.click(screen.getByText(/Alice Guardian/));
+    const firstNameInput = screen.getAllByPlaceholderText("Enter guardian's first name")[0];
+    await user.type(firstNameInput, 'X{Enter}');
+
+    // Give a would-be async submit a chance to reach the database.
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(updateKid).not.toHaveBeenCalled();
+  });
+
+  it('Ctrl+Enter in a text field saves the kid with pending edits', async () => {
+    const user = userEvent.setup();
+    renderKidForm(makeKid(), vi.fn());
 
     await user.click(screen.getByText(/Alice Guardian/));
     const firstNameInput = screen.getAllByPlaceholderText("Enter guardian's first name")[0];
     await user.clear(firstNameInput);
-    await user.type(firstNameInput, 'AliceEdited{Enter}');
+    await user.type(firstNameInput, 'AliceEdited{Control>}{Enter}{/Control}');
 
     await waitFor(() => expect(updateKid).toHaveBeenCalled(), { timeout: 3000 });
     const [, updates] = updateKid.mock.calls[0] as [string, Kid];
     expect(updates.guardians[0].first_name).toBe('AliceEdited');
+  });
+
+  it.each([
+    ['a dropdown', () => screen.getAllByDisplayValue('Mother')[0]],
+    ['a checkbox', () => screen.getAllByRole('checkbox')[0]],
+    ['a textarea', () => screen.getByPlaceholderText('General notes about the child')],
+    ['a button', () => screen.getByRole('button', { name: /Bob Guardian/ })],
+  ])('Ctrl+Enter saves the kid when focus is on %s', async (_label, getElement) => {
+    const user = userEvent.setup();
+    renderKidForm(makeKid(), vi.fn());
+
+    await user.click(screen.getByText(/Alice Guardian/));
+    getElement().focus();
+    await user.keyboard('{Control>}{Enter}{/Control}');
+
+    await waitFor(() => expect(updateKid).toHaveBeenCalled(), { timeout: 3000 });
   });
 
   it('blocks saving when a guardian is left with a missing required field', async () => {
