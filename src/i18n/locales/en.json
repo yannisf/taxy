@@ -169,7 +169,7 @@
   "telephoneHomeIcon": "🏠 Home",
   "telephoneWorkIcon": "💼 Work",
   "telephoneOtherIcon": "📞 Other",
-  "updateGuardian": "Update Guardian",
+  "guardianChangesPending": "Changes will be saved when you update the kid",
   "deleteGuardian": "Delete guardian",
   "saveGuardian": "Save Guardian",
   "noGuardiansYet": "No guardians added yet. Click \"Add Guardian\" to get started.",

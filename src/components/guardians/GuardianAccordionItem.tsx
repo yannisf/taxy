@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, forwardRef, useImperativeHandle } from 'react';
 import { Accordion, Button } from 'react-bootstrap';
 import { X } from 'react-bootstrap-icons';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -18,16 +18,26 @@ interface GuardianAccordionItemProps {
   onSave: (guardian: Guardian) => void;
   onDelete: (guardian: Guardian) => void;
   onCancel?: () => void;
+  // Existing (non-new) guardians only: collapses this accordion item, used
+  // when Escape discards in-progress edits.
+  onRequestCollapse?: () => void;
 }
 
-const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
+export interface GuardianAccordionItemHandle {
+  // Commits any pending, valid edits into the parent guardians list. Returns
+  // false (without committing) if the guardian has unsaved invalid data.
+  commitIfDirty: () => Promise<boolean>;
+}
+
+const GuardianAccordionItemComponent = forwardRef<GuardianAccordionItemHandle, GuardianAccordionItemProps>(({
   guardian,
   isNew = false,
   eventKey,
   onSave,
   onDelete,
-  onCancel
-}) => {
+  onCancel,
+  onRequestCollapse
+}, ref) => {
   const { t } = useTranslation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -58,18 +68,18 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     name: 'telephones'
   });
 
-  const onSubmit = useCallback((data: Guardian) => {
+  const onSubmit = useCallback((data: Guardian): boolean => {
     setValidationError(null);
-    
+
     // Validate guardian data
     const validationResult = validationService.validateGuardian(data);
-    
+
     if (!validationResult.valid) {
-      const errorMessages = validationResult.errors?.map(err => 
+      const errorMessages = validationResult.errors?.map(err =>
         `${err.instancePath || ''} ${err.message}`
       ).join(', ') || 'Validation failed';
       setValidationError(errorMessages);
-      return;
+      return false;
     }
 
     onSave(data);
@@ -77,7 +87,21 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     if (isNew) {
       reset();
     }
+    return true;
   }, [onSave, isNew, reset]);
+
+  useImperativeHandle(ref, () => ({
+    commitIfDirty: async () => {
+      if (!isDirty) {
+        return true;
+      }
+      let succeeded = false;
+      await handleSubmit((data) => {
+        succeeded = onSubmit(data);
+      })();
+      return succeeded;
+    }
+  }), [isDirty, handleSubmit, onSubmit]);
 
   const handleDelete = useCallback(() => {
     if (guardian) {
@@ -85,6 +109,36 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
     }
     setShowDeleteModal(false);
   }, [guardian, onDelete]);
+
+  const handleFieldsKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    // Skip keys already handled elsewhere (e.g. autocomplete suggestion
+    // selection) and anything originating from a modal.
+    if (e.defaultPrevented) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('.modal')) return;
+    if (target.tagName !== 'INPUT' && target.tagName !== 'SELECT') return;
+
+    if (e.key === 'Enter' && isNew) {
+      // This guardian isn't part of the kid's guardians array yet: letting
+      // Enter bubble up would submit the kid form natively and silently
+      // discard this in-progress draft. Finalize the draft instead.
+      e.preventDefault();
+      e.stopPropagation();
+      handleSubmit(onSubmit)();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      if (isNew) {
+        onCancel?.();
+      } else {
+        reset();
+        onRequestCollapse?.();
+      }
+    }
+    // Enter on an existing guardian's fields is intentionally left alone:
+    // it bubbles up and submits the kid form natively, which already
+    // flushes this guardian's pending edits.
+  }, [isNew, handleSubmit, onSubmit, onCancel, reset, onRequestCollapse]);
 
   // Helper function to get the relation translation key
   const getRelationKey = (relation: string) => {
@@ -155,7 +209,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
           </div>
         </Accordion.Header>
         <Accordion.Body>
-          <div>
+          <div onKeyDown={handleFieldsKeyDown}>
             {validationError && (
               <div className="alert alert-danger">{validationError}</div>
             )}
@@ -180,18 +234,22 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
               onRemoveTelephone={removeTelephone}
             />
 
-            <div className="d-flex gap-2">
-              {(isNew || isDirty) && (
+            {isNew ? (
+              <div className="d-flex gap-2">
                 <Button variant="primary" onClick={handleSubmit(onSubmit)}>
-                  {isNew ? t('addGuardian') : t('updateGuardian')}
+                  {t('addGuardian')}
                 </Button>
-              )}
-              {isNew && onCancel && (
-                <Button variant="secondary" onClick={onCancel}>
-                  {t('cancel')}
-                </Button>
-              )}
-            </div>
+                {onCancel && (
+                  <Button variant="secondary" onClick={onCancel}>
+                    {t('cancel')}
+                  </Button>
+                )}
+              </div>
+            ) : isDirty && (
+              <small className="text-muted d-block">
+                {t('guardianChangesPending')}
+              </small>
+            )}
           </div>
         </Accordion.Body>
       </Accordion.Item>
@@ -204,7 +262,7 @@ const GuardianAccordionItemComponent: React.FC<GuardianAccordionItemProps> = ({
       />
     </>
   );
-};
+});
 
 export const GuardianAccordionItem = React.memo(GuardianAccordionItemComponent);
 export default GuardianAccordionItem;

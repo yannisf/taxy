@@ -27,6 +27,7 @@ import BasicInfoSection from './sections/BasicInfoSection';
 import AdditionalInfoSection from './sections/AdditionalInfoSection';
 import AddressSection from './sections/AddressSection';
 import GuardiansSection from './sections/GuardiansSection';
+import type { GuardiansSectionHandle } from './sections/GuardiansSection';
 import UnsavedChangesModal from '../common/UnsavedChangesModal';
 
 type KidFormProps = {
@@ -40,6 +41,11 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
   const [guardians, setGuardians] = useState<Guardian[]>(initialData?.guardians || []);
   const [guardiansChanged, setGuardiansChanged] = useState(false);
   const bypassBlockerRef = useRef(false);
+  const guardiansSectionRef = useRef<GuardiansSectionHandle>(null);
+  // Mirrors `guardians` synchronously so a flush immediately followed by a
+  // submit (both within the same handler) reads the latest value instead of
+  // a stale render closure while the setGuardians update is still pending.
+  const guardiansRef = useRef<Guardian[]>(initialData?.guardians || []);
   const navigate = useNavigate();
   const { kidId } = useParams<{ kidId: string }>();
   const { refreshKids } = useKids();
@@ -100,7 +106,22 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
   });
 
   const handleGuardiansChange = (updatedGuardians: Guardian[]) => {
+    guardiansRef.current = updatedGuardians;
     setGuardians(updatedGuardians);
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Commit any pending edits on the currently open guardian before saving
+    // the kid, since it lives in its own nested form and isn't otherwise
+    // reflected in the guardians array until explicitly flushed.
+    const guardianEditValid = await guardiansSectionRef.current?.flushActiveGuardian();
+    if (guardianEditValid === false) {
+      return;
+    }
+
+    await handleSubmit(onSubmit)();
   };
 
   const handleCancel = () => {
@@ -114,6 +135,16 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     } else {
       navigate('/kids');
     }
+  };
+
+  const handleFormKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    const target = e.target as HTMLElement;
+    // Skip modals (they handle their own Escape) and the date picker (its
+    // Escape closes the calendar popup, not the whole form).
+    if (target.closest('.modal, .react-datepicker-wrapper')) return;
+    e.preventDefault();
+    handleCancel();
   };
 
   const onSubmit = useCallback(async (data: Kid) => {
@@ -132,7 +163,8 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       }
 
       // Use the guardians from state instead of form data
-      data.guardians = guardians;
+      const currentGuardians = guardiansRef.current;
+      data.guardians = currentGuardians;
 
       // Validate kid data
       const validationResult = validationService.validateKid(data);
@@ -151,7 +183,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
 
       if (initialData) {
         // Update existing kid
-        const updates = { ...data, guardians };
+        const updates = { ...data, guardians: currentGuardians };
         await withTimeout(db.updateKid(initialData.kid_id, updates), 5000, 'Update timed out');
       } else {
         // Create new kid
@@ -186,7 +218,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       logger.error('Kid insertion error:', error);
       setServerError(error instanceof Error ? error.message : t('error'));
     }
-  }, [guardians, initialData, refreshKids, onSubmitSuccess, reset, selectedClass, t]);
+  }, [initialData, refreshKids, onSubmitSuccess, reset, selectedClass, t]);
 
   return (
     <Container>
@@ -195,7 +227,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
           {serverError}
         </Alert>
       )}
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleFormSubmit} onKeyDown={handleFormKeyDown}>
         <BasicInfoSection control={control} errors={errors} />
 
         <AdditionalInfoSection register={register} />
@@ -203,6 +235,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
         <AddressSection control={control} errors={errors} initialAddress={initialData?.address} />
 
         <GuardiansSection
+          ref={guardiansSectionRef}
           initialGuardians={initialData?.guardians}
           onChange={handleGuardiansChange}
         />

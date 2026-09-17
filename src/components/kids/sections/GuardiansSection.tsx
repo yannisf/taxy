@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Accordion } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import type { Guardian } from '../../../types/models';
 import GuardianAccordionItem from '../../guardians/GuardianAccordionItem';
+import type { GuardianAccordionItemHandle } from '../../guardians/GuardianAccordionItem';
 import GuardiansSectionHeader from './GuardiansSectionHeader';
 
 interface GuardiansSectionProps {
@@ -10,11 +11,29 @@ interface GuardiansSectionProps {
   onChange: (guardians: Guardian[]) => void;
 }
 
-const GuardiansSection: React.FC<GuardiansSectionProps> = ({ initialGuardians, onChange }) => {
+export interface GuardiansSectionHandle {
+  // Commits any pending edits on the currently open guardian. Returns false
+  // (without committing) if that guardian has unsaved invalid data.
+  flushActiveGuardian: () => Promise<boolean>;
+}
+
+const GuardiansSection = forwardRef<GuardiansSectionHandle, GuardiansSectionProps>(({ initialGuardians, onChange }, ref) => {
   const { t } = useTranslation();
   const [guardians, setGuardians] = useState<Guardian[]>(initialGuardians || []);
   const [showNewGuardian, setShowNewGuardian] = useState(false);
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const activeItemRef = useRef<GuardianAccordionItemHandle | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    flushActiveGuardian: async () => {
+      // The "new guardian" draft is intentionally left out: it isn't part of
+      // the guardians list until explicitly added, same as before.
+      if (!activeKey || activeKey === 'new-guardian' || !activeItemRef.current) {
+        return true;
+      }
+      return activeItemRef.current.commitIfDirty();
+    }
+  }));
 
   const guardianCount = guardians.length;
 
@@ -64,15 +83,20 @@ const GuardiansSection: React.FC<GuardiansSectionProps> = ({ initialGuardians, o
         </div>
       ) : (
         <Accordion activeKey={activeKey} onSelect={(key) => setActiveKey(key as string | null)}>
-          {guardians.map((guardian, index) => (
-            <GuardianAccordionItem
-              key={index}
-              guardian={guardian}
-              eventKey={`guardian-${index}`}
-              onSave={(updatedGuardian) => handleSaveGuardian(index, updatedGuardian)}
-              onDelete={handleDeleteGuardian}
-            />
-          ))}
+          {guardians.map((guardian, index) => {
+            const eventKey = `guardian-${index}`;
+            return (
+              <GuardianAccordionItem
+                key={index}
+                ref={activeKey === eventKey ? activeItemRef : undefined}
+                guardian={guardian}
+                eventKey={eventKey}
+                onSave={(updatedGuardian) => handleSaveGuardian(index, updatedGuardian)}
+                onDelete={handleDeleteGuardian}
+                onRequestCollapse={() => setActiveKey(null)}
+              />
+            );
+          })}
 
           {showNewGuardian && (
             <GuardianAccordionItem
@@ -87,6 +111,6 @@ const GuardiansSection: React.FC<GuardiansSectionProps> = ({ initialGuardians, o
       )}
     </div>
   );
-};
+});
 
 export default GuardiansSection;
