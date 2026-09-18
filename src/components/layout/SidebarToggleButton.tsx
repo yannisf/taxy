@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
-import { PeopleFill } from 'react-bootstrap-icons';
+import { People } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 
 interface SidebarToggleButtonProps {
@@ -11,14 +10,15 @@ const SidebarToggleButton: React.FC<SidebarToggleButtonProps> = ({ onClick }) =>
   const { t } = useTranslation();
 
   return (
-    <Button
-      className="d-md-none sidebar-toggle-button"
+    <button
+      type="button"
+      className="d-md-none topbar-icon-button sidebar-toggle-button"
       onClick={onClick}
       aria-label={t('toggleSidebar')}
       aria-expanded={false}
     >
-      <PeopleFill />
-    </Button>
+      <People />
+    </button>
   );
 };
 

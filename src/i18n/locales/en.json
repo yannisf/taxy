@@ -283,6 +283,7 @@
   "totalInFile": "The import file contains {{count}} kids.",
   "confirmImport": "Confirm Import",
   "cancelImport": "Cancel Import",
+  "menu": "Menu",
   "menuKids": "Kids",
   "menuClasses": "Class",
   "menuCards": "Cards",

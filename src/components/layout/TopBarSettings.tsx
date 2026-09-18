@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { MoonStars, Sun } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks/useTheme';
@@ -9,17 +8,20 @@ const TopBarSettings: React.FC = () => {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
 
+  const label = theme === 'light' ? t('darkMode') : t('lightMode');
+
   return (
-    <div className="d-flex align-items-center gap-2">
-      <Button 
-        variant="outline-secondary" 
-        size="sm" 
-        onClick={toggleTheme} 
-        title={theme === 'light' ? t('darkMode') : t('lightMode')}
+    <div className="d-flex align-items-center gap-1">
+      <button
+        type="button"
+        className="topbar-icon-button"
+        onClick={toggleTheme}
+        title={label}
+        aria-label={label}
       >
-        {theme === 'light' ? <MoonStars/> : <Sun/>}
-      </Button>
-      
+        {theme === 'light' ? <MoonStars /> : <Sun />}
+      </button>
+
       <LanguageSelector />
     </div>
   );

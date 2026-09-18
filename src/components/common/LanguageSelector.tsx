@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 const LanguageSelector: React.FC = () => {
@@ -10,14 +9,18 @@ const LanguageSelector: React.FC = () => {
     i18n.changeLanguage(newLanguage);
   };
 
-  const getCurrentLanguageLabel = () => {
-    return i18n.language === 'en' ? 'EN' : 'EL';
-  };
+  const label = `Switch to ${i18n.language === 'en' ? 'Greek' : 'English'}`;
 
   return (
-    <Button variant="outline-secondary" size="sm" onClick={toggleLanguage} title={`Switch to ${i18n.language === 'en' ? 'Greek' : 'English'}`}>
-      {getCurrentLanguageLabel()}
-    </Button>
+    <button
+      type="button"
+      className="topbar-icon-button topbar-icon-button-text"
+      onClick={toggleLanguage}
+      title={label}
+      aria-label={label}
+    >
+      {i18n.language === 'en' ? 'EN' : 'EL'}
+    </button>
   );
 };
 

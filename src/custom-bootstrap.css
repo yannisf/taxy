@@ -389,25 +389,3 @@
   color: #fff !important;
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-secondary-rgb), 0.5) !important;
 }
-
-/* Outline success button styling */
-.btn-outline-success {
-  --bs-btn-color: var(--bs-success);
-  --bs-btn-border-color: var(--bs-success);
-  --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: var(--bs-success);
-  --bs-btn-hover-border-color: var(--bs-success);
-  --bs-btn-focus-shadow-rgb: var(--bs-success-rgb);
-  --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: var(--bs-success);
-  --bs-btn-active-border-color: var(--bs-success);
-}
-
-.btn-outline-success:active,
-.btn-outline-success.active,
-.btn-outline-success.show {
-  background-color: var(--bs-success) !important;
-  border-color: var(--bs-success) !important;
-  color: #fff !important;
-  box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.5) !important;
-}

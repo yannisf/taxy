@@ -6,9 +6,9 @@ const TopBarLogo: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <Navbar.Brand className="d-flex align-items-center px-3">
-      <img src="/favicon.svg" alt="Entaxy Logo" style={{ paddingRight: '0.75rem' }}/>{' '}
-      <span className='fs-5'>{t('appName')}</span>
+    <Navbar.Brand className="topbar-brand">
+      <img src="/favicon.svg" alt="Entaxy Logo" />
+      <span>{t('appName')}</span>
     </Navbar.Brand>
   );
 };

@@ -283,6 +283,7 @@
   "totalInFile": "Το αρχείο εισαγωγής περιέχει {{count}} παιδιά.",
   "confirmImport": "Επιβεβαίωση Εισαγωγής",
   "cancelImport": "Ακύρωση Εισαγωγής",
+  "menu": "Μενού",
   "menuKids": "Παιδιά",
   "menuClasses": "Τάξη",
   "menuCards": "Κάρτες",

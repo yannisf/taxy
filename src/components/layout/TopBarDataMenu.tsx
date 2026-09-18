@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { Download, Upload, ChevronDown } from 'react-bootstrap-icons';
+import { Download, Upload } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../hooks/useClass';
@@ -10,13 +10,10 @@ import { exportClassData } from '../../utils/exportUtils';
 import { validateImportFile, performImport, type ImportValidationResult } from '../../utils/importUtils';
 import ExportModal from '../classes/ExportModal';
 import ImportConfirmModal from '../classes/ImportConfirmModal';
+import TopBarMenuToggle from './TopBarMenuToggle';
 import { logger } from '../../utils/logger';
 
-interface TopBarDataMenuProps {
-  theme: 'light' | 'dark';
-}
-
-const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
+const TopBarDataMenu: React.FC = () => {
   const { t } = useTranslation();
   const { selectedClass, selectClass, refreshClasses } = useClass();
   const { refreshKids } = useKids();
@@ -132,21 +129,9 @@ const TopBarDataMenu: React.FC<TopBarDataMenuProps> = ({ theme }) => {
 
   return (
     <>
-      <Dropdown show={dropdown.isOpen} onToggle={dropdown.toggle} className="me-2">
-        <Dropdown.Toggle
-          as="a"
-          id="import-export-dropdown"
-          className={`nav-link no-caret text-decoration-none d-flex align-items-center gap-1 topbar-nav-item ${theme === 'light' ? 'text-dark' : 'text-white'}`}
-          role="button"
-          aria-haspopup="menu"
-          aria-expanded={dropdown.isOpen}
-          tabIndex={0}
-          style={{ cursor: 'pointer' }}
-        >
-          <span>{t('importExport')}</span>
-          <ChevronDown size={14} />
-        </Dropdown.Toggle>
-        <Dropdown.Menu align="start" className={`topbar-dropdown-menu medium ${theme === 'light' ? 'light' : 'dark'}`}>
+      <Dropdown show={dropdown.isOpen} onToggle={dropdown.toggle}>
+        <TopBarMenuToggle id="import-export-dropdown" label={t('importExport')} isOpen={dropdown.isOpen} />
+        <Dropdown.Menu align="start" className="topbar-dropdown-menu medium">
           <Dropdown.Item
             onClick={() => { handleImportClick(); dropdown.close(); }}
             disabled={importModal.isLoading}

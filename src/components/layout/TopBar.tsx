@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
-import { useTheme } from '../../hooks/useTheme';
+import { List, X } from 'react-bootstrap-icons';
+import { useTranslation } from 'react-i18next';
 import { useClass } from '../../hooks/useClass';
 import TopBarLogo from './TopBarLogo';
 import TopBarClassMenu from './TopBarClassMenu';
@@ -16,7 +17,7 @@ interface TopBarProps {
 }
 
 const TopBar: React.FC<TopBarProps> = ({ onSidebarToggle, onSidebarClose }) => {
-  const { theme } = useTheme();
+  const { t } = useTranslation();
   const { selectedClass } = useClass();
   const [expanded, setExpanded] = useState(false);
 
@@ -31,8 +32,6 @@ const TopBar: React.FC<TopBarProps> = ({ onSidebarToggle, onSidebarClose }) => {
   return (
     <Navbar
       fixed='top'
-      bg={theme === 'light' ? 'light' : 'dark'}
-      variant={theme === 'light' ? 'light' : 'dark'}
       expand="lg"
       expanded={expanded}
       onToggle={(expanded) => setExpanded(expanded)}
@@ -41,29 +40,35 @@ const TopBar: React.FC<TopBarProps> = ({ onSidebarToggle, onSidebarClose }) => {
         <TopBarLogo />
 
         {/* Toggle buttons container - sidebar toggle on left, hamburger on right */}
-        <div className="d-flex align-items-center gap-2 ms-auto">
+        <div className="d-flex align-items-center gap-1 ms-auto d-lg-none">
           {/* Sidebar toggle button - shows on small screens only when a class is selected */}
           {onSidebarToggle && selectedClass && <SidebarToggleButton onClick={onSidebarToggle} />}
 
           {/* Hamburger toggle button - shows on mobile */}
-          <Navbar.Toggle aria-controls="navbar-nav" onClick={handleHamburgerToggle} />
+          <Navbar.Toggle
+            as="button"
+            aria-controls="navbar-nav"
+            aria-label={t('menu')}
+            className="topbar-icon-button"
+            onClick={handleHamburgerToggle}
+          >
+            {expanded ? <X /> : <List />}
+          </Navbar.Toggle>
         </div>
-        
+
         {/* Collapsible navbar content */}
         <Navbar.Collapse id="navbar-nav">
           {/* Menu items */}
-          <Nav className="me-auto">
-            <TopBarClassMenu theme={theme} />
-            <TopBarDataMenu theme={theme} />
-            <TopBarCardsMenu theme={theme} />
-            <TopBarReportsMenu theme={theme} />
+          <Nav className="topbar-nav">
+            <TopBarClassMenu />
+            <TopBarDataMenu />
+            <TopBarCardsMenu />
+            <TopBarReportsMenu />
           </Nav>
 
           {/* Right-aligned items */}
-          <Nav className="ms-auto align-items-lg-center">
-            <Nav.Item>
-              <TopBarSettings />
-            </Nav.Item>
+          <Nav className="topbar-actions ms-auto align-items-lg-center">
+            <TopBarSettings />
           </Nav>
         </Navbar.Collapse>
       </Container>

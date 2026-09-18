@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Dropdown, Form } from 'react-bootstrap';
-import { PlusCircle, PencilSquare, BoxArrowLeft, ChevronDown, Trash } from 'react-bootstrap-icons';
+import { PlusCircle, PencilSquare, BoxArrowLeft, Trash } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -8,13 +8,10 @@ import { useClass } from '../../hooks/useClass';
 import { useModalState, useDropdownState } from '../../hooks/useModalState';
 import ClassModal from '../classes/ClassModal';
 import DeleteClassModal from '../classes/DeleteClassModal';
+import TopBarMenuToggle from './TopBarMenuToggle';
 import { logger } from '../../utils/logger';
 
-interface TopBarClassMenuProps {
-  theme: 'light' | 'dark';
-}
-
-const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
+const TopBarClassMenu: React.FC = () => {
   const { t } = useTranslation();
   const { classes, selectedClass, selectClass, createClass, updateClass, deleteClass, clearSelectedClass } = useClass();
   const navigate = useNavigate();
@@ -164,21 +161,9 @@ const TopBarClassMenu: React.FC<TopBarClassMenuProps> = ({ theme }) => {
   return (
     <>
       <Dropdown show={dropdown.isOpen} onToggle={dropdown.toggle}>
-        <Dropdown.Toggle
-          as="a"
-          id="class-actions-dropdown"
-          className={`nav-link no-caret text-decoration-none d-flex align-items-center gap-1 topbar-nav-item ${theme === 'light' ? 'text-dark' : 'text-white'}`}
-          role="button"
-          aria-haspopup="menu"
-          aria-expanded={dropdown.isOpen}
-          tabIndex={0}
-          style={{ cursor: 'pointer' }}
-        >
-          <span>{t('classes')}</span>
-          <ChevronDown size={14} />
-        </Dropdown.Toggle>
-        <Dropdown.Menu align="start" className={`topbar-dropdown-menu wide ${theme === 'light' ? 'light' : 'dark'}`}>
-          <Dropdown.ItemText onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} style={{padding: '0.5rem 1rem'}}>
+        <TopBarMenuToggle id="class-actions-dropdown" label={t('classes')} isOpen={dropdown.isOpen} />
+        <Dropdown.Menu align="start" className="topbar-dropdown-menu wide">
+          <Dropdown.ItemText onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} className="topbar-dropdown-field">
             <Form.Select value={selectedClass?.class_id || ''} onChange={async (e) => {
               await handleClassSelect(e);
               dropdown.close();

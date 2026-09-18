@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { FilePdf, Envelope, ChevronDown } from 'react-bootstrap-icons';
+import { FilePdf, Envelope } from 'react-bootstrap-icons';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
 import { exportGuardianEmails } from '../../utils/exportUtils';
+import { useDropdownState } from '../../hooks/useModalState';
+import TopBarMenuToggle from './TopBarMenuToggle';
 import { logger } from '../../utils/logger';
 
 // The PDF generators pull in pdfmake and ~260KB of embedded IEP Sans font data.
 // They are imported dynamically inside the handlers so that weight stays out of
 // the initial bundle and is only fetched when a report is actually requested.
 
-interface TopBarReportsMenuProps {
-  theme: 'light' | 'dark';
-}
-
-const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
+const TopBarReportsMenu: React.FC = () => {
   const { t } = useTranslation();
   const { selectedClass } = useClass();
   const classKids = useClassKids();
-  const [reportsDropdownOpen, setReportsDropdownOpen] = useState(false);
+  const dropdown = useDropdownState();
   const [isGeneratingCatalog, setIsGeneratingCatalog] = useState(false);
   const [isExportingEmails, setIsExportingEmails] = useState(false);
 
@@ -66,25 +64,13 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
   };
 
   return (
-    <Dropdown show={reportsDropdownOpen} onToggle={(show: boolean) => setReportsDropdownOpen(show)} className="me-2">
-      <Dropdown.Toggle
-        as="a"
-        id="reports-dropdown"
-        className={`nav-link no-caret text-decoration-none d-flex align-items-center gap-1 topbar-nav-item ${theme === 'light' ? 'text-dark' : 'text-white'}`}
-        role="button"
-        aria-haspopup="menu"
-        aria-expanded={reportsDropdownOpen}
-        tabIndex={0}
-        style={{ cursor: 'pointer' }}
-      >
-        <span>{t('menuReports')}</span>
-        <ChevronDown size={14} />
-      </Dropdown.Toggle>
-      <Dropdown.Menu align="start" className={`topbar-dropdown-menu narrow ${theme === 'light' ? 'light' : 'dark'}`}>
-        <Dropdown.Item onClick={() => { handleGenerateCatalog(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isGeneratingCatalog || classKids.length === 0}>
+    <Dropdown show={dropdown.isOpen} onToggle={dropdown.toggle}>
+      <TopBarMenuToggle id="reports-dropdown" label={t('menuReports')} isOpen={dropdown.isOpen} />
+      <Dropdown.Menu align="start" className="topbar-dropdown-menu narrow">
+        <Dropdown.Item onClick={() => { handleGenerateCatalog(); dropdown.close(); }} disabled={!selectedClass || isGeneratingCatalog || classKids.length === 0}>
           <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateCatalog')}</span>
         </Dropdown.Item>
-        <Dropdown.Item onClick={() => { handleExportGuardianEmails(); setReportsDropdownOpen(false); }} disabled={!selectedClass || isExportingEmails || classKids.length === 0}>
+        <Dropdown.Item onClick={() => { handleExportGuardianEmails(); dropdown.close(); }} disabled={!selectedClass || isExportingEmails || classKids.length === 0}>
           <span className="d-flex align-items-center gap-2"><Envelope /> {t('exportGuardianEmails')}</span>
         </Dropdown.Item>
       </Dropdown.Menu>
