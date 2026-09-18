@@ -1,8 +1,0 @@
-
-    
-- Guardians/Profession should be autocompletable with suggestions from the 1st typed character
-- Guardians/First Name should be autocompletable with suggestions from the 1st typed character. It should use all first names as source, either from guardians or kids.
-
-- The guardians should be shorted upon add/update so that they follow the order of the relations as shown in the input box (Father/Mother/etc)
-
-- where creating a new classroom the scope should be cleaned. now I see the old kid in context

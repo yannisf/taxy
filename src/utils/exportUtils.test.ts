@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { exportClassData } from '../utils/exportUtils';
+import { exportClassData } from './exportUtils';
 import { db } from '../services/database';
 import type { Kid } from '../types/models';
 

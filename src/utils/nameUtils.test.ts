@@ -8,7 +8,7 @@ import {
   extractUniquePostalCodes,
   extractUniqueCities,
   extractUniqueCountries
-} from '../utils/nameUtils';
+} from './nameUtils';
 import type { Kid } from '../types/models';
 
 describe('nameUtils', () => {

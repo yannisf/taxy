@@ -2,17 +2,17 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import '../i18n';
-import { KidForm } from '../components/kids/KidForm';
-import { KidsContext } from '../hooks/useKids';
-import { ClassContext } from '../hooks/useClass';
-import type { Kid } from '../types/models';
+import '../../i18n';
+import { KidForm } from './KidForm';
+import { KidsContext } from '../../hooks/useKids';
+import { ClassContext } from '../../hooks/useClass';
+import type { Kid } from '../../types/models';
 
 const updateKid = vi.fn().mockResolvedValue(undefined);
 const getClassById = vi.fn();
 const addKid = vi.fn();
 
-vi.mock('../services/database', () => ({
+vi.mock('../../services/database', () => ({
   db: {
     updateKid: (...args: unknown[]) => updateKid(...args),
     getClassById: (...args: unknown[]) => getClassById(...args),

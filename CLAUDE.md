@@ -178,24 +178,22 @@ logger.error('Error');             // Always shown
 The logger automatically suppresses debug and info messages in production builds.
 
 ### Error Handling Pattern
-Use the `useAsyncAction` hook (`src/hooks/useAsyncAction.ts`) for consistent async error handling with toast notifications:
+Async actions handle their own errors inline with `try`/`catch`/`finally`, a local `isLoading` state, and `react-toastify` for feedback. Log the error through `logger`, then surface a translated message via `toast`:
 
 ```typescript
-import { useAsyncAction } from '../hooks/useAsyncAction';
-
-const executeAction = useAsyncAction();
-
-await executeAction(
-  () => deleteClass(classId),
-  {
-    successMessage: t('classDeleted'),
-    errorMessage: t('failedToDeleteClass'),
-    onSuccess: () => navigate('/kids')
-  }
-);
+setIsGenerating(true);
+try {
+  await generateClassCatalogPDF(selectedClass, classKids, t);
+  toast.success(t('catalogGenerated'));
+} catch (error) {
+  logger.error('Catalog generation failed:', error);
+  toast.error(t('failedToGenerateCatalog'));
+} finally {
+  setIsGenerating(false);
+}
 ```
 
-This eliminates repetitive try/catch blocks and standardizes error/success feedback.
+See `src/components/layout/TopBarReportsMenu.tsx` for the canonical example.
 
 ## Autocomplete Features
 
@@ -206,7 +204,7 @@ Form fields (first name in `BasicInfoSection.tsx`; street name, neighborhood, po
 - Operates entirely in-memory over kids loaded by KidsProvider — no database changes
 - Address extraction skips guardian addresses where `same_address_as_kid` is true
 
-**Tests:** `src/test/nameUtils.test.ts`
+**Tests:** `src/utils/nameUtils.test.ts`
 
 ## PDF Generation
 
@@ -242,7 +240,11 @@ This provides:
 
 ## Testing
 
-Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment uses:
+Tests are colocated with the code they cover (`src/utils/nameUtils.test.ts` sits next to `src/utils/nameUtils.ts`). New tests go beside their module, not in a central directory.
+
+`src/test/` holds only shared test infrastructure: `setup.ts` and `testDataFixtures.test.ts`, which validates the JSON fixtures in `test-data/` and belongs to no single module.
+
+The test environment uses:
 - jsdom for DOM simulation
 - @testing-library/react for component testing
 - Global test utilities enabled

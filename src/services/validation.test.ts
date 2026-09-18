@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validationService } from '../services/validation';
+import { validationService } from './validation';
 import type { Kid } from '../types/models';
 
 const kidWithRelation = (relation: string) =>
