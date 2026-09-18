@@ -7,14 +7,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Entaxy is a React-based class management system for educational institutions. It manages students (referred to as "kids"), guardians, and class information with multilingual support (English/Greek). The application runs entirely client-side using IndexedDB for local data persistence.
 
 **Key Stack:**
-- React 19 + TypeScript
-- Vite 7.1.7 (build tool)
-- Dexie 4.2.0 (IndexedDB wrapper)
-- Bootstrap 5.3.8 + React Bootstrap 2.10.10
-- React Router DOM 7.9.3
+- React + TypeScript
+- Vite (build tool)
+- Dexie (IndexedDB wrapper)
+- Bootstrap + React Bootstrap + react-bootstrap-icons
+- React Router DOM
 - i18next for internationalization
 - Vitest + React Testing Library
-- nanoid for ID generation
+- uuid for ID generation
 - date-fns for date formatting
 - react-datepicker for date input controls
 - pdfmake for PDF generation
@@ -49,7 +49,8 @@ The application uses `ClassManagementDatabase` defined in `src/services/database
 
 - **v1**: Original kids table
 - **v2**: Added timestamps (created_at, updated_at)
-- **v3**: Added classes table
+- **v3**: Added classes table (kid_ids array on Class)
+- **v4**: Added `class_id` to Kid; relationship is now a kid→class foreign key instead of the class's kid_ids array
 
 **Tables:**
 - `kids`: Student records with guardians, addresses, telephones
@@ -71,10 +72,10 @@ The application uses `ClassManagementDatabase` defined in `src/services/database
 - `Telephone`: Phone numbers with type (mobile/home/work/other)
 
 **Important Constraints:**
-- All primary entities use unique IDs generated via nanoid library
+- All primary entities use unique IDs generated via the uuid library
 - Timestamps (created_at, updated_at) are automatically managed
 - Kids can have multiple guardians and phone numbers
-- Classes contain arrays of kid_ids (not embedded kids)
+- Each Kid references its Class via `class_id` (not embedded kids); `kid_ids` arrays only remain on `ClassRecord`/`ClassExport` for import/export
 
 ### Context Architecture
 
@@ -145,73 +146,12 @@ const { t } = useTranslation();
 
 ## Reporting Capabilities
 
-The application provides two main reporting features, accessible via the Reports menu in the top bar:
+Two reporting features, accessible via the Reports menu (`src/components/layout/TopBarReportsMenu.tsx`), both requiring a selected class with at least one student:
 
-### 1. Class Catalog PDF Report
+- **Class Catalog PDF** — `generateClassCatalogPDF()` in `src/utils/pdf/catalogGenerator.ts`. Landscape A4 roster (student name + guardian contact info per row) via pdfmake, filename `{school_name}_{class_name}_{school_year}_catalog.pdf`.
+- **Guardian Emails Export** — `exportGuardianEmails()` in `src/utils/exportUtils.ts`. Deduplicated CSV (`first_name,last_name,email`) of guardian emails, filename `{school-name}-{class-name}-guardian-emails-{date}.csv`. Throws if no guardian has an email.
 
-**Function**: `generateClassCatalogPDF()` in `src/utils/pdf/catalogGenerator.ts`
-
-**Features:**
-- Generates landscape A4 PDF using pdfmake library
-- Contains student roster with guardian contact information
-- Filename format: `{school_name}_{class_name}_{school_year}_catalog.pdf`
-
-**PDF Structure:**
-- **Header**: School name, class name, school year, and generation date
-- **Table Columns**:
-  1. Number (sequential, 1-indexed)
-  2. Student Name (uses preferred_name if available, otherwise first_name)
-  3. Guardian Information (formatted per guardian):
-     - Guardian full name
-     - Relation badge (uppercase, xx-small bold font)
-     - Phone numbers (up to 3, formatted as XXX XXX XXXX)
-
-**Key Implementation Details:**
-- Phone formatting: Strips country code, formats as XXX XXX XXXX
-- Relations are translated via i18n keys: `pdfRelationFather`, `pdfRelationMother`, etc.
-- Each guardian displayed on separate line within the cell
-- Alternating row colors (#ffffff and #f8f9fa) for readability
-- Dynamic import of pdfmake to ensure proper font initialization
-
-**Requires:**
-- A selected class with at least one student
-- Guardians with telephone numbers (optional, but recommended)
-
-### 2. Guardian Emails Export
-
-**Function**: `exportGuardianEmails()` in `src/utils/exportUtils.ts`
-
-**Features:**
-- Exports unique guardian email addresses to CSV format
-- Deduplicates emails (same guardian for multiple kids counted once)
-- Filename format: `{school-name}-{class-name}-guardian-emails-{date}.csv`
-
-**CSV Structure:**
-```
-first_name,last_name,email
-John,Doe,john.doe@example.com
-Jane,Smith,jane.smith@example.com
-```
-
-**Key Implementation Details:**
-- Filters out guardians without email addresses
-- CSV field escaping for commas, quotes, and newlines
-- Returns count of unique emails exported
-- Throws error if no guardians with emails found
-
-**Requires:**
-- A selected class with at least one student
-- At least one guardian with an email address
-
-### Reports Menu Component
-
-**Location**: `src/components/layout/TopBarReportsMenu.tsx`
-
-**UI/UX:**
-- Both reports disabled if no class selected or class has no students
-- Loading states prevent duplicate generation
-- Success/error toasts provide user feedback
-- Translation keys used: `selectClassToExport`, `catalogGenerated`, `failedToGenerateCatalog`, `guardianEmailsExported`, `noGuardianEmailsFound`, `failedToExportGuardianEmails`
+The menu disables both actions when no class/students are selected and shows loading states plus success/error toasts during generation.
 
 ## Common Patterns
 
@@ -219,7 +159,7 @@ Jane,Smith,jane.smith@example.com
 All database updates automatically set `updated_at`. When creating records, both `created_at` and `updated_at` are set. The database layer handles this automatically.
 
 ### ID Generation
-Use the `createKid()` and `createClass()` utility functions from `src/types/models.ts` to ensure proper ID and timestamp initialization. IDs are generated using `nanoid()` for smaller bundle size and better performance compared to UUIDs.
+Use the `createKid()` and `createClass()` utility functions from `src/types/models.ts` to ensure proper ID and timestamp initialization. IDs are generated using `uuid`'s `v4()`.
 
 ### Form Handling
 Forms use React Hook Form for validation and state management. See `src/components/kids/KidForm.tsx` for the main student form pattern.
@@ -263,76 +203,14 @@ This eliminates repetitive try/catch blocks and standardizes error/success feedb
 
 ## Autocomplete Features
 
-The application provides autocomplete functionality for form fields to improve data entry consistency and speed.
+Form fields (first name in `BasicInfoSection.tsx`; street name, neighborhood, postal code, city, country in `AddressForm.tsx`) autocomplete from existing kid/guardian data via the shared `AutocompleteInput` component (`src/components/common/AutocompleteInput.tsx`) and extraction/filter utilities in `src/utils/nameUtils.ts` (`extractUniqueFirstNames`, `extractUniqueStreetNames`, `extractUniqueNeighborhoods`, `extractUniquePostalCodes`, `extractUniqueCities`, `extractUniqueCountries`, `filterNamesByQuery`, `normalizeString`).
 
-### First Name Autocomplete
+- Triggers after 2+ characters typed; case- and accent-insensitive (NFD normalization, e.g. Γιώργος matches "γιωργος")
+- Keyboard navigation (Arrow Up/Down, Enter, Escape) plus click/tap selection
+- Operates entirely in-memory over kids loaded by KidsProvider — no database changes
+- Address extraction skips guardian addresses where `same_address_as_kid` is true
 
-Provides autocomplete for the first name field when adding or editing students.
-
-**Features:**
-- Appears after typing 2 or more characters
-- Sources names from existing students' first_name and preferred_name fields
-- Case-insensitive and accent-insensitive matching
-- Supports keyboard navigation (Arrow Up/Down, Enter, Escape)
-- Click or tap to select suggestions
-
-**Integration:** `src/components/kids/sections/BasicInfoSection.tsx`
-
-### Address Field Autocomplete
-
-Provides autocomplete for all address fields (street name, neighborhood, postal code, city, country) when entering kid or guardian addresses.
-
-**Features:**
-- Appears after typing 2 or more characters
-- Sources data from both kid addresses and guardian addresses
-- Skips guardian addresses when `same_address_as_kid` is true
-- Each field suggests values from the same field type only
-- Case-insensitive and accent-insensitive matching
-- Supports keyboard navigation (Arrow Up/Down, Enter, Escape)
-- Click or tap to select suggestions
-- Respects disabled state (no autocomplete when field is disabled)
-
-**Supported Fields:**
-- Street Name: `extractUniqueStreetNames()`
-- Neighborhood: `extractUniqueNeighborhoods()`
-- Postal Code: `extractUniquePostalCodes()`
-- City: `extractUniqueCities()`
-- Country: `extractUniqueCountries()`
-
-**Integration:** `src/components/common/AddressForm.tsx`
-
-### Technical Implementation
-
-**Reusable Component:** `src/components/common/AutocompleteInput.tsx`
-- Generic autocomplete input that receives suggestions as props
-- Handles keyboard navigation and mouse interaction
-- Manages dropdown visibility and focus states
-
-**Utility Functions:** `src/utils/nameUtils.ts`
-- `normalizeString()`: Removes accents and converts to lowercase for matching
-- `extractUniqueFirstNames()`: Extracts unique first/preferred names from kids
-- `extractUniqueStreetNames()`: Extracts unique street names from all addresses
-- `extractUniqueNeighborhoods()`: Extracts unique neighborhoods from all addresses
-- `extractUniquePostalCodes()`: Extracts unique postal codes from all addresses
-- `extractUniqueCities()`: Extracts unique cities from all addresses
-- `extractUniqueCountries()`: Extracts unique countries from all addresses
-- `filterNamesByQuery()`: Filters any list based on user input (min 2 chars)
-
-**How It Works:**
-1. KidsProvider loads all kids from IndexedDB on app mount
-2. Components extract unique values using appropriate extraction functions
-3. Values are cached using `useMemo` for performance
-4. `filterNamesByQuery()` filters the list in real-time as user types
-5. AutocompleteInput component displays filtered suggestions
-
-**Technical Details:**
-- Uses Unicode normalization (NFD) to remove diacritical marks for accent-insensitive matching
-- Supports Greek characters with accents (Γιώργος matches "γιωργος")
-- No database changes - operates entirely in-memory
-- Lists update automatically when kids data changes in KidsContext
-- Address extraction skips guardians with `same_address_as_kid: true`
-
-**Tests:** `src/test/nameUtils.test.ts` (22 tests covering all extraction and filtering functions)
+**Tests:** `src/test/nameUtils.test.ts`
 
 ## PDF Generation
 
@@ -383,32 +261,9 @@ Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment
 
 ## File Locations
 
-### Core Application
-- Main app component: `src/App.tsx`
+Paths not already called out above:
 - Entry point: `src/main.tsx`
-- Database schema: `src/services/database.ts`
-- Type definitions: `src/types/models.ts`
 - Validation service: `src/services/validation.ts` (uses ajv with JSON schemas from `src/schemas/`)
-
-### Utilities (Modular Structure)
-- **PDF generation**: `src/utils/pdf/` (modular: catalogGenerator, gridGenerator, listGenerator, formatters, pdfSetup)
-- **Other utilities**:
-  - Export utilities: `src/utils/exportUtils.ts`
-  - Import utilities: `src/utils/importUtils.ts`
-  - Name utilities: `src/utils/nameUtils.ts`
-  - Logger: `src/utils/logger.ts`
-  - Date formatting: Using `date-fns` library
-
-### Hooks
-- Async action hook: `src/hooks/useAsyncAction.ts`
-- Modal state hook: `src/hooks/useModalState.ts`
-- Class kids hook: `src/hooks/useClassKids.ts`
-
-### Components
-- Reports menu: `src/components/layout/TopBarReportsMenu.tsx`
-- Autocomplete input: `src/components/common/AutocompleteInput.tsx`
-- Error fallback: `src/components/common/ErrorFallback.tsx`
-
-### Tests
-- Name utils tests: `src/test/nameUtils.test.ts`
+- Hooks: `src/hooks/` (multiple hooks; see directory for the full list)
+- i18n locales: `src/i18n/locales/` (en.json, el.json)
 - Test setup: `src/test/setup.ts`

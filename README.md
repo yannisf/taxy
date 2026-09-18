@@ -129,10 +129,9 @@ npm run dev -- --port 3000
 
 # Start with host exposure (for network access)
 npm run dev -- --host
-
-# Start with HTTPS
-npm run dev -- --https
 ```
+
+> The dev server already binds to `0.0.0.0` via `vite.config.ts`, so `--host` is redundant here. Vite's CLI has no `--https` flag; enabling HTTPS requires configuring `server.https` in `vite.config.ts`.
 
 ### Stop Development Server
 
@@ -153,13 +152,6 @@ npm run test:run
 
 # Run tests with UI interface
 npm run test:ui
-```
-
-### Test Coverage
-
-```bash
-# Run tests with coverage report
-npm run test:run -- --coverage
 ```
 
 ### Test File Patterns
@@ -200,12 +192,13 @@ npm run lint -- --fix
 
 ### ESLint Configuration
 
-The project uses:
+`eslint.config.js` uses:
 - `@eslint/js` - Core ESLint rules
 - `typescript-eslint` - TypeScript-specific rules
 - `eslint-plugin-react-hooks` - React Hooks rules
 - `eslint-plugin-react-refresh` - React Fast Refresh rules
-- `eslint-config-prettier` - Prettier compatibility
+
+(`eslint-config-prettier` is a devDependency but isn't currently wired into `eslint.config.js`.)
 
 ### Code Formatting
 
@@ -221,15 +214,11 @@ npx prettier --check .
 
 ### TypeScript Type Checking
 
-Run TypeScript compiler for type checking:
-
 ```bash
-# Type check without emitting files
-npx tsc --noEmit
-
-# Type check with build info
 npx tsc -b
 ```
+
+> `tsconfig.json` only has project references, so plain `tsc --noEmit` silently checks nothing here — always use `tsc -b` (this is also what `npm run build` runs).
 
 ## 🏗️ Building & Deployment
 
@@ -396,10 +385,7 @@ taxy/
 
 ### Vite Configuration
 
-Key Vite settings in `vite.config.ts`:
-- React plugin with fast refresh
-- Build target: ES2022
-- Output directory: `dist/`
+`vite.config.ts` currently only configures the React plugin (fast refresh) and a dev server bound to `0.0.0.0`; everything else (build target, output directory `dist/`, etc.) is Vite's default.
 
 ### TypeScript Configuration
 
@@ -481,7 +467,7 @@ Error: Cannot resolve dependency 'X'
 Error: Build failed with X errors
 ```
 **Solutions**:
-1. Run type check: `npx tsc --noEmit`
+1. Run type check: `npx tsc -b`
 2. Fix linting errors: `npm run lint -- --fix`
 3. Clear build cache: `rm -rf dist node_modules/.vite`
 
@@ -493,16 +479,12 @@ Error: Build failed with X errors
 - Check for large files in `src/`
 
 #### Large Bundle Size
-- Analyze bundle: `npm run build -- --analyze`
 - Consider code splitting
 - Check for duplicate dependencies
 
 ### Browser Compatibility
 
-#### Older Browser Support
-- Update browserslist in `package.json`
-- Add polyfills if needed
-- Test in target browsers
+The app targets modern evergreen browsers (see [System Requirements](#prerequisites)); there's no `browserslist` config or polyfill setup in this project to adjust.
 
 ## 🤝 Contributing
 
