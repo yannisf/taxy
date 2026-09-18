@@ -15,27 +15,27 @@ export interface PDFMakeInstance {
  */
 export async function initializePDFMake(): Promise<PDFMakeInstance> {
   const pdfMakeModule = await import('pdfmake/build/pdfmake');
-  const pdfFontsModule = await import('pdfmake/build/vfs_fonts');
 
   // Get the actual pdfMake instance
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pdfMake = (pdfMakeModule as any).default || pdfMakeModule;
 
-  // Register the default (Roboto) fonts baked into pdfmake
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pdfMake.addVirtualFileSystem((pdfFontsModule as any).default || pdfFontsModule);
+  // IEP Sans is the only family used by any report, so pdfmake's bundled
+  // Roboto VFS (vfs_fonts) is deliberately not loaded — it is ~836KB and
+  // would have no consumer. Every generator sets defaultStyle.font, so
+  // nothing falls back to pdfmake's implicit 'Roboto' default.
+  registerIEPSansFont(pdfMake);
 
   return pdfMake;
 }
 
 /**
- * Gets font configuration for catalog PDFs (Roboto)
+ * Gets font configuration for catalog PDFs (IEP Sans)
  */
 export async function getCatalogFontConfig() {
   const pdfMake = await initializePDFMake();
-  const fontFamily = 'Roboto';
 
-  return { pdfMake, fontFamily };
+  return { pdfMake, fontFamily: IEP_SANS_FONT_FAMILY };
 }
 
 /**
@@ -43,7 +43,6 @@ export async function getCatalogFontConfig() {
  */
 export async function getCardsFontConfig() {
   const pdfMake = await initializePDFMake();
-  registerIEPSansFont(pdfMake);
 
   return { pdfMake, fontFamily: IEP_SANS_FONT_FAMILY };
 }

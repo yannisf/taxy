@@ -18,8 +18,10 @@ import { KidsProvider } from './contexts/KidsContext';
 import { ClassProvider } from './contexts/ClassContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 
-// Import Bootstrap CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
+// Bootstrap CSS is imported by custom-bootstrap.css (see main.tsx), which
+// layers the theme overrides on top of it — importing it here too would ship
+// a second, fully shadowed copy of the framework.
+
 // Import React Toastify CSS
 import 'react-toastify/dist/ReactToastify.css';
 

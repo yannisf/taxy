@@ -57,7 +57,7 @@ function createCatalogTableData(kids: Kid[], t: TFunction): TableCell[][] {
 
 /**
  * Generates and downloads the class catalog PDF
- * Uses Roboto font for professional appearance
+ * Uses IEP Sans, the same family as the card reports
  */
 export async function generateClassCatalogPDF(classRecord: Class, kids: Kid[], t: TFunction): Promise<void> {
   const { pdfMake, fontFamily } = await getCatalogFontConfig();

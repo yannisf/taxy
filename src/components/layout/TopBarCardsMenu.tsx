@@ -5,8 +5,11 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
-import { generateStudentGridPDF, generateStudentListPDF } from '../../utils/pdf';
 import { logger } from '../../utils/logger';
+
+// The PDF generators pull in pdfmake and ~260KB of embedded IEP Sans font data.
+// They are imported dynamically inside the handlers so that weight stays out of
+// the initial bundle and is only fetched when a report is actually requested.
 
 interface TopBarCardsMenuProps {
   theme: 'light' | 'dark';
@@ -28,6 +31,7 @@ const TopBarCardsMenu: React.FC<TopBarCardsMenuProps> = ({ theme }) => {
 
     setIsGeneratingGrid(true);
     try {
+      const { generateStudentGridPDF } = await import('../../utils/pdf');
       await generateStudentGridPDF(selectedClass, classKids, t);
       toast.success(t('studentGridGenerated'));
     } catch (error) {
@@ -46,6 +50,7 @@ const TopBarCardsMenu: React.FC<TopBarCardsMenuProps> = ({ theme }) => {
 
     setIsGeneratingList(true);
     try {
+      const { generateStudentListPDF } = await import('../../utils/pdf');
       await generateStudentListPDF(selectedClass, classKids, t);
       toast.success(t('studentListGenerated'));
     } catch (error) {

@@ -6,8 +6,11 @@ import { useTranslation } from 'react-i18next';
 import { useClass } from '../../hooks/useClass';
 import { useClassKids } from '../../hooks/useClassKids';
 import { exportGuardianEmails } from '../../utils/exportUtils';
-import { generateClassCatalogPDF } from '../../utils/pdf';
 import { logger } from '../../utils/logger';
+
+// The PDF generators pull in pdfmake and ~260KB of embedded IEP Sans font data.
+// They are imported dynamically inside the handlers so that weight stays out of
+// the initial bundle and is only fetched when a report is actually requested.
 
 interface TopBarReportsMenuProps {
   theme: 'light' | 'dark';
@@ -29,6 +32,7 @@ const TopBarReportsMenu: React.FC<TopBarReportsMenuProps> = ({ theme }) => {
 
     setIsGeneratingCatalog(true);
     try {
+      const { generateClassCatalogPDF } = await import('../../utils/pdf');
       await generateClassCatalogPDF(selectedClass, classKids, t);
       toast.success(t('catalogGenerated'));
     } catch (error) {
