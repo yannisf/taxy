@@ -29,7 +29,6 @@ npm run dev              # Start dev server at http://localhost:5173
 # Testing
 npm run test            # Run tests in watch mode
 npm run test:run        # Run tests once and exit
-npm run test:ui         # Run tests with UI interface
 
 # Code Quality
 npm run lint            # Run ESLint

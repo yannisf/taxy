@@ -149,9 +149,6 @@ npm run test
 
 # Run tests once and exit
 npm run test:run
-
-# Run tests with UI interface
-npm run test:ui
 ```
 
 ### Test File Patterns
@@ -197,20 +194,6 @@ npm run lint -- --fix
 - `typescript-eslint` - TypeScript-specific rules
 - `eslint-plugin-react-hooks` - React Hooks rules
 - `eslint-plugin-react-refresh` - React Fast Refresh rules
-
-(`eslint-config-prettier` is a devDependency but isn't currently wired into `eslint.config.js`.)
-
-### Code Formatting
-
-Format code using Prettier:
-
-```bash
-# Format all files
-npx prettier --write .
-
-# Check formatting
-npx prettier --check .
-```
 
 ### TypeScript Type Checking
 
@@ -367,8 +350,7 @@ taxy/
 ├── tsconfig.json          # TypeScript configuration
 ├── tsconfig.app.json      # App-specific TypeScript config
 ├── tsconfig.node.json     # Node.js TypeScript config
-├── vite.config.ts         # Vite configuration
-└── vitest.config.ts       # Vitest test configuration
+└── vite.config.ts         # Vite build + Vitest configuration
 ```
 
 ### Key Files Description
@@ -378,14 +360,13 @@ taxy/
 - **`src/services/database.ts`**: Dexie database configuration
 - **`src/types/models.ts`**: TypeScript interfaces and types
 - **`src/contexts/`**: React context providers for state management
-- **`vite.config.ts`**: Vite build tool configuration
-- **`vitest.config.ts`**: Test framework configuration
+- **`vite.config.ts`**: Vite build tool and Vitest test configuration
 
 ## ⚙️ Configuration
 
 ### Vite Configuration
 
-`vite.config.ts` currently only configures the React plugin (fast refresh) and a dev server bound to `0.0.0.0`; everything else (build target, output directory `dist/`, etc.) is Vite's default.
+`vite.config.ts` configures the React plugin (fast refresh), a dev server bound to `0.0.0.0`, and the Vitest `test` block; everything else (build target, output directory `dist/`, etc.) is Vite's default.
 
 ### TypeScript Configuration
 
@@ -404,7 +385,7 @@ Located in `eslint.config.js`:
 
 ### Testing Configuration
 
-Vitest settings in `vitest.config.ts`:
+Vitest settings live in the `test` block of `vite.config.ts`:
 - jsdom environment for DOM testing
 - Global test utilities
 - Test setup file: `src/test/setup.ts`
