@@ -164,9 +164,6 @@ Use the `createKid()` and `createClass()` utility functions from `src/types/mode
 ### Form Handling
 Forms use React Hook Form for validation and state management. See `src/components/kids/KidForm.tsx` for the main student form pattern.
 
-### Drag & Drop
-Telephone ordering uses @dnd-kit library. See `src/components/common/SortableTelephoneForm.tsx`.
-
 ### Logging
 Use the centralized `logger` utility (`src/utils/logger.ts`) instead of `console` methods:
 
@@ -256,7 +253,7 @@ Tests are in `src/test/` with setup in `src/test/setup.ts`. The test environment
 - **Database Constraints**: Cannot delete a class that contains kids. Must remove all kids first.
 - **Class Context**: The selected class is persisted in localStorage and restored on app load.
 - **Guardian Same Address**: Guardians can share the kid's address (same_address_as_kid flag).
-- **Telephone Sorting**: Telephones are displayed in array order and can be reordered via drag-and-drop.
+- **Telephone Order**: Telephones are displayed in array order; there is no reordering UI (they can only be added and removed).
 - **PDF Generation**: Uses pdfmake library (see `src/utils/pdf/`).
 
 ## File Locations
