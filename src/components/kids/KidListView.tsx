@@ -63,7 +63,7 @@ const KidListView: React.FC = () => {
             ) : kidCount === 0 ? (
               <>
                 <div className="mb-4">
-                  <h5 className="text-info mb-3">{formatClassDisplay(selectedClass)}</h5>
+                  <h5 className="text-body-secondary mb-3">{formatClassDisplay(selectedClass)}</h5>
                   <p className="lead text-muted">
                     {t('noKidsInClass')}
                   </p>
@@ -82,7 +82,7 @@ const KidListView: React.FC = () => {
             ) : (
               <>
                 <div className="mb-4">
-                  <h5 className="text-info mb-3">{formatClassDisplay(selectedClass)}</h5>
+                  <h5 className="text-body-secondary mb-3">{formatClassDisplay(selectedClass)}</h5>
                   <h4 className="text-primary">{t('kidsInClass', { count: kidCount })}</h4>
                   <p className="text-muted">
                     {t('selectFromPanel')}

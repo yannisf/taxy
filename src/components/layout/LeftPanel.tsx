@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { ListGroup, Button, OverlayTrigger, Tooltip, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Plus, ExclamationTriangle, X } from 'react-bootstrap-icons';
+import { PersonPlus, ExclamationTriangle, X } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 // useKids not needed in LeftPanel anymore; import in TopBar
 import { useClass } from '../../hooks/useClass';
@@ -105,16 +105,15 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
                 placement="top"
                 overlay={<Tooltip id="add-kid-tooltip">{t('addKid')}</Tooltip>}
               >
-                <Button
-                  variant="link"
-                  size="sm"
-                  className="p-0 add-kid-icon-button"
+                <button
+                  type="button"
+                  className="icon-action icon-action--accent icon-action--sm"
                   onClick={() => navigate('/kids/add')}
                   aria-label={t('addKid')}
                   title={t('addKid')}
                 >
-                  <Plus size={18} />
-                </Button>
+                  <PersonPlus size={15} />
+                </button>
               </OverlayTrigger>
             </div>
 
@@ -149,17 +148,7 @@ const LeftPanel: React.FC<LeftPanelProps> = ({
             <ListGroup.Item 
               key={kid.kid_id} 
               className="kid-list-item d-flex justify-content-between align-items-center py-2 px-0 border-0"
-              style={{ 
-                cursor: 'pointer',
-                backgroundColor: 'transparent',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+              style={{ cursor: 'pointer' }}
               onClick={() => handleKidClick(kid)}
             >
               <div className="kid-name-area flex-grow-1 d-flex align-items-center gap-2">

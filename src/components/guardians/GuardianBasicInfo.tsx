@@ -122,18 +122,6 @@ const GuardianBasicInfo: React.FC<GuardianBasicInfoProps> = ({ control, errors, 
                 />
               )}
             />
-            <Controller
-              name={`guardians.${index}.same_address_as_kid`}
-              control={control}
-              render={({ field }) => (
-                <Form.Check
-                  type="checkbox"
-                  label={t('sameAddressAsKid')}
-                  checked={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
           </Form.Group>
         </Col>
       </Row>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Row, Col, Alert, Badge } from 'react-bootstrap';
+import { Card, Row, Col, Alert } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import GuardianCard from '../../guardians/GuardianCard';
 import type { Guardian } from '../../../types/models';
@@ -13,9 +13,8 @@ const KidDetailsGuardians: React.FC<KidDetailsGuardiansProps> = ({ guardians }) 
 
   return (
     <Card className="mt-3">
-      <Card.Header className="d-flex align-items-center gap-2">
+      <Card.Header>
         <h4 className="mb-0">{t('guardians')}</h4>
-        <Badge bg="secondary">{guardians.length}</Badge>
       </Card.Header>
       <Card.Body>
         {guardians.length === 0 ? (

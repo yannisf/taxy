@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { ChevronLeft, ChevronRight } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 
@@ -19,47 +19,31 @@ const KidDetailsNavigationControls: React.FC<KidDetailsNavigationControlsProps> 
   const { t } = useTranslation();
 
   return (
-    <>
-      {/* Previous Kid Button */}
-      <OverlayTrigger
-        placement="bottom"
-        overlay={<Tooltip>{t('previousKidTooltip')}</Tooltip>}
-      >
-        <Button
-          variant="link"
-          size="sm"
-          className="p-0 text-decoration-none"
+    <div className="icon-action-group" role="group" aria-label={t('kidNavigation')}>
+      <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('previousKidTooltip')}</Tooltip>}>
+        <button
+          type="button"
+          className="icon-action"
           onClick={onPrevious}
           disabled={!hasPrevious}
-          style={{
-            cursor: hasPrevious ? 'pointer' : 'not-allowed',
-            opacity: hasPrevious ? 1 : 0.5
-          }}
+          aria-label={t('previousKidTooltip')}
         >
-          <ChevronLeft size={20} className="text-primary" />
-        </Button>
+          <ChevronLeft size={16} />
+        </button>
       </OverlayTrigger>
 
-      {/* Next Kid Button */}
-      <OverlayTrigger
-        placement="bottom"
-        overlay={<Tooltip>{t('nextKidTooltip')}</Tooltip>}
-      >
-        <Button
-          variant="link"
-          size="sm"
-          className="p-0 text-decoration-none"
+      <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('nextKidTooltip')}</Tooltip>}>
+        <button
+          type="button"
+          className="icon-action"
           onClick={onNext}
           disabled={!hasNext}
-          style={{
-            cursor: hasNext ? 'pointer' : 'not-allowed',
-            opacity: hasNext ? 1 : 0.5
-          }}
+          aria-label={t('nextKidTooltip')}
         >
-          <ChevronRight size={20} className="text-primary" />
-        </Button>
+          <ChevronRight size={16} />
+        </button>
       </OverlayTrigger>
-    </>
+    </div>
   );
 };
 

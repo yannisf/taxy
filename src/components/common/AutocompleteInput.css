@@ -32,8 +32,11 @@
   background-color: #f8f9fa;
 }
 
+/* The keyboard-highlighted item reads as a selection, so it takes the brand tint */
 .autocomplete-suggestion-item.active {
   font-weight: 500;
+  background-color: var(--brand-tint);
+  color: var(--brand-ink);
 }
 
 /* Dark mode support */
@@ -42,7 +45,11 @@
   border-color: #495057;
 }
 
-[data-bs-theme="dark"] .autocomplete-suggestion-item:hover,
-[data-bs-theme="dark"] .autocomplete-suggestion-item.active {
+[data-bs-theme="dark"] .autocomplete-suggestion-item:hover {
   background-color: #343a40;
+}
+
+[data-bs-theme="dark"] .autocomplete-suggestion-item.active {
+  background-color: var(--brand-tint);
+  color: var(--brand-ink);
 }

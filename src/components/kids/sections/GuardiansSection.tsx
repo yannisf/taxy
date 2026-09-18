@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Accordion } from 'react-bootstrap';
 import { useFieldArray } from 'react-hook-form';
-import type { Control, FieldErrors } from 'react-hook-form';
+import type { Control, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { Guardian, Kid } from '../../../types/models';
+import { createEmptyAddress } from '../../../utils/addressUtils';
 import GuardianAccordionItem from '../../guardians/GuardianAccordionItem';
 import GuardiansSectionHeader from './GuardiansSectionHeader';
 
 interface GuardiansSectionProps {
   control: Control<Kid>;
   errors: FieldErrors<Kid>;
+  setValue: UseFormSetValue<Kid>;
 }
 
 const blankGuardian: Guardian = {
@@ -17,18 +19,17 @@ const blankGuardian: Guardian = {
   last_name: '',
   relation_with_kid: '' as Guardian['relation_with_kid'],
   authorized_for_pickup: true,
-  same_address_as_kid: true,
+  // No address until someone says otherwise - not even the kid's.
+  same_address_as_kid: false,
   telephones: [],
-  address: {
-    country: 'Ελλάδα'
-  }
+  address: createEmptyAddress()
 };
 
 // Guardians are just another field of the kid's own form (via useFieldArray),
 // not a separate form of their own. Every keystroke updates the kid form
 // directly, so "Update Kid" is a single, ordinary submit - no separate step
 // is needed to pull in-progress guardian edits into the saved data.
-const GuardiansSection: React.FC<GuardiansSectionProps> = ({ control, errors }) => {
+const GuardiansSection: React.FC<GuardiansSectionProps> = ({ control, errors, setValue }) => {
   const { t } = useTranslation();
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const { fields, append, remove } = useFieldArray({ control, name: 'guardians' });
@@ -47,7 +48,6 @@ const GuardiansSection: React.FC<GuardiansSectionProps> = ({ control, errors }) 
   return (
     <div className="mb-4">
       <GuardiansSectionHeader
-        guardianCount={fields.length}
         onAddGuardian={handleAddGuardianClick}
       />
       {fields.length === 0 ? (
@@ -62,6 +62,7 @@ const GuardiansSection: React.FC<GuardiansSectionProps> = ({ control, errors }) 
               <GuardianAccordionItem
                 key={field.id}
                 control={control}
+                setValue={setValue}
                 errors={errors.guardians?.[index]}
                 index={index}
                 eventKey={eventKey}

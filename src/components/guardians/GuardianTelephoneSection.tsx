@@ -26,7 +26,6 @@ const GuardianTelephoneSection: React.FC<GuardianTelephoneSectionProps> = ({
   return (
     <div className="mb-4">
       <TelephonesSectionHeader
-        telephoneCount={fields.length}
         onAddTelephone={() => append({ country_code: '+30', number: '', telephone_type: 'mobile' })}
       />
       {fields.length === 0 ? (

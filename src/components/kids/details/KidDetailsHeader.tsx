@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { PencilSquare, InfoCircle, XLg } from 'react-bootstrap-icons';
+import { PencilSquare, InfoCircle, PersonDash } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 import { formatDateDisplay } from '../../../utils/dateUtils';
 import type { Kid } from '../../../types/models';
@@ -32,11 +32,13 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
   return (
     <Card.Header className="d-flex flex-wrap justify-content-between align-items-center gap-3">
       <h2 className="mb-0">{displayName}</h2>
-      <div className="d-flex align-items-center gap-2 flex-shrink-0">
+      <div className="card-actions flex-shrink-0">
         {/* Navigation Controls */}
         <KidDetailsNavigationControls onPrevious={onPrevious} onNext={onNext} hasPrevious={hasPrevious} hasNext={hasNext} />
 
-        {/* Info Icon */}
+        <span className="card-actions-divider" aria-hidden="true" />
+
+        {/* Record timestamps */}
         <OverlayTrigger
           placement="bottom"
           overlay={
@@ -48,17 +50,25 @@ const KidDetailsHeader: React.FC<KidDetailsHeaderProps> = ({
             </Tooltip>
           }
         >
-          <InfoCircle size={20} className="text-primary" style={{ cursor: 'pointer' }} />
+          <button type="button" className="icon-action" aria-label={t('recordInfo')}>
+            <InfoCircle size={18} />
+          </button>
         </OverlayTrigger>
 
-        {/* Edit Icon */}
+        {/* Edit */}
         <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('editDetails')} ({t('editModeShortcut')})</Tooltip>}>
-          <PencilSquare size={20} className="text-primary" style={{ cursor: 'pointer' }} onClick={onEdit}/>
+          <button type="button" className="icon-action" onClick={onEdit} aria-label={t('editDetails')}>
+            <PencilSquare size={18} />
+          </button>
         </OverlayTrigger>
 
-        {/* Delete Icon - with extra spacing */}
-        <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('delete')} ({t('deleteModeShortcut')})</Tooltip>} >
-          <XLg size={20} className="text-danger ms-2" style={{ cursor: 'pointer' }} onClick={onDelete} />
+        <span className="card-actions-divider" aria-hidden="true" />
+
+        {/* Remove kid record — a person being taken off the roster, not rubbish */}
+        <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('removeKid')} ({t('deleteModeShortcut')})</Tooltip>}>
+          <button type="button" className="icon-action icon-action--destructive" onClick={onDelete} aria-label={t('removeKid')}>
+            <PersonDash size={18} />
+          </button>
         </OverlayTrigger>
       </div>
     </Card.Header>

@@ -49,6 +49,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     formState: { errors, isDirty },
     register,
     reset,
+    setValue,
     watch
   } = useForm<Kid>({
       defaultValues: initialData || {
@@ -209,15 +210,15 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       <Form onSubmit={handleSubmit(onSubmit)} onKeyDown={handleFormKeyDown}>
         <BasicInfoSection control={control} errors={errors} />
 
-        <AdditionalInfoSection register={register} />
+        <AdditionalInfoSection register={register} control={control} />
 
-        <AddressSection control={control} errors={errors} initialAddress={initialData?.address} />
+        <AddressSection control={control} errors={errors} />
 
-        <GuardiansSection control={control} errors={errors} />
+        <GuardiansSection control={control} errors={errors} setValue={setValue} />
 
         <div className="d-flex gap-2">
           <Button variant="primary" type="submit">
-            {initialData ? t('updateKid') : t('addKid')}
+            {initialData ? t('update') : t('addKid')}
           </Button>
           <Button variant="secondary" type="button" onClick={handleCancel}>
             {t('cancel')}

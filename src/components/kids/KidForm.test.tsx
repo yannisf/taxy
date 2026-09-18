@@ -30,6 +30,8 @@ function makeKid(): Kid {
     level: 'kindergartner',
     extended_day_care: false,
     special_education: false,
+    // A kid with notes, so the notes boxes render without being opened first.
+    notes: 'Existing note',
     guardians: [
       {
         first_name: 'Alice',
@@ -118,7 +120,7 @@ describe('KidForm guardian editing (full integration)', () => {
     await user.clear(firstNameInputs()[1]);
     await user.type(firstNameInputs()[1], 'BobEdited');
 
-    await user.click(screen.getByRole('button', { name: 'Update Kid' }));
+    await user.click(screen.getByRole('button', { name: 'Update' }));
 
     await waitFor(() => expect(updateKid).toHaveBeenCalled(), { timeout: 3000 });
     await waitFor(() => expect(onSubmitSuccess).toHaveBeenCalled(), { timeout: 3000 });
@@ -144,7 +146,7 @@ describe('KidForm guardian editing (full integration)', () => {
     await user.type(lastNameInputs[2], 'Guardian');
     await user.selectOptions(relationSelects[relationSelects.length - 1], 'mother');
 
-    await user.click(screen.getByRole('button', { name: 'Update Kid' }));
+    await user.click(screen.getByRole('button', { name: 'Update' }));
 
     await waitFor(() => expect(updateKid).toHaveBeenCalled(), { timeout: 3000 });
     const [, updates] = updateKid.mock.calls[0] as [string, Kid];
@@ -161,10 +163,10 @@ describe('KidForm guardian editing (full integration)', () => {
 
     // The delete button lives in the accordion header, visible regardless
     // of whether that guardian's panel is expanded.
-    await user.click(screen.getAllByTitle('Delete guardian')[0]);
+    await user.click(screen.getAllByTitle('Remove guardian')[0]);
     await user.click(screen.getByRole('button', { name: 'Delete' }));
 
-    await user.click(screen.getByRole('button', { name: 'Update Kid' }));
+    await user.click(screen.getByRole('button', { name: 'Update' }));
 
     await waitFor(() => expect(updateKid).toHaveBeenCalled(), { timeout: 3000 });
     const [, updates] = updateKid.mock.calls[0] as [string, Kid];
@@ -226,7 +228,7 @@ describe('KidForm guardian editing (full integration)', () => {
     const firstNameInput = screen.getAllByPlaceholderText("Enter guardian's first name")[0];
     await user.clear(firstNameInput);
 
-    await user.click(screen.getByRole('button', { name: 'Update Kid' }));
+    await user.click(screen.getByRole('button', { name: 'Update' }));
 
     await waitFor(() => {
       expect(screen.getByText('First name is required')).toBeInTheDocument();

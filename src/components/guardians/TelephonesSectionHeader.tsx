@@ -1,30 +1,32 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Plus } from 'react-bootstrap-icons';
 import { useTranslation } from 'react-i18next';
 
 interface TelephonesSectionHeaderProps {
-  telephoneCount: number;
   onAddTelephone: () => void;
 }
 
 const TelephonesSectionHeader: React.FC<TelephonesSectionHeaderProps> = ({
-  telephoneCount,
   onAddTelephone
 }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className="d-flex align-items-center gap-1 mb-3">
       <h6 className="mb-0">
-        📞 {t('telephoneNumbers')} <span className="badge text-bg-secondary">{telephoneCount}</span>
+        📞 {t('telephoneNumbers')}
       </h6>
-      <Button
-        variant="outline-primary"
-        size="sm"
-        onClick={onAddTelephone}
-      >
-        + {t('addTelephone')}
-      </Button>
+      <OverlayTrigger placement="bottom" overlay={<Tooltip>{t('addTelephone')}</Tooltip>}>
+        <button
+          type="button"
+          className="icon-action icon-action--sm"
+          onClick={onAddTelephone}
+          aria-label={t('addTelephone')}
+        >
+          <Plus size={18} />
+        </button>
+      </OverlayTrigger>
     </div>
   );
 };

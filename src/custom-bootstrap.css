@@ -11,42 +11,69 @@
   --logo-green: #00a15a;
   --logo-blue: #0094e5;
   --logo-red: #ed0018;
-  
+
+  /* Brand blue, split by surface.
+     --brand-fill carries white text, so it stays dark enough for AA in both
+     themes; --brand-ink is the text/icon tone and lightens in dark mode. */
+  --brand-fill: #0071b8;
+  --brand-fill-rgb: 0, 113, 184;
+  --brand-hover: #005e99;
+  --brand-ink: #0071b8;
+  --brand-tint: rgba(0, 113, 184, 0.08);
+  --brand-tint-strong: rgba(0, 113, 184, 0.14);
+
+  /* Green now means success and nothing else, so it needs a readable ink tone */
+  --success-ink: #00854a;
+
+  /* Neutral slate for counts and other non-semantic chrome */
+  --neutral-fill: #5a6b7a;
+  --neutral-hover: #4a5967;
+
   /* Bootstrap color overrides */
-  --bs-primary: var(--logo-green);
-  --bs-primary-rgb: 0, 161, 90;
-  --bs-secondary: var(--logo-blue);
-  --bs-secondary-rgb: 0, 148, 229;
+  --bs-primary: var(--brand-fill);
+  --bs-primary-rgb: var(--brand-fill-rgb);
+  --bs-secondary: var(--neutral-fill);
+  --bs-secondary-rgb: 90, 107, 122;
   --bs-success: var(--logo-green);
   --bs-success-rgb: 0, 161, 90;
   --bs-warning: var(--logo-orange);
   --bs-warning-rgb: 255, 166, 0;
   --bs-danger: var(--logo-red);
   --bs-danger-rgb: 237, 0, 24;
-  --bs-info: var(--logo-blue);
-  --bs-info-rgb: 0, 148, 229;
+  --bs-info: var(--brand-fill);
+  --bs-info-rgb: var(--brand-fill-rgb);
+}
+
+/* Dark theme: lighten the text/icon tones so they read against a dark body.
+   Fills stay put — they already carry white text at AA. */
+:root[data-bs-theme='dark'] {
+  --brand-ink: #4db4ee;
+  --brand-hover: #1a86c9;
+  --brand-tint: rgba(77, 180, 238, 0.12);
+  --brand-tint-strong: rgba(77, 180, 238, 0.2);
+  --success-ink: #34c98a;
 }
 
 /* Primary button styling */
 .btn-primary {
   --bs-btn-bg: var(--bs-primary);
   --bs-btn-border-color: var(--bs-primary);
-  --bs-btn-hover-bg: #008849;
-  --bs-btn-hover-border-color: #007a42;
+  --bs-btn-hover-bg: #005e99;
+  --bs-btn-hover-border-color: #00548a;
   --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
-  --bs-btn-active-bg: #008849;
-  --bs-btn-active-border-color: #007a42;
+  --bs-btn-active-bg: #005e99;
+  --bs-btn-active-border-color: #00548a;
 }
 
 /* Secondary button styling */
 .btn-secondary {
   --bs-btn-bg: var(--bs-secondary);
   --bs-btn-border-color: var(--bs-secondary);
-  --bs-btn-hover-bg: #0082ca;
-  --bs-btn-hover-border-color: #0077bd;
+  --bs-btn-hover-bg: var(--neutral-hover);
+  --bs-btn-hover-border-color: #414e5a;
   --bs-btn-focus-shadow-rgb: var(--bs-secondary-rgb);
-  --bs-btn-active-bg: #0082ca;
-  --bs-btn-active-border-color: #0077bd;
+  --bs-btn-active-bg: var(--neutral-hover);
+  --bs-btn-active-border-color: #414e5a;
 }
 
 /* Warning button styling */
@@ -87,26 +114,29 @@
 
 /* Info button styling */
 .btn-info {
+  --bs-btn-color: #fff;
   --bs-btn-bg: var(--bs-info);
   --bs-btn-border-color: var(--bs-info);
-  --bs-btn-hover-bg: #0082ca;
-  --bs-btn-hover-border-color: #0077bd;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #005e99;
+  --bs-btn-hover-border-color: #00548a;
   --bs-btn-focus-shadow-rgb: var(--bs-info-rgb);
-  --bs-btn-active-bg: #0082ca;
-  --bs-btn-active-border-color: #0077bd;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #005e99;
+  --bs-btn-active-border-color: #00548a;
 }
 
 /* Alert styling */
 .alert-primary {
-  --bs-alert-color: #004d2c;
-  --bs-alert-bg: #d4f4e7;
-  --bs-alert-border-color: #b3ecdb;
+  --bs-alert-color: #04405f;
+  --bs-alert-bg: #d9eefb;
+  --bs-alert-border-color: #b3ddf6;
 }
 
 .alert-secondary {
-  --bs-alert-color: #003d5c;
-  --bs-alert-bg: #cce8f5;
-  --bs-alert-border-color: #99daef;
+  --bs-alert-color: #343f49;
+  --bs-alert-bg: #e8ebee;
+  --bs-alert-border-color: #d2d8dd;
 }
 
 .alert-success {
@@ -128,9 +158,30 @@
 }
 
 .alert-info {
-  --bs-alert-color: #003d5c;
-  --bs-alert-bg: #cce8f5;
-  --bs-alert-border-color: #99daef;
+  --bs-alert-color: #04405f;
+  --bs-alert-bg: #d9eefb;
+  --bs-alert-border-color: #b3ddf6;
+}
+
+/* Dark theme: the tinted alert surfaces above are light boxes, so invert the
+   ones the app actually renders (info, secondary, primary, success). */
+:root[data-bs-theme='dark'] .alert-primary,
+:root[data-bs-theme='dark'] .alert-info {
+  --bs-alert-color: #a8dcf7;
+  --bs-alert-bg: rgba(0, 113, 184, 0.18);
+  --bs-alert-border-color: rgba(77, 180, 238, 0.35);
+}
+
+:root[data-bs-theme='dark'] .alert-secondary {
+  --bs-alert-color: #c3ccd4;
+  --bs-alert-bg: rgba(90, 107, 122, 0.22);
+  --bs-alert-border-color: rgba(144, 160, 173, 0.35);
+}
+
+:root[data-bs-theme='dark'] .alert-success {
+  --bs-alert-color: #8fe3bd;
+  --bs-alert-bg: rgba(0, 161, 90, 0.18);
+  --bs-alert-border-color: rgba(52, 201, 138, 0.35);
 }
 
 /* Badge styling */
@@ -140,6 +191,18 @@
 
 .badge.text-bg-secondary {
   background-color: var(--bs-secondary) !important;
+}
+
+/* Softer badge for supplementary labels (e.g. guardian relation) that
+   shouldn't compete visually with the solid secondary count badges above. */
+.badge-soft {
+  background-color: rgba(90, 107, 122, 0.14) !important;
+  color: var(--neutral-fill) !important;
+}
+
+:root[data-bs-theme='dark'] .badge-soft {
+  background-color: rgba(144, 160, 173, 0.2) !important;
+  color: #c3ccd4 !important;
 }
 
 .badge.text-bg-success {
@@ -162,8 +225,14 @@
 /* Form focus styling */
 .form-control:focus,
 .form-select:focus {
-  border-color: #4dc080;
-  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.25);
+  border-color: #4da5d8;
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Dimmer placeholder text; Bootstrap's default reads almost as dark as real input text */
+.form-control::placeholder {
+  color: var(--bs-secondary-color);
+  opacity: 0.5;
 }
 
 /* Progress bar styling */
@@ -177,7 +246,7 @@
 
 /* Link styling */
 .link-primary {
-  color: var(--bs-primary) !important;
+  color: var(--brand-ink) !important;
 }
 
 .link-secondary {
@@ -200,17 +269,22 @@
   box-shadow: none !important;
 }
 
-/* Text color utilities */
+/* Text color utilities — these use the ink tones, which lighten in dark mode,
+   rather than the fill tones used for buttons and badges. */
 .text-primary {
-  color: var(--bs-primary) !important;
+  color: var(--brand-ink) !important;
 }
 
 .text-secondary {
   color: var(--bs-secondary) !important;
 }
 
+:root[data-bs-theme='dark'] .text-secondary {
+  color: #9aa7b2 !important;
+}
+
 .text-success {
-  color: var(--bs-success) !important;
+  color: var(--success-ink) !important;
 }
 
 .text-warning {
@@ -222,7 +296,7 @@
 }
 
 .text-info {
-  color: var(--bs-info) !important;
+  color: var(--brand-ink) !important;
 }
 
 /* Background color utilities */
@@ -252,9 +326,9 @@
 
 /* Accordion styling - active/selected items */
 .accordion-item .accordion-button:not(.collapsed) {
-  background-color: #d4f4e7; /* Pale green tone */
-  color: #004d2c; /* Dark green text for contrast */
-  border-color: #b3ecdb;
+  background-color: var(--brand-tint); /* Brand tint instead of a second hue */
+  color: var(--brand-ink);
+  border-color: var(--brand-tint-strong);
 }
 
 .accordion-item .accordion-button:not(.collapsed)::after {
@@ -262,18 +336,18 @@
 }
 
 .accordion-item .accordion-button:focus {
-  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.25);
-  border-color: #4dc080;
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+  border-color: #4da5d8;
 }
 
 .accordion-item .accordion-button:hover:not(.collapsed) {
-  background-color: #c1ead7; /* Slightly darker pale green on hover */
+  background-color: var(--brand-tint-strong);
 }
 
 /* Outline button active states - consistent with primary theme */
 .btn-outline-primary {
-  --bs-btn-color: var(--bs-primary);
-  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-color: var(--brand-ink);
+  --bs-btn-border-color: var(--brand-ink);
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: var(--bs-primary);
   --bs-btn-hover-border-color: var(--bs-primary);
@@ -281,8 +355,8 @@
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: var(--bs-primary);
   --bs-btn-active-border-color: var(--bs-primary);
-  --bs-btn-disabled-color: var(--bs-primary);
-  --bs-btn-disabled-border-color: var(--bs-primary);
+  --bs-btn-disabled-color: var(--brand-ink);
+  --bs-btn-disabled-border-color: var(--brand-ink);
 }
 
 .btn-outline-primary:active,
@@ -291,7 +365,7 @@
   background-color: var(--bs-primary) !important;
   border-color: var(--bs-primary) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.5) !important;
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.5) !important;
 }
 
 /* Outline secondary button styling */
@@ -313,7 +387,7 @@
   background-color: var(--bs-secondary) !important;
   border-color: var(--bs-secondary) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 0.25rem rgba(0, 148, 229, 0.5) !important;
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-secondary-rgb), 0.5) !important;
 }
 
 /* Outline success button styling */
@@ -335,5 +409,5 @@
   background-color: var(--bs-success) !important;
   border-color: var(--bs-success) !important;
   color: #fff !important;
-  box-shadow: 0 0 0 0.25rem rgba(0, 161, 90, 0.5) !important;
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-success-rgb), 0.5) !important;
 }

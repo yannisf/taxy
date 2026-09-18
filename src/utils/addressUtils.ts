@@ -1,5 +1,22 @@
 import type { Address } from '../types/models';
 
+/** Country prefilled on new addresses and hidden from address displays. */
+export const DEFAULT_COUNTRY = 'Ελλάδα';
+
+/** A blank address, prefilled with the default country. */
+export function createEmptyAddress(): Address {
+  return { country: DEFAULT_COUNTRY };
+}
+
+/**
+ * Checks whether an address has anything the user actually typed. The country
+ * is prefilled on every new address, so on its own it does not count.
+ */
+export function hasEnteredAddress(address?: Address | null): boolean {
+  return !!address && Object.entries(address)
+    .some(([field, value]) => field !== 'country' && !!value && value.trim() !== '');
+}
+
 /**
  * Checks whether an address object has at least one non-empty field
  */

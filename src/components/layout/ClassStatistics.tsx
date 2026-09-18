@@ -77,8 +77,8 @@ const ClassStatistics: React.FC<ClassStatisticsProps> = ({ kids }) => {
       <Collapse in={isExpanded}>
         <div className="statistics-list small mt-2">
         {/* Total Kids */}
-        <div className="d-flex justify-content-between align-items-center mb-2 p-2 rounded" 
-             style={{ backgroundColor: 'rgba(13, 110, 253, 0.1)' }}>
+        <div className="d-flex justify-content-between align-items-center mb-2 p-2 rounded"
+             style={{ backgroundColor: 'var(--brand-tint-strong)' }}>
           <span className="d-flex align-items-center gap-2">
             <People size={16} className="text-primary" />
             <span className="fw-semibold">{t('totalKids')}:</span>
@@ -107,28 +107,28 @@ const ClassStatistics: React.FC<ClassStatisticsProps> = ({ kids }) => {
         {/* Pre-Kindergartners */}
         <div className="d-flex justify-content-between align-items-center mb-1 ps-2 pe-2 py-1">
           <span className="d-flex align-items-center gap-2">
-            <Mortarboard size={14} className="text-success" />
+            <Mortarboard size={14} className="text-primary" />
             <span>{t('preKindergartners')}:</span>
           </span>
-          <span className="text-success">{statistics.preKindergartners}</span>
+          <span className="fw-semibold">{statistics.preKindergartners}</span>
         </div>
         
         {/* Kindergartners */}
         <div className="d-flex justify-content-between align-items-center mb-1 ps-2 pe-2 py-1">
           <span className="d-flex align-items-center gap-2">
-            <Mortarboard size={14} className="text-success" />
+            <Mortarboard size={14} className="text-primary" />
             <span>{t('kindergartners')}:</span>
           </span>
-          <span className="text-success">{statistics.kindergartners}</span>
+          <span className="fw-semibold">{statistics.kindergartners}</span>
         </div>
         
         {/* Kindergartners Repeating */}
         <div className="d-flex justify-content-between align-items-center mb-2 ps-2 pe-2 py-1">
           <span className="d-flex align-items-center gap-2">
-            <Mortarboard size={14} className="text-success" />
+            <Mortarboard size={14} className="text-primary" />
             <span>{t('kindergartnersRepeating')}:</span>
           </span>
-          <span className="text-success">{statistics.kindergartnersRepeating}</span>
+          <span className="fw-semibold">{statistics.kindergartnersRepeating}</span>
         </div>
         
         {/* Special Education */}
@@ -143,22 +143,22 @@ const ClassStatistics: React.FC<ClassStatisticsProps> = ({ kids }) => {
 
         {/* Extended Day Care */}
         <div className="d-flex justify-content-between align-items-center mb-2 p-2 rounded"
-             style={{ backgroundColor: 'rgba(111, 66, 193, 0.1)' }}>
+             style={{ backgroundColor: 'var(--brand-tint)' }}>
           <span className="d-flex align-items-center gap-2">
-            <Clock size={14} style={{ color: '#6f42c1' }} />
+            <Clock size={14} className="text-primary" />
             <span>{t('extendedDayCareKids')}:</span>
           </span>
-          <span className="fw-semibold" style={{ color: '#6f42c1' }}>{statistics.extendedDayCareKids}</span>
+          <span className="fw-semibold">{statistics.extendedDayCareKids}</span>
         </div>
 
         {/* Total Guardians */}
         <div className="d-flex justify-content-between align-items-center p-2 rounded"
-             style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}>
+             style={{ backgroundColor: 'var(--brand-tint-strong)' }}>
           <span className="d-flex align-items-center gap-2">
-            <PersonHearts size={16} className="text-danger" />
+            <PersonHearts size={16} className="text-primary" />
             <span className="fw-semibold">{t('totalGuardians')}:</span>
           </span>
-          <span className="fw-bold text-danger">{statistics.totalGuardians}</span>
+          <span className="fw-bold text-primary">{statistics.totalGuardians}</span>
         </div>
         </div>
       </Collapse>

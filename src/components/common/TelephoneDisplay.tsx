@@ -1,5 +1,4 @@
 import React from 'react';
-import { Badge } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import type { Telephone } from '../../types/models';
 import { getTelephoneTypeIcon, formatPhoneNumberGrouped } from '../../utils/telephoneUtils';
@@ -46,7 +45,7 @@ const TelephoneDisplay: React.FC<TelephoneDisplayProps> = ({
   if (compact) {
     return (
       <div className={`d-flex align-items-center gap-1 ${className}`}>
-        <span>{typeIcon}</span>
+        <span title={typeLabel}>{typeIcon}</span>
         <a
           href={telLink}
           className="text-decoration-none"
@@ -61,14 +60,13 @@ const TelephoneDisplay: React.FC<TelephoneDisplayProps> = ({
         >
           {formattedNumber}
         </a>
-        <Badge bg="primary">{typeLabel}</Badge>
       </div>
     );
   }
 
   return (
     <div className={`d-flex align-items-center gap-2 ${className}`}>
-      <span style={{ fontSize: '1.1em' }}>{typeIcon}</span>
+      <span style={{ fontSize: '1.1em' }} title={typeLabel}>{typeIcon}</span>
       <a
         href={telLink}
         className="text-decoration-none fw-medium"
@@ -83,7 +81,6 @@ const TelephoneDisplay: React.FC<TelephoneDisplayProps> = ({
       >
         {formattedNumber}
       </a>
-      <Badge bg="primary">{typeLabel}</Badge>
     </div>
   );
 };

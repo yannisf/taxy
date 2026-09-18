@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Address } from '../../types/models';
-import { hasAddressData } from '../../utils/addressUtils';
+import { DEFAULT_COUNTRY, hasAddressData } from '../../utils/addressUtils';
 
 interface AddressDisplayProps {
   address?: Address | null;
@@ -44,7 +44,7 @@ const AddressDisplay: React.FC<AddressDisplayProps> = ({ address, className = ''
     if (cityPostal) parts.push(cityPostal);
 
     // Country (hide "Ελλάδα" as it's the default)
-    if (address.country && address.country !== 'Ελλάδα') {
+    if (address.country && address.country !== DEFAULT_COUNTRY) {
       parts.push(address.country);
     }
     

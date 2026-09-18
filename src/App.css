@@ -30,22 +30,22 @@
   margin-bottom: 0.35rem;
 }
 .topbar-dropdown-menu.light .menu-header {
-  background: rgba(0,123,255,0.06);
-  color: #007bff;
+  background: var(--brand-tint);
+  color: var(--brand-ink);
 }
 .topbar-dropdown-menu.dark .menu-header {
-  background: rgba(0,123,255,0.1);
-  color: #bcd9ff;
+  background: rgba(77, 180, 238, 0.12);
+  color: #a8dcf7;
 }
 .topbar-dropdown-menu .dropdown-item {
   border-radius: 0.35rem;
 }
 .topbar-dropdown-menu .dropdown-item svg {
   vertical-align: middle;
-  color: var(--bs-primary);
+  color: var(--brand-ink);
 }
 .topbar-dropdown-menu .dropdown-item:hover {
-  background-color: rgba(0,123,255,0.07);
+  background-color: var(--brand-tint);
 }
 
 /* Control compact navbar height and spacing */
@@ -192,7 +192,7 @@
 }
 
 .navbar-toggler:focus {
-  box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
 }
 
 .navbar-toggler-icon {
@@ -353,31 +353,157 @@
   padding-right: 6px; /* avoid overlap when vertical scrollbar appears */
 }
 
-.left-panel .kid-list-item:hover {
-  background: rgba(40,167,69,0.06);
+.left-panel .kid-list-item {
+  background-color: transparent;
+  transition: background-color 0.2s ease;
 }
 
-.add-kid-icon-button {
+.left-panel .kid-list-item:hover {
+  background-color: var(--brand-tint);
+}
+
+/* Card header action toolbar (kid details and anywhere else a card header
+   carries controls). Icons are real buttons: proper hit targets, hover/focus
+   states and disabled states, instead of bare clickable SVGs. */
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.card-actions .card-actions-divider {
+  align-self: stretch;
+  width: 1px;
+  margin: 0.3rem 0.4rem;
+  background-color: var(--bs-border-color, rgba(0, 0, 0, 0.12));
+}
+
+.icon-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.15rem;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  color: var(--bs-primary);
-  border: 1px solid var(--bs-border-color, rgba(0,0,0,0.08));
-  box-sizing: border-box;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--brand-ink);
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
-.add-kid-icon-button:hover:not(:disabled) {
-  background-color: rgba(0,123,255,0.06);
-  border-color: rgba(0,123,255,0.25);
+
+.icon-action:hover:not(:disabled) {
+  background-color: var(--brand-tint);
 }
-.add-kid-icon-button:disabled {
-  color: rgba(0,0,0,0.26);
-  opacity: 0.6;
+
+.icon-action:active:not(:disabled) {
+  background-color: var(--brand-tint-strong);
+  transform: scale(0.94);
+}
+
+.icon-action:focus-visible {
+  outline: 2px solid var(--brand-ink);
+  outline-offset: 2px;
+  background-color: var(--brand-tint);
+}
+
+.icon-action:disabled {
+  color: var(--bs-secondary-color, #6c757d);
+  opacity: 0.4;
   cursor: not-allowed;
+}
+
+.icon-action--sm {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+}
+
+/* Accent action: a solid brand chip, like the count badges beside it, for the
+   primary "add" affordance that should read first in a section header. */
+.icon-action--accent {
+  background-color: var(--brand-fill);
+  color: #fff;
+}
+
+.icon-action--accent:hover:not(:disabled),
+.icon-action--accent:focus-visible {
+  background-color: var(--brand-hover);
+  color: #fff;
+}
+
+.icon-action--accent:active:not(:disabled) {
+  background-color: var(--brand-hover);
+  color: #fff;
+}
+
+.icon-action--accent:disabled {
+  background-color: var(--bs-secondary-bg, #e9ecef);
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+/* Destructive action: sits in the same brand ink as its neighbours and only
+   takes the danger tone once the pointer or focus is on it. */
+.icon-action--destructive {
+  color: var(--brand-ink);
+}
+
+.icon-action--destructive:hover:not(:disabled),
+.icon-action--destructive:focus-visible {
+  background-color: rgba(var(--bs-danger-rgb), 0.1);
+  color: var(--bs-danger);
+}
+
+.icon-action--destructive:active:not(:disabled) {
+  background-color: rgba(var(--bs-danger-rgb), 0.18);
+  color: var(--bs-danger);
+}
+
+.icon-action--destructive:focus-visible {
+  outline-color: var(--bs-danger);
+}
+
+/* Segmented pair: prev/next read as one control rather than two loose icons */
+.icon-action-group {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--bs-border-color, rgba(0, 0, 0, 0.12));
+  border-radius: 8px;
+}
+
+.icon-action-group .icon-action {
+  width: 32px;
+  height: 30px;
+  border-radius: 0;
+}
+
+.icon-action-group .icon-action:first-child {
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+
+.icon-action-group .icon-action:last-child {
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+
+.icon-action-group .icon-action + .icon-action {
+  border-left: 1px solid var(--bs-border-color, rgba(0, 0, 0, 0.12));
+}
+
+.icon-action-group .icon-action:active:not(:disabled) {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-action {
+    transition: none;
+  }
+  .icon-action:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 /* Responsive Left Panel - Mobile Sidebar */
