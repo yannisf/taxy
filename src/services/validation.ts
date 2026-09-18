@@ -40,6 +40,22 @@ export class ValidationService {
   }
 
   private initializeValidators() {
+    // Pre-compile guardian schema. Also embedded in the kid schema below, so an
+    // imported kid's guardians are held to the same rules as a directly validated one.
+    const guardianSchema = {
+      type: 'object',
+      properties: {
+        first_name: { type: 'string', minLength: 1 },
+        last_name: { type: 'string', minLength: 1 },
+        relation_with_kid: {
+          type: 'string',
+          // 'sibling' and 'grandparent' are legacy values kept for backward compatibility with existing records.
+          enum: ['father', 'mother', 'brother', 'sister', 'grandfather', 'grandmother', 'uncle', 'aunt', 'godfather', 'godmother', 'caregiver', 'extended family', 'friend', 'sibling', 'grandparent']
+        }
+      },
+      required: ['first_name', 'last_name', 'relation_with_kid']
+    };
+
     // Pre-compile kid schema
     const kidSchema = {
       type: 'object',
@@ -48,31 +64,13 @@ export class ValidationService {
         last_name: { type: 'string', minLength: 1 },
         gender: { type: 'string', enum: ['male', 'female', 'other'] },
         level: { type: 'string', enum: ['pre-kindergartner', 'kindergartner', 'kindergartner-repeating'] },
-        guardians: { 
-          type: 'array', 
+        guardians: {
+          type: 'array',
           minItems: 0,
-          items: {
-            type: 'object',
-            required: ['first_name', 'last_name', 'relation_with_kid']
-          }
+          items: guardianSchema
         }
       },
       required: ['first_name', 'last_name', 'gender', 'level', 'guardians']
-    };
-
-    // Pre-compile guardian schema
-    const guardianSchema = {
-      type: 'object',
-      properties: {
-        first_name: { type: 'string', minLength: 1 },
-        last_name: { type: 'string', minLength: 1 },
-        relation_with_kid: { 
-          type: 'string', 
-          // 'sibling' and 'grandparent' are legacy values kept for backward compatibility with existing records.
-          enum: ['father', 'mother', 'brother', 'sister', 'grandfather', 'grandmother', 'uncle', 'aunt', 'godfather', 'godmother', 'caregiver', 'extended family', 'friend', 'sibling', 'grandparent']
-        }
-      },
-            required: ['first_name', 'last_name', 'relation_with_kid']
     };
 
     this.kidValidator = this.ajv.compile(kidSchema);

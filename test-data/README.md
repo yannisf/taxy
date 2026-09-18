@@ -26,7 +26,7 @@ Covers a realistic mix of guardian arrangements (both parents, single parent, gr
 
 ## Verifying compatibility
 
-`src/test/testDataFixtures.test.ts` loads this file through the real (unmocked) `validationService`. It checks two things: that the file imports cleanly via `validateImportFile`, and — separately — that every guardian relation in it is still an accepted value. The second check is needed because `validateKid` only requires guardians to *have* a `relation_with_kid` key; it does not validate the value against the enum, so an import can succeed with a relation the app no longer offers. Run it with:
+`src/test/testDataFixtures.test.ts` loads this file through the real (unmocked) `validationService`. It checks that the file imports cleanly via `validateImportFile`, and that every guardian relation in it is still an accepted value — the latter reports the offending kid and relation by name, where the import check alone would only say which kid failed. Run it with:
 
 ```bash
 npm run test:run -- testDataFixtures

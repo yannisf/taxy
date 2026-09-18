@@ -78,7 +78,9 @@ export const validateImportFile = async (file: File): Promise<ImportValidationRe
       // Validate kid structure
       const validation = validationService.validateKid(kidData);
       if (!validation.valid) {
-        const kidErrors = validation.errors?.map(err => `Kid ${i + 1}: ${err.message || 'Invalid data'}`);
+        const kidErrors = validation.errors?.map(err =>
+          `Kid ${i + 1}${err.instancePath ? ` ${err.instancePath}` : ''}: ${err.message || 'Invalid data'}`
+        );
         errors.push(...(kidErrors || [`Kid ${i + 1}: Invalid data structure`]));
         continue;
       }

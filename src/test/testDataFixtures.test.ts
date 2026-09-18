@@ -55,9 +55,8 @@ describe('test-data fixtures', () => {
     expect(result?.validatedKids).toHaveLength(parsed.kids.length);
   });
 
-  // validateKid only checks that guardians have the three required keys, not that
-  // relation_with_kid is one of the accepted values, so the import assertion above
-  // would stay green if the relation enum dropped a value this fixture still uses.
+  // The import above would also catch this, but only as an opaque "Kid N" failure.
+  // Checking the guardians directly names every offending record and relation value.
   it('uses only guardian relation values the app still accepts', () => {
     const { content } = loadFixture(FIXTURE);
     const parsed = JSON.parse(content);
@@ -69,5 +68,22 @@ describe('test-data fixtures', () => {
     );
 
     expect(rejected).toEqual([]);
+  });
+
+  it('is rejected on import once a guardian relation goes out of enum', async () => {
+    (db.getClassById as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+
+    const { content } = loadFixture(FIXTURE);
+    const corrupted = JSON.parse(content);
+    corrupted.kids[0].guardians[0].relation_with_kid = 'not-a-relation';
+    const corruptedContent = JSON.stringify(corrupted);
+
+    let result: Awaited<ReturnType<typeof validateImportFile>> | undefined;
+    await withFileReaderResult(corruptedContent, async () => {
+      result = await validateImportFile(new File([corruptedContent], FIXTURE));
+    });
+
+    expect(result?.valid).toBe(false);
+    expect(result?.errors?.[0]).toContain('/guardians/0/relation_with_kid');
   });
 });
