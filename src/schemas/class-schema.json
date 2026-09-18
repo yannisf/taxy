@@ -164,9 +164,9 @@
           "description": "Date of birth in ISO format (YYYY-MM-DD)."
         },
         "gender": {
-          "type": "string",
-          "description": "Gender of the child.",
-          "enum": ["male", "female", "other"]
+          "type": ["string", "null"],
+          "description": "Gender of the child. Null when unspecified.",
+          "enum": ["male", "female", null]
         },
         "level": {
           "type": "string",
@@ -217,7 +217,6 @@
         "class_id",
         "first_name",
         "last_name",
-        "gender",
         "level",
         "extended_day_care",
         "special_education",

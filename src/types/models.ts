@@ -36,7 +36,7 @@ export interface Kid {
   last_name: string;
   preferred_name?: string;
   date_of_birth?: string;
-  gender: 'male' | 'female' | 'other';
+  gender?: 'male' | 'female' | null;
   level: 'pre-kindergartner' | 'kindergartner' | 'kindergartner-repeating';
   address?: Address;
   notes?: string | null;

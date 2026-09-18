@@ -62,7 +62,7 @@ export class ValidationService {
       properties: {
         first_name: { type: 'string', minLength: 1 },
         last_name: { type: 'string', minLength: 1 },
-        gender: { type: 'string', enum: ['male', 'female', 'other'] },
+        gender: { type: ['string', 'null'], enum: ['male', 'female', null] },
         level: { type: 'string', enum: ['pre-kindergartner', 'kindergartner', 'kindergartner-repeating'] },
         guardians: {
           type: 'array',
@@ -70,7 +70,7 @@ export class ValidationService {
           items: guardianSchema
         }
       },
-      required: ['first_name', 'last_name', 'gender', 'level', 'guardians']
+      required: ['first_name', 'last_name', 'level', 'guardians']
     };
 
     this.kidValidator = this.ajv.compile(kidSchema);

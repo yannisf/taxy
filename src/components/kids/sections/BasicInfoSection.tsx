@@ -81,25 +81,22 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ control, errors }) 
       <Row>
         <Col>
           <Form.Group className="mb-3">
-            <Form.Label>{t('gender')} <span style={{color: 'red'}}>{t('required')}</span></Form.Label>
+            <Form.Label>{t('gender')}</Form.Label>
             <Controller
               name="gender"
               control={control}
-              rules={{ required: t('fieldRequiredTemplate', { field: t('gender') }) }}
               render={({ field }) => (
-                <Form.Select {...field} value={field.value || ''} isInvalid={!!errors.gender}>
-                  <option value="" disabled>{t('selectGender')}</option>
+                <Form.Select
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(e) => field.onChange(e.target.value || null)}
+                >
+                  <option value="">{t('selectGender')}</option>
                   <option value="male">{t('male')}</option>
                   <option value="female">{t('female')}</option>
-                  <option value="other">{t('other')}</option>
                 </Form.Select>
               )}
             />
-            {errors.gender && (
-              <Form.Control.Feedback type="invalid">
-                {errors.gender.message}
-              </Form.Control.Feedback>
-            )}
           </Form.Group>
         </Col>
         <Col>

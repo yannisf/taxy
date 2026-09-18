@@ -24,7 +24,9 @@ const KidDetailsPersonalInfo: React.FC<KidDetailsPersonalInfoProps> = ({ kid }) 
       {kid.date_of_birth && (
         <p><strong>{t('dateOfBirth')}:</strong> {formatDateDisplay(kid.date_of_birth)}</p>
       )}
-      <p><strong>{t('gender')}:</strong> {t(`gender${kid.gender === 'male' ? 'Boy' : kid.gender === 'female' ? 'Girl' : 'Other'}`)}</p>
+      {kid.gender && (
+        <p><strong>{t('gender')}:</strong> {t(`gender${kid.gender === 'male' ? 'Boy' : 'Girl'}`)}</p>
+      )}
       <p><strong>{t('level')}:</strong> {t(`level${kid.level === 'pre-kindergartner' ? 'PreKindergarten' : kid.level === 'kindergartner' ? 'Kindergarten' : 'KindergartenRepeating'}`)}</p>
       {kid.extended_day_care && (
         <p><strong>{t('extendedDayCare')}</strong> <CheckLg className="text-success" /></p>

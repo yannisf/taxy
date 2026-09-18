@@ -99,6 +99,18 @@ export class ClassManagementDatabase extends Dexie {
       });
     });
 
+    // Version 5: Gender is now nullable and limited to male/female; clear 'other'
+    this.version(5).stores({
+      kids: 'kid_id, first_name, last_name, level, gender, created_at, updated_at, class_id',
+      classes: 'class_id, school_name, class_name, school_year, created_at, updated_at'
+    }).upgrade(trans => {
+      return trans.table('kids').toCollection().modify((kid: Kid) => {
+        if (kid.gender !== 'male' && kid.gender !== 'female') {
+          kid.gender = null;
+        }
+      });
+    });
+
     this.kids = this.table('kids');
     this.classes = this.table('classes');
   }

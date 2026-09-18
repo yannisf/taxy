@@ -55,7 +55,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
       defaultValues: initialData || {
       first_name: '',
       last_name: '',
-      gender: undefined as unknown as Kid['gender'],
+      gender: null,
       level: undefined as unknown as Kid['level'],
       extended_day_care: false,
       special_education: false,
@@ -80,7 +80,7 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
     // For add mode, check if any meaningful fields have been filled
     const formValues = watch();
     const hasName = formValues.first_name || formValues.last_name;
-    const hasGender = formValues.gender !== undefined;
+    const hasGender = !!formValues.gender;
     const hasLevel = formValues.level !== undefined;
     const hasGuardians = (formValues.guardians?.length ?? 0) > 0;
     const hasNotes = formValues.notes || formValues.private_notes;
@@ -135,11 +135,10 @@ export const KidForm: React.FC<KidFormProps> = ({ initialData, onSubmitSuccess, 
   const onSubmit = useCallback(async (data: Kid) => {
     try {
       // Ensure minimum required data
-      if (!data.first_name || !data.last_name || !data.gender || !data.level) {
+      if (!data.first_name || !data.last_name || !data.level) {
         const missingFields = [];
         if (!data.first_name) missingFields.push(t('firstName'));
         if (!data.last_name) missingFields.push(t('lastName'));
-        if (!data.gender) missingFields.push(t('gender'));
         if (!data.level) missingFields.push(t('level'));
         
         const errorMessage = t('missingFields', { fields: missingFields.join(', ') });
