@@ -2,15 +2,29 @@
  * Class catalog PDF generator
  */
 
-import type { TDocumentDefinitions, TableCell } from 'pdfmake/interfaces';
+import type { TDocumentDefinitions, TableCell, ContentTable } from 'pdfmake/interfaces';
 import type { Kid, Class } from '../../types/models';
 import type { TFunction } from 'i18next';
 import { format } from 'date-fns';
 import { el, enGB } from 'date-fns/locale';
 import i18n from '../../i18n';
 import { logger } from '../logger';
-import { createGuardianTextArray } from './formatters';
+import { createGuardianTable } from './formatters';
 import { getCatalogFontConfig, createPDFFilename } from './pdfSetup';
+
+/** Column the guardian cells sit in */
+const GUARDIAN_COLUMN_INDEX = 2;
+
+/**
+ * Stripe colour of a catalog row. The header and every other body row are grey;
+ * the guardian cells reuse this so their own zebra sits on the right base.
+ */
+function catalogRowFillColor(rowIndex: number): string {
+  if (rowIndex === 0) {
+    return '#f8f9fa';
+  }
+  return rowIndex % 2 === 0 ? '#ffffff' : '#f8f9fa';
+}
 
 /**
  * Creates the table data for the catalog PDF
@@ -27,7 +41,9 @@ function createCatalogTableData(kids: Kid[], t: TFunction): TableCell[][] {
   ]);
 
   kids.forEach((kid, index) => {
-    const kidName = `${kid.preferred_name || kid.first_name} ${kid.last_name}`;
+    // First and last name always sit on their own line, so the column reads as
+    // two columns of names rather than wrapping at arbitrary points
+    const kidName = `${kid.preferred_name || kid.first_name}\n${kid.last_name}`;
     const notes = kid.notes || '';
 
     if (kid.guardians.length === 0) {
@@ -35,7 +51,9 @@ function createCatalogTableData(kids: Kid[], t: TFunction): TableCell[][] {
       tableData.push([
         { text: (index + 1).toString(), style: 'numberCell', verticalAlignment: 'middle' },
         { text: kidName, style: 'nameCell', verticalAlignment: 'middle' },
-        { text: t('pdfNoGuardians'), style: 'guardianCell', italics: true, color: '#666666' },
+        // The layout paints no fill in this column (see below), so the cell
+        // carries the row's stripe colour itself
+        { text: t('pdfNoGuardians'), style: 'guardianCell', italics: true, color: '#666666', fillColor: catalogRowFillColor(index + 1) },
         { text: notes, style: 'tableCell', fontSize: 8 }
       ]);
     } else {
@@ -44,8 +62,10 @@ function createCatalogTableData(kids: Kid[], t: TFunction): TableCell[][] {
         { text: (index + 1).toString(), style: 'numberCell', verticalAlignment: 'middle' },
         { text: kidName, style: 'nameCell', verticalAlignment: 'middle' },
         {
-          text: createGuardianTextArray(kid.guardians, t),
-          style: 'guardianCell'
+          ...createGuardianTable(kid.guardians, t, catalogRowFillColor(index + 1)),
+          style: 'guardianCell',
+          // The nested table carries its own padding so the stripes are full-bleed
+          margin: [0, 0, 0, 0]
         },
         { text: notes, style: 'tableCell', fontSize: 8 }
       ]);
@@ -110,9 +130,32 @@ export async function generateClassCatalogPDF(classRecord: Class, kids: Kid[], t
           dontBreakRows: true
         },
         layout: {
-          fillColor: function(rowIndex: number) {
-            return rowIndex === 0 ? '#f8f9fa' : (rowIndex % 2 === 0 ? '#ffffff' : '#f8f9fa');
+          // The guardian column paints its own background, one band per guardian,
+          // from inside the nested table. The row fill has to stay out of it:
+          // with dontBreakRows the outer fill is drawn over the nested table's
+          // fills, which would erase the zebra.
+          fillColor: function(rowIndex: number, _node: ContentTable, columnIndex: number) {
+            if (rowIndex > 0 && columnIndex === GUARDIAN_COLUMN_INDEX) {
+              return null;
+            }
+            return catalogRowFillColor(rowIndex);
           },
+          // The guardian column's background is painted by the nested table, so
+          // the outer cell must not inset it - otherwise the stripes stop short
+          // of the column borders. The nested table re-adds the inset as its own
+          // padding, keeping the text aligned with the other columns.
+          paddingLeft: function(columnIndex: number) {
+            return columnIndex === GUARDIAN_COLUMN_INDEX ? 0 : 4;
+          },
+          paddingRight: function(columnIndex: number) {
+            return columnIndex === GUARDIAN_COLUMN_INDEX ? 0 : 4;
+          },
+          // Vertical padding is per row, not per cell, so it cannot be dropped
+          // for the guardian column alone. Every other column carries its own
+          // margin, so zeroing it here only closes the gap above the first band
+          // and below the last one.
+          paddingTop: function() { return 0; },
+          paddingBottom: function() { return 0; },
           hLineWidth: function() { return 0.5; },
           vLineWidth: function() { return 0.5; },
           hLineColor: function() { return '#dee2e6'; },

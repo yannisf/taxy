@@ -147,7 +147,7 @@ const { t } = useTranslation();
 
 Two reporting features, accessible via the Reports menu (`src/components/layout/TopBarReportsMenu.tsx`), both requiring a selected class with at least one student:
 
-- **Class Catalog PDF** — `generateClassCatalogPDF()` in `src/utils/pdf/catalogGenerator.ts`. Landscape A4 roster (student name + guardian contact info per row) via pdfmake, filename `{school_name}_{class_name}_{school_year}_catalog.pdf`.
+- **Class Catalog PDF** — `generateClassCatalogPDF()` in `src/utils/pdf/catalogGenerator.ts`. Landscape A4 roster (student name + guardian contact info per row, phone numbers in bold monospace, guardians zebra striped within their cell) via pdfmake, filename `{school_name}_{class_name}_{school_year}_catalog.pdf`.
 - **Guardian Emails Export** — `exportGuardianEmails()` in `src/utils/exportUtils.ts`. Deduplicated CSV (`first_name,last_name,email`) of guardian emails, filename `{school-name}-{class-name}-guardian-emails-{date}.csv`. Throws if no guardian has an email.
 
 The menu disables both actions when no class/students are selected and shows loading states plus success/error toasts during generation.
@@ -212,13 +212,26 @@ The application uses pdfmake for PDF generation with utilities split into focuse
 
 ### PDF Module Structure (`src/utils/pdf/`)
 
-- `formatters.ts` - Phone number and text formatting utilities
-- `pdfSetup.ts` - PDF initialization and font configuration
+- `formatters.ts` - Phone number and text formatting utilities; `createGuardianTable()` builds the zebra-striped guardian cell, phone numbers render in bold Courier so digits align
+- `pdfSetup.ts` - PDF initialization and font configuration (IEP Sans for text, Courier metrics for monospace)
 - `catalogGenerator.ts` - Class catalog PDF generation (landscape, IEP Sans font)
-- `gridGenerator.ts` - Student grid PDF generation (2-column, IEP Sans font)
+- `gridGenerator.ts` - Student grid PDF generation (2-column, IEP Sans font; `{ bold: true }` renders names in IEP Sans Bold)
 - `listGenerator.ts` - Student list PDF generation (single-column, IEP Sans font)
 - `iepFonts.ts` - IEP Sans font registration for pdfmake (base64 data in `iepFontsData.ts`)
 - `index.ts` - Public API exports
+
+### Nested table fills
+
+The catalog's guardian cell is a borderless nested table, one row per guardian,
+striped by its own `fillColor`. Because the outer table uses `dontBreakRows`,
+pdfmake paints the outer row fill *over* anything nested inside it, so the outer
+layout returns `null` for the guardian column and the nested table paints both
+the base row colour and the zebra. The outer layout also zeroes its padding for
+that column (and vertically for every row) so the stripes reach the borders; the
+nested table re-adds the inset as its own 12pt left/right padding. Consequence:
+when another column (a long note) makes a row taller than its guardians, the
+leftover strip of the guardian column stays white instead of picking up the
+row's stripe.
 
 ### Date Formatting
 

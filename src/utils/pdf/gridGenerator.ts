@@ -8,18 +8,29 @@ import type { TFunction } from 'i18next';
 import { logger } from '../logger';
 import { getCardsFontConfig, createPDFFilename } from './pdfSetup';
 
+export interface StudentGridOptions {
+  /** Render the names in IEP Sans Bold instead of Regular */
+  bold?: boolean;
+}
+
 /**
  * Generates and downloads a student name grid PDF (2 columns)
  * Uses IEP Sans font for readability
  */
-export async function generateStudentGridPDF(classRecord: Class, kids: Kid[], _t: TFunction): Promise<void> {
+export async function generateStudentGridPDF(
+  classRecord: Class,
+  kids: Kid[],
+  _t: TFunction,
+  options: StudentGridOptions = {}
+): Promise<void> {
+  const { bold = false } = options;
   const { pdfMake, fontFamily } = await getCardsFontConfig();
 
   const fileName = createPDFFilename(
     classRecord.school_name,
     classRecord.class_name,
     classRecord.school_year,
-    'student_grid'
+    bold ? 'student_grid_bold' : 'student_grid'
   );
 
   // Create 2-column grid
@@ -29,6 +40,7 @@ export async function generateStudentGridPDF(classRecord: Class, kids: Kid[], _t
     const leftCell = {
       text: leftName,
       style: 'gridCell',
+      bold,
       fontSize: leftName.length > 10 ? 24 : 30 // smaller for long names
     };
 
@@ -37,9 +49,10 @@ export async function generateStudentGridPDF(classRecord: Class, kids: Kid[], _t
       return {
         text: rightName,
         style: 'gridCell',
+        bold,
         fontSize: rightName.length > 10 ? 24 : 30 // smaller for long names
       };
-    })() : { text: '', style: 'gridCell' };
+    })() : { text: '', style: 'gridCell', bold };
 
     gridBody.push([leftCell, rightCell]);
   }

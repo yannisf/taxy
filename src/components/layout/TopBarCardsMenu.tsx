@@ -19,6 +19,7 @@ const TopBarCardsMenu: React.FC = () => {
   const classKids = useClassKids();
   const dropdown = useDropdownState();
   const [isGeneratingGrid, setIsGeneratingGrid] = useState(false);
+  const [isGeneratingGridBold, setIsGeneratingGridBold] = useState(false);
   const [isGeneratingList, setIsGeneratingList] = useState(false);
 
   const handleGenerateStudentGrid = async () => {
@@ -37,6 +38,25 @@ const TopBarCardsMenu: React.FC = () => {
       toast.error(t('failedToGenerateStudentGrid'));
     } finally {
       setIsGeneratingGrid(false);
+    }
+  };
+
+  const handleGenerateStudentGridBold = async () => {
+    if (!selectedClass) {
+      toast.error(t('selectClassToExport'));
+      return;
+    }
+
+    setIsGeneratingGridBold(true);
+    try {
+      const { generateStudentGridPDF } = await import('../../utils/pdf');
+      await generateStudentGridPDF(selectedClass, classKids, t, { bold: true });
+      toast.success(t('studentGridBoldGenerated'));
+    } catch (error) {
+      logger.error('Bold student grid generation failed:', error);
+      toast.error(t('failedToGenerateStudentGridBold'));
+    } finally {
+      setIsGeneratingGridBold(false);
     }
   };
 
@@ -65,6 +85,9 @@ const TopBarCardsMenu: React.FC = () => {
       <Dropdown.Menu align="start" className="topbar-dropdown-menu narrow">
         <Dropdown.Item onClick={() => { handleGenerateStudentGrid(); dropdown.close(); }} disabled={!selectedClass || isGeneratingGrid || classKids.length === 0}>
           <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateStudentGrid')}</span>
+        </Dropdown.Item>
+        <Dropdown.Item onClick={() => { handleGenerateStudentGridBold(); dropdown.close(); }} disabled={!selectedClass || isGeneratingGridBold || classKids.length === 0}>
+          <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateStudentGridBold')}</span>
         </Dropdown.Item>
         <Dropdown.Item onClick={() => { handleGenerateStudentList(); dropdown.close(); }} disabled={!selectedClass || isGeneratingList || classKids.length === 0}>
           <span className="d-flex align-items-center gap-2"><FilePdf /> {t('generateStudentList')}</span>
